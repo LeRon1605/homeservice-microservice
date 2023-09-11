@@ -18,6 +18,7 @@
 
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\..\..\BuildingBlocks\BuildingBlocks.Infrastructure\BuildingBlocks.Infrastructure.csproj" />
       <ProjectReference Include="..\..\..\..\..\BuildingBlocks\BuildingBlocks.Presentation\BuildingBlocks.Presentation.csproj" />
     </ItemGroup>
 
