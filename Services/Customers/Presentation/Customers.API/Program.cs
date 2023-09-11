@@ -1,4 +1,4 @@
-using Services.Common.Swagger;
+using BuildingBlocks.Presentation.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 

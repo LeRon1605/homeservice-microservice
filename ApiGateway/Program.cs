@@ -1,6 +1,6 @@
+using BuildingBlocks.Presentation.Swagger;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
-using Services.Common.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 
