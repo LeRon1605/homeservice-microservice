@@ -7,9 +7,11 @@ namespace BuildingBlocks.Infrastructure.EfCore.UnitOfWorks;
 public class EfCoreUnitOfWork<TDbContext> : IUnitOfWork where TDbContext : DbContext
 {
     private readonly TDbContext _dbContext;
-    private IDbContextTransaction _transaction;
+    private IDbContextTransaction? _transaction;
     
     public bool HasActiveTransaction => _transaction != null;
+    
+    public IDbContextTransaction? GetCurrentTransaction() => _transaction;
     
     public EfCoreUnitOfWork(TDbContext dbContext)
     {
@@ -36,7 +38,7 @@ public class EfCoreUnitOfWork<TDbContext> : IUnitOfWork where TDbContext : DbCon
             try
             {
                 await SaveChangesAsync();
-                await _transaction.CommitAsync();
+                await _transaction!.CommitAsync();
             }
             catch
             {
@@ -45,7 +47,7 @@ public class EfCoreUnitOfWork<TDbContext> : IUnitOfWork where TDbContext : DbCon
             }
             finally
             {
-                await _transaction.DisposeAsync();
+                await _transaction!.DisposeAsync();
                 _transaction = null;
             }
         }
@@ -55,7 +57,7 @@ public class EfCoreUnitOfWork<TDbContext> : IUnitOfWork where TDbContext : DbCon
     {
         if (HasActiveTransaction)
         {
-            await _transaction.RollbackAsync();
+            await _transaction!.RollbackAsync();
         }
     }
 }

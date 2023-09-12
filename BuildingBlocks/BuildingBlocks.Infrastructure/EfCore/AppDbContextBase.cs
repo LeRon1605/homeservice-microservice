@@ -42,7 +42,8 @@ public abstract class AppDbContextBase : DbContext
     {
         var domainEntities = ChangeTracker
             .Entries<IEntity>()
-            .Where(x => x.Entity.DomainEvents != null && x.Entity.DomainEvents.Any());
+            .Where(x => x.Entity.DomainEvents != null && x.Entity.DomainEvents.Any())
+            .ToList();
 
         var domainEvents = domainEntities
             .SelectMany(x => x.Entity.DomainEvents)

@@ -5,37 +5,43 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BuildingBlocks.Infrastructure.EfCore.Repositories;
 
-public class EfCoreReadOnlyRepository<TDbContext, TAggregateRoot> : IReadOnlyRepository<TAggregateRoot>
-    where TAggregateRoot : AggregateRoot
+public class EfCoreReadOnlyRepository<TDbContext, TEntity> : IReadOnlyRepository<TEntity>
+    where TEntity : Entity
     where TDbContext : DbContext
 {
-    private DbSet<TAggregateRoot> _dbSet;
+    private DbSet<TEntity>? _dbSet;
     
     private readonly TDbContext _dbContext;
-    private DbSet<TAggregateRoot> DbSet => _dbSet ??= _dbContext.Set<TAggregateRoot>();
+    private DbSet<TEntity> DbSet => _dbSet ??= _dbContext.Set<TEntity>();
     
     public EfCoreReadOnlyRepository(TDbContext dbContext)
     {
         _dbContext = dbContext;
     }
     
-    public async Task<TAggregateRoot?> GetByIdAsync(Guid id)
+    public async Task<TEntity?> GetByIdAsync(Guid id) 
+        => await DbSet.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
+
+    public async Task<TEntity?> FindAsync(ISpecification<TEntity> spec)
     {
-        return await DbSet.FindAsync(id);
+        return await GetQuery<TEntity>.From(DbSet, spec).FirstOrDefaultAsync();
     }
 
-    public Task<TAggregateRoot?> FindOneAsync(ISpecification<TAggregateRoot> spec)
+    public async Task<IEnumerable<TEntity>> FindListAsync(ISpecification<TEntity> spec)
     {
-        throw new NotImplementedException();
+        return await GetQuery<TEntity>.From(DbSet, spec).ToListAsync(); 
     }
 
-    public Task<IEnumerable<TAggregateRoot>> FindAsync(ISpecification<TAggregateRoot> spec)
+    public async Task<int> CountAsync(ISpecification<TEntity> specification)
     {
-        throw new NotImplementedException();
+        return await GetQuery<TEntity>.From(DbSet, specification).CountAsync();
     }
 
-    public Task<(IEnumerable<TAggregateRoot>, int)> FindWithTotalCountAsync(ISpecification<TAggregateRoot> spec)
+    public async Task<(IEnumerable<TEntity>, int)> FindWithTotalCountAsync(ISpecification<TEntity> spec)
     {
-        throw new NotImplementedException();
+        var query = GetQuery<TEntity>.From(DbSet, spec);
+        var count = await query.CountAsync();
+        var data = await query.ToListAsync();
+        return (data, count); 
     }
 }
