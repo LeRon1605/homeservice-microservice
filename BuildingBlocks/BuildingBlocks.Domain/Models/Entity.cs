@@ -1,24 +1,19 @@
 ﻿using BuildingBlocks.Domain.Event;
+using BuildingBlocks.Domain.Models.Interfaces;
 
 namespace BuildingBlocks.Domain.Models;
 
 
 public abstract class Entity : IEntity
 {
-    public Guid Id { get; }
-    
-    private List<IDomainEvent> _domainEvents;
-    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
+    public Guid Id { get; private set; }
 
-    protected Entity()
-    {
-        Id = Guid.NewGuid();
-        
-    }
+    private List<IDomainEvent> _domainEvents = null!;
+    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
     
     public void AddDomainEvent(IDomainEvent eventItem)
     {
-        _domainEvents = _domainEvents ?? new List<IDomainEvent>();
+        _domainEvents ??= new List<IDomainEvent>();
         _domainEvents.Add(eventItem);
     }
 
