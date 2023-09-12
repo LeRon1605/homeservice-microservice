@@ -5,7 +5,28 @@ namespace BuildingBlocks.Domain.Specification;
 public interface ISpecification<T>
 {
     bool IsSatisfiedBy(T entity);
+    
     Expression<Func<T, bool>> ToExpression();
-
-    Specification<T> AndSpecification(Specification<T> specification);
+    
+    ISpecification<T> And(ISpecification<T> specification);
+    
+    bool IsTracking { get; set; }
+    
+    List<Expression<Func<T, object>>> Includes { get; }
+    
+    List<string> IncludeStrings { get; }
+    
+    List<string> SearchFields { get; }
+    
+    public string? SearchTerm { get; }
+    
+    List<Expression<Func<T, bool>>> FilterConditions { get; }
+    
+    string? OrderByField { get; }
+    
+    public bool IsDescending { get; }
+    
+    public int Take { get; }
+    
+    public int Skip { get; }
 }

@@ -5,10 +5,10 @@ namespace BuildingBlocks.Domain.Specification;
 
 public class AndSpecification<T> : Specification<T>, ISpecification<T>
 {
-	private readonly Specification<T> _leftSpecification;
-	private readonly Specification<T> _rightSpecification;
+	private readonly ISpecification<T> _leftSpecification;
+	private readonly ISpecification<T> _rightSpecification;
 
-	public AndSpecification(Specification<T> leftSpecification, Specification<T> rightSpecification)
+	public AndSpecification(ISpecification<T> leftSpecification, ISpecification<T> rightSpecification)
 	{
 		_leftSpecification = leftSpecification;
 		_rightSpecification = rightSpecification;
