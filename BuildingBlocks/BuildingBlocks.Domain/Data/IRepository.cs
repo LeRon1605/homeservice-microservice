@@ -4,21 +4,21 @@ using BuildingBlocks.Domain.Specification;
 namespace BuildingBlocks.Domain.Data;
 
 
-public interface IRepository<TEntity> where TEntity : AggregateRoot
+public interface IRepository<TAggregateRoot> where TAggregateRoot : AggregateRoot
 {
-    void Add(TEntity entity);
+    void Add(TAggregateRoot aggregate);
 
-    void Update(TEntity entity);
+    void Update(TAggregateRoot aggregate);
 
-    void Delete(TEntity entity);
+    void Delete(TAggregateRoot aggregate);
 
-    Task<TEntity?> GetByIdAsync(int id);
+    Task<TAggregateRoot?> GetByIdAsync(Guid id);
 
-    Task<TEntity?> FindOneAsync(ISpecification<TEntity> spec);
+    Task<TAggregateRoot?> FindAsync(ISpecification<TAggregateRoot> specification);
 
-    Task<IEnumerable<TEntity>> FindAsync(ISpecification<TEntity> spec);
+    Task<IEnumerable<TAggregateRoot>> FindListAsync(ISpecification<TAggregateRoot> specification);
     
-    Task<bool> AnyAsync(ISpecification<TEntity> spec);
+    Task<bool> AnyAsync(ISpecification<TAggregateRoot> specification);
     
-    Task<bool> AnyAsync(int id);
+    Task<bool> AnyAsync(Guid id);
 }
