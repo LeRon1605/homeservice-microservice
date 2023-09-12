@@ -2,7 +2,7 @@
 
 namespace BuildingBlocks.Domain.Models;
 
-public abstract class AggregateRoot : Entity, IAggregateRoot
+public abstract class AuditableAggregateRoot : AuditableEntity, IAuditableAggregateRoot
 {
     
 }

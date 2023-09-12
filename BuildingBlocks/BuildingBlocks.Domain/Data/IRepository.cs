@@ -8,11 +8,13 @@ public interface IRepository<TEntity> where TEntity : AggregateRoot
 {
     void Add(TEntity entity);
 
+    Task AddAsync(TEntity entity);
+
     void Update(TEntity entity);
 
     void Delete(TEntity entity);
 
-    Task<TEntity?> GetByIdAsync(int id);
+    Task<TEntity?> GetByIdAsync(Guid id);
 
     Task<TEntity?> FindOneAsync(ISpecification<TEntity> spec);
 
@@ -20,5 +22,5 @@ public interface IRepository<TEntity> where TEntity : AggregateRoot
     
     Task<bool> AnyAsync(ISpecification<TEntity> spec);
     
-    Task<bool> AnyAsync(int id);
+    Task<bool> AnyAsync(Guid id);
 }

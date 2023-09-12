@@ -5,7 +5,7 @@ namespace BuildingBlocks.Domain.Data;
 
 public interface IReadOnlyRepository<TEntity> where TEntity : Entity
 {
-    Task<TEntity?> GetByIdAsync(int id);
+    Task<TEntity?> GetByIdAsync(Guid id);
 
     Task<TEntity?> FindOneAsync(ISpecification<TEntity> spec);
 

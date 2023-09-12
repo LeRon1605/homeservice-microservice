@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.Domain.Event;
+using BuildingBlocks.Domain.Models.Interfaces;
 
 namespace BuildingBlocks.Domain.Models;
 
@@ -9,12 +10,6 @@ public abstract class Entity : IEntity
     
     private List<IDomainEvent> _domainEvents;
     public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
-
-    protected Entity()
-    {
-        Id = Guid.NewGuid();
-        
-    }
     
     public void AddDomainEvent(IDomainEvent eventItem)
     {

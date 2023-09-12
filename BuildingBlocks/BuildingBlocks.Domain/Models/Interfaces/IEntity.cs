@@ -1,6 +1,6 @@
 ﻿using BuildingBlocks.Domain.Event;
 
-namespace BuildingBlocks.Domain.Models;
+namespace BuildingBlocks.Domain.Models.Interfaces;
 
 public interface IEntity
 {
