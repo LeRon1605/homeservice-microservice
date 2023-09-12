@@ -27,7 +27,7 @@ public class EventBusRabbitMq : IEventBus
     private readonly IServiceProvider _serviceProvider;
     
     private IModel _consumerChannel;
-    private readonly string _queueName;
+    private string _queueName;
 
     private readonly int _retryCount;
 
@@ -46,6 +46,7 @@ public class EventBusRabbitMq : IEventBus
         _queueName = queueName;
         _retryCount = retryCount;
         _consumerChannel = CreateConsumerChannel();
+        _subManager.OnEventRemoved += SubsManager_OnEventRemoved;
     }
 
     public void Publish(IntegrationEvent @event)
@@ -97,10 +98,26 @@ public class EventBusRabbitMq : IEventBus
         var eventName = _subManager.GetEventName<T>();
         DoInternalSubscription(eventName);
 
-        _logger.LogInformation("Subscribing to event {EventName} with {EventHandler}", eventName, typeof(TH).MakeGenericType().Name);
+        _logger.LogInformation("Subscribing to event {EventName} with {EventHandler}", eventName, typeof(TH).Name);
 
         _subManager.AddSubscription<T, TH>();
         StartBasicConsume();
+    }
+
+    public void Clear()
+    {
+        _subManager.Clear();
+    }
+
+    public void Unsubscribe<T, TH>()
+        where T : IntegrationEvent
+        where TH : IIntegrationEventHandler<T>
+    {
+        var eventName = _subManager.GetEventName<T>();
+
+        _logger.LogInformation("Unsubscribing from event {EventName}", eventName);
+
+        _subManager.RemoveSubscription<T, TH>();
     }
     
     public void Dispose()
@@ -112,6 +129,26 @@ public class EventBusRabbitMq : IEventBus
 
         _subManager.Clear();
     }
+    
+    private void SubsManager_OnEventRemoved(object sender, string eventName)
+    {
+        if (!_persistentConnection.IsConnected)
+        {
+            _persistentConnection.TryConnect();
+        }
+
+        using var channel = _persistentConnection.CreateModel();
+        channel.QueueUnbind(queue: _queueName,
+            exchange: Exchange,
+            routingKey: eventName);
+
+        if (_subManager.IsEmpty)
+        {
+            _queueName = string.Empty;
+            _consumerChannel.Close();
+        }
+    }
+
     
     private void DoInternalSubscription(string eventName)
     {

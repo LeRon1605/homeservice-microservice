@@ -5,6 +5,7 @@ namespace BuildingBlocks.EventBus.SubscriptionManager;
 public interface IEventBusSubscriptionManager
 {
     bool IsEmpty { get; }
+    event EventHandler<string> OnEventRemoved;
     
     void AddSubscription<T, TH>()
         where T : IntegrationEvent

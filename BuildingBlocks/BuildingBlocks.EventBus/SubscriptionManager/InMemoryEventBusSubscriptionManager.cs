@@ -11,6 +11,7 @@ public class InMemoryEventBusSubscriptionManager : IEventBusSubscriptionManager
     private readonly List<Type> _eventTypes;
 
     public bool IsEmpty => _subscriptions.Count == 0;
+    public event EventHandler<string>? OnEventRemoved;
 
     public InMemoryEventBusSubscriptionManager()
     {
@@ -62,6 +63,8 @@ public class InMemoryEventBusSubscriptionManager : IEventBusSubscriptionManager
         if (!_subscriptions[eventName].Any())
         {
             _subscriptions.Remove(eventName);
+            OnEventRemoved?.Invoke(this, eventName);
+            
             var eventTypeToRemove = _eventTypes.FirstOrDefault(x => x.Name == eventName);
             if (eventTypeToRemove != null)
             {
@@ -104,6 +107,11 @@ public class InMemoryEventBusSubscriptionManager : IEventBusSubscriptionManager
 
     public void Clear()
     {
+        foreach (var eventName in _subscriptions.Keys)
+        {
+            OnEventRemoved?.Invoke(this, eventName);
+        }
+        
         _subscriptions.Clear();
         _eventTypes.Clear();
     }
