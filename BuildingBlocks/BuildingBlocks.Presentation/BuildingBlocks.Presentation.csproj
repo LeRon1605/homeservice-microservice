@@ -13,4 +13,9 @@
     </ItemGroup>
 
 
+
+    <ItemGroup>
+      <ProjectReference Include="..\BuildingBlocks.EventBus\BuildingBlocks.EventBus.csproj" />
+    </ItemGroup>
+
 </Project>
