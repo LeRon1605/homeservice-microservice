@@ -9,7 +9,6 @@ public abstract class Specification<T> : ISpecification<T>
     public List<string> IncludeStrings { get; } = new();
     public List<string> SearchFields { get; } = new();
     public string? SearchTerm { get; private set; }
-    public List<Expression<Func<T, bool>>> FilterConditions { get; private set; } = new();
     public string? OrderByField { get; private set; }
     public bool IsDescending { get; private set; }
     public int Take { get; private set; }
@@ -21,8 +20,6 @@ public abstract class Specification<T> : ISpecification<T>
     public abstract Expression<Func<T, bool>> ToExpression();
 
     public ISpecification<T> And(ISpecification<T> specification) => new AndSpecification<T>(this, specification);
-    
-    protected void AddFilter(Expression<Func<T, bool>> filter) => FilterConditions.Add(filter);
     
     protected void SetTracking(bool isTracking) => IsTracking = isTracking;
 

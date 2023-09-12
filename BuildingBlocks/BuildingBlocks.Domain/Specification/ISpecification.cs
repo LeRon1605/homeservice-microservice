@@ -20,8 +20,6 @@ public interface ISpecification<T>
     
     public string? SearchTerm { get; }
     
-    List<Expression<Func<T, bool>>> FilterConditions { get; }
-    
     string? OrderByField { get; }
     
     public bool IsDescending { get; }

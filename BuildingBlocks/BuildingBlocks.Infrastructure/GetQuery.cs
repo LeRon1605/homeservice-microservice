@@ -16,8 +16,7 @@ public static class GetQuery<TEntity> where TEntity : Entity
         query = specification.IsTracking ? query.AsTracking() : query.AsNoTracking();
 
         // Filtering
-        if (specification.FilterConditions.Any())
-            specification.FilterConditions.ForEach(filter => query = query.Where(filter));
+        query = query.Where(specification.ToExpression());
 
         // Include related data
         query = specification.Includes.Aggregate(
