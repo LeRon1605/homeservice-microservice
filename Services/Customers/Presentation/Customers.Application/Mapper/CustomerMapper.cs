@@ -1,6 +1,14 @@
-﻿namespace Customers.Application.Mapper;
+﻿using AutoMapper;
+using Customers.Application.Dtos;
+using Customers.Domain.CustomerAggregate;
 
-public class CustomerMapper
+namespace Customers.Application.Mapper;
+
+public class CustomerMapper : Profile
 {
-    
+    public CustomerMapper()
+    {
+        CreateMap<Customer, CustomerFilterAndPagingDto>();
+    }
+
 }

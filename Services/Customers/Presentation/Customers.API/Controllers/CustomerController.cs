@@ -1,4 +1,5 @@
 ﻿using Customers.Application.Dtos;
+using Customers.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,9 +17,9 @@ public class CustomerController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetCustomersAsync([FromQuery] CustomerFilterAndPagingDto customerFilterAndPagingDto)
+    public async Task<IActionResult> GetCustomersAsync([FromQuery] CustomerFilterAndPagingQuery query)
     {
-        var customers = await _mediator.Send(new CustomerFilterAndPagingDto());
+        var customers = await _mediator.Send(query);
         return Ok(customers);
     }
 }

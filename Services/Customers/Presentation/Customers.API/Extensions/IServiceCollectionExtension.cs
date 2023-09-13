@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using BuildingBlocks.Domain.Data;
+using BuildingBlocks.Infrastructure.EfCore.UnitOfWorks;
 using Customers.Application;
 using Customers.Domain.CustomerAggregate;
 using Customers.Infrastructure;
@@ -24,8 +25,9 @@ public static class IServiceCollectionExtension
 	public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<ICustomerRepository, CustomerRepository>();
-        services.AddScoped<IReadOnlyCustomerRepository, ReadOnlyCustomerRepository>();
-        return services;
+		services.AddScoped<IReadOnlyRepository<Customer>, ReadOnlyCustomerRepository>();
+		services.AddScoped<IUnitOfWork, EfCoreUnitOfWork<CustomerDbContext>>();
+		return services;
     }
     
     public static IServiceCollection AddMapper(this IServiceCollection services)
