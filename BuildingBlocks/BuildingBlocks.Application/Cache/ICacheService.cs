@@ -2,13 +2,9 @@ namespace BuildingBlocks.Application.Cache;
 
 public interface ICacheService
 {
-    Task<T> GetOrAddAsync<T>(string id, Func<Task<T>> factory, TimeSpan expireTime);
+    Task SetCachedDataAsync<T>(string key, T data, TimeSpan cacheDuration);
 
-    Task<bool> SetRecordAsync<T>(string id, T data, TimeSpan expireTime);
+    T? GetCachedDataAsync<T>(string key);
 
-    Task<T> GetRecordAsync<T>(string id);
-
-    Task<bool> RemoveRecordAsync(string id);
-
-    Task ClearAsync();
+    Task RemoveCachedDataAsync(string key);
 }
