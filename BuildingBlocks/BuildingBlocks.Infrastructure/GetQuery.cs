@@ -29,19 +29,6 @@ public static class GetQuery<TEntity> where TEntity : Entity
             (current,
              include) => current.Include(include));
 
-        // Searching
-        if (!string.IsNullOrEmpty(specification.SearchTerm))
-        {
-            var searchClause = string.Empty;
-            foreach (var searchField in specification.SearchFields)
-            {
-                searchClause += searchClause == string.Empty ? string.Empty : " || ";
-                searchClause +=
-                    $"{searchField} != null && {searchField}.ToLower().Contains(\"{specification.SearchTerm}\")";
-            }
-            query = query.Where(searchClause);
-        }
-
         // Ordering
         if (specification.OrderByField != null)
             query = specification.IsDescending

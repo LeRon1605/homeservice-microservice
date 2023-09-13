@@ -5,18 +5,19 @@ namespace Products.Domain.ProductAggregate.Specifications;
 
 public class ProductsWithPaginationSpec : Specification<Product>
 {
+    private readonly string? _search;
+    
     public override Expression<Func<Product, bool>> ToExpression()
     {
-        return p => true;
+        return string.IsNullOrWhiteSpace(_search)
+                   ? p => true
+                   : p => p.Name != null && p.Name.ToLower().Contains(_search.ToLower());
     }
 
     public ProductsWithPaginationSpec(string? search, int pageIndex, int pageSize)
     {
-        if (!string.IsNullOrWhiteSpace(search))
-        {
-            AddSearchTerm(search);
-            AddSearchField(nameof(Product.Name));
-        }
+        _search = search;
+        
         ApplyPaging(pageIndex, pageSize);
     }
 }

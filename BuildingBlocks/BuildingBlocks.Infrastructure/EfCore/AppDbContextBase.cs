@@ -1,4 +1,6 @@
-﻿using BuildingBlocks.Application.Identity;
+﻿using System.Linq.Expressions;
+using BuildingBlocks.Application.Identity;
+using BuildingBlocks.Domain.Models;
 using BuildingBlocks.Domain.Models.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +28,19 @@ public abstract class AppDbContextBase : DbContext
     {
         base.OnModelCreating(modelBuilder);
         
-        modelBuilder.Entity<IAuditableEntity>().HasQueryFilter(s => !s.IsDeleted);
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            if (typeof(AuditableEntity).IsAssignableFrom(entityType.ClrType))
+            {
+                var parameter = Expression.Parameter(entityType.ClrType, "p");
+                var deletedCheck =
+                    Expression.Lambda(
+                        Expression.Equal(Expression.Property(parameter, nameof(AuditableEntity.IsDeleted)), 
+                        Expression.Constant(false)),
+                        parameter);
+                modelBuilder.Entity(entityType.ClrType).HasQueryFilter(deletedCheck);
+            }
+        }
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
@@ -41,7 +55,7 @@ public abstract class AppDbContextBase : DbContext
     private async Task DispatchDomainEventsAsync()
     {
         var domainEntities = ChangeTracker
-            .Entries<IEntity>()
+            .Entries<Entity>()
             .Where(x => x.Entity.DomainEvents != null && x.Entity.DomainEvents.Any())
             .ToList();
 
@@ -61,7 +75,7 @@ public abstract class AppDbContextBase : DbContext
 
     private void ProcessAuditEntityState()
     {
-        foreach (var entry in ChangeTracker.Entries<IAuditableEntity>())
+        foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
         {
             switch (entry.State)
             {

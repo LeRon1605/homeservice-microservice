@@ -2,9 +2,9 @@ using Products.Domain.ProductAggregate;
 
 namespace Products.Infrastructure.Data;
 
-public class ProductDbContextSeed
+public static class ProductDbContextSeed
 {
-    public async Task SeedAsync(ProductDbContext context)
+    public static async Task SeedAsync(ProductDbContext context)
     {
         if (!context.Products.Any())
         {

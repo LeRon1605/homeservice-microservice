@@ -13,4 +13,9 @@
     </ItemGroup>
 
 
+
+    <ItemGroup>
+      <ProjectReference Include="..\BuildingBlocks.Application\BuildingBlocks.Application.csproj" />
+    </ItemGroup>
+
 </Project>

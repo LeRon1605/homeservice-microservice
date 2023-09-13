@@ -7,8 +7,6 @@ public abstract class Specification<T> : ISpecification<T>
     public bool IsTracking { get; set; }
     public List<Expression<Func<T, object>>> Includes { get; } = new();
     public List<string> IncludeStrings { get; } = new();
-    public List<string> SearchFields { get; } = new();
-    public string? SearchTerm { get; private set; }
     public string? OrderByField { get; private set; }
     public bool IsDescending { get; private set; }
     public int Take { get; private set; }
@@ -26,10 +24,6 @@ public abstract class Specification<T> : ISpecification<T>
     protected void AddInclude(Expression<Func<T, object>> includeExpression) => Includes.Add(includeExpression);
 
     protected void AddInclude(string includeString) => IncludeStrings.Add(includeString);
-
-    protected void AddSearchField(string searchField) => SearchFields.Add(searchField);
-
-    protected void AddSearchTerm(string searchTerm) => SearchTerm = searchTerm.ToLower().Trim();
 
     protected void AddOrderByField(string? orderBy) => OrderByField = orderBy;
 
