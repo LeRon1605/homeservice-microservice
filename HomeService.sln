@@ -19,8 +19,6 @@ EndProject
 <<<<<<< HEAD
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{98C7932E-3EDF-4CB7-A57D-34788B297B4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IAC.API", "Services\IAC\Presentation\IAC.API\IAC.API.csproj", "{99E1237D-55F0-484E-BA5D-D1995E8EB00B}"
-=======
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{74FDE5E5-F8A6-4DC9-8460-31CEE023DBDA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Products.API", "Services\Products\Presentation\Products.API\Products.API\Products.API.csproj", "{E4B43121-6A86-44AE-BEA6-548B62C87331}"
@@ -56,6 +54,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 =======
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{F2F76BE7-468E-42BB-957A-EF58FB919E39}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IAC.API", "Services\IAC\IAC.API\IAC.API.csproj", "{20F0034F-36E4-4C40-B11A-04A0AE502F52}"

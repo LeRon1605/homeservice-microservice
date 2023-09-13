@@ -5,7 +5,7 @@ namespace Products.API.Extensions;
 
 public static class MediatRExtension
 {
-    public static void AddMediatR(this IServiceCollection services)
+    public static IServiceCollection AddMediatR(this IServiceCollection services)
     {
         services.AddMediatR(cfg =>
         {
@@ -13,5 +13,7 @@ public static class MediatRExtension
 
             cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
+
+        return services;
     } 
 }

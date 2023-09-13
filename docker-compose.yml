@@ -6,21 +6,68 @@
       dockerfile: Services/Products/Products.API/Dockerfile
     ports:
       - "5005:80"
-#      - "6005:443"
     environment: 
+      - Serilog__SeqServerUrl=http://seq:5341
+      - EventBus__HostName=rabbitmq
+      - EventBus__Port=5672
+      - EventBus__UserName=admin
+      - EventBus__Password=admin
+      - EventBus__SubscriptionClientName=ProductService
+      - EventBus__RetryCount=5
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=db,1433;Database=HomeCare.ProductDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
+    
+    depends_on:
+      - db
+      - rabbitmq
+      - seq
+      - redis
+      
+  iac.api:
+    image: iac.api
+    build:
+      context: .
+      dockerfile: Services/IAC/IAC.API/Dockerfile
+    ports:
+        - "5003:80"
+    environment:
+        - EventBus__HostName=rabbitmq
+        - EventBus__Port=5672
+        - EventBus__UserName=admin
+        - EventBus__Password=admin
+        - EventBus__SubscriptionClientName=IdentityService
+        - EventBus__RetryCount=5
+        - Serilog__SeqServerUrl=http://seq:5341
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ASPNETCORE_URLS=http://+:80
+        - ConnectionStrings__Default=Server=db,1433;Database=HomeCare.IacDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
+    depends_on: 
+      - db
+      - rabbitmq
+      - seq
+      - redis
+      
+  apigateway:
+    image: apigateway
+    build:
+      context: .
+      dockerfile: ApiGateway/Dockerfile
+    ports:
+      - "5000:80"
+    environment:
       - Serilog__SeqServerUrl=http://seq:5341
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      # ;https://+:443
-      - ConnectionStrings__DefaultConnection=Server=db,1433;Database=HomeCare.ProductDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
-#      - ASPNETCORE_Kestrel__Certificates__Default__Password=Admin123
-#      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-    depends_on:
-        - db
-#    volumes:
-#      - ~/.aspnet/https:/https:ro 
+      - Routes__1__DownstreamHostAndPorts__0__Host=iac.api
+      - Routes__1__DownstreamHostAndPorts__0__Port=80
+      - SwaggerEndPoints__1__Config__0__Url=http://iac.api/swagger/v1/swagger.json
+      - Routes__2__DownstreamHostAndPorts__0__Host=products.api
+      - Routes__2__DownstreamHostAndPorts__0__Port=80
+      - SwaggerEndPoints__2__Config__0__Url=http://products.api/swagger/v1/swagger.json
+        
   db:
-    image: mcr.microsoft.com/mssql/server
+    image: mcr.microsoft.com/mssql/server:2022-latest
     ports:
       - "1433:1433"
     environment:
@@ -28,6 +75,7 @@
       - SA_PASSWORD=Admin123
     volumes:
       - homecaredata:/var/opt/mssql
+      
   seq:
     image: datalust/seq:latest
     ports:
@@ -37,6 +85,7 @@
       - ACCEPT_EULA=Y
     volumes:
       - seqdata:/data
+      
   rabbitmq:
     image: rabbitmq:3-management
     ports:
@@ -47,12 +96,14 @@
       - RABBITMQ_DEFAULT_PASS=admin
     volumes:
       - homecaremq:/var/lib/rabbitmq
+    
   redis:
     image: redis
     ports:
       - "6379:6379"
     volumes:
       - redisdata:/data
+      
 volumes:
     homecaredata:
     seqdata:

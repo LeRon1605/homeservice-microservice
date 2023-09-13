@@ -5,7 +5,7 @@ namespace Products.API.Extensions;
 
 public static class DbContextExtension
 {
-    public static void AddDbContext(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddDbContext(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<ProductDbContext>(options =>
         {
@@ -16,5 +16,7 @@ public static class DbContextExtension
                 });
             options.EnableSensitiveDataLogging();
         });
+
+        return services;
     } 
 }
