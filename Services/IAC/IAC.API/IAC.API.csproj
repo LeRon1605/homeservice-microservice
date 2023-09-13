@@ -4,6 +4,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -22,5 +23,11 @@
       <ProjectReference Include="..\IAC.Infrastructure.EfCore\IAC.Infrastructure.EfCore.csproj" />
     </ItemGroup>
 
+
+    <ItemGroup>
+      <Content Include="..\..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
 
 </Project>

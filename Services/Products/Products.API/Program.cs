@@ -1,8 +1,10 @@
 using BuildingBlocks.Application.Identity;
+using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Authorization;
+using BuildingBlocks.Presentation.EventBus;
+using BuildingBlocks.Presentation.ExceptionHandlers;
 using FluentValidation;
-using Products.API.Middlewares;
 using Products.Application.Dtos;
 using Products.Application.MappingProfiles;
 using BuildingBlocks.Presentation.Swagger;
@@ -14,38 +16,29 @@ Log.Logger = ApplicationLoggerFactory.CreateSerilogLogger(builder.Configuration,
 
 builder.Host.UseSerilog();
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-builder.Services.AddSwagger("ProductService");
+builder.Services.AddSwagger("ProductService")
+                .AddEventBus(builder.Configuration)
+                .AddDbContext(builder.Configuration)
+                .AddAutoMapper(typeof(Profiles))
+                .AddMediatR()
+                .AddValidatorsFromAssembly(typeof(GetProductDto).Assembly)
+                .AddRepositories();
 
-builder.Services.AddDbContext(builder.Configuration);
-
-builder.Services.AddAutoMapper(typeof(Profiles));
-
-builder.Services.AddMediatR();
-
-builder.Services.AddValidatorsFromAssembly(typeof(GetProductDto).Assembly);
-
-builder.Services.AddRepositories();
-
-// Access current user info
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.AddHttpContextAccessor();
 
-
 await builder.Services.RunMigrateAsync();
-
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+var eventBus = app.Services.GetRequiredService<IEventBus>();
+
+app.UseApplicationExceptionHandler();
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseCustomExceptionHandler(app.Environment);
-
-// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
