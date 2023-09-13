@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Customers.Infrastructure.Configuration;
 
-public class CustomerConfiguration: IEntityTypeConfiguration<Customer>
+public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
 {
     public void Configure(EntityTypeBuilder<Customer> builder)
     {

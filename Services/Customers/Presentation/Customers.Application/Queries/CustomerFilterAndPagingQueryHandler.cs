@@ -8,7 +8,7 @@ using Customers.Domain.CustomerAggregate.Specifications;
 
 namespace Customers.Application.Queries;
 
-public class CustomerFilterAndPagingQueryHandler: IQueryHandler<CustomerFilterAndPagingQuery, PagedResult<CustomerFilterAndPagingDto>>
+public class CustomerFilterAndPagingQueryHandler : IQueryHandler<CustomerFilterAndPagingQuery, PagedResult<CustomerFilterAndPagingDto>>
 {
     private readonly IReadOnlyRepository<Customer> _customerRepository;
     private readonly IMapper _mapper;
