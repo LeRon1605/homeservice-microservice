@@ -1,4 +1,4 @@
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using BuildingBlocks.Application.Identity;
 using Microsoft.AspNetCore.Http;
 
