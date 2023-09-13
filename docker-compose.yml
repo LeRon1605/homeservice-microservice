@@ -17,7 +17,7 @@
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__DefaultConnection=Server=db,1433;Database=HomeCare.ProductDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
-    
+    restart: always
     depends_on:
       - db
       - rabbitmq
@@ -42,7 +42,33 @@
         - ASPNETCORE_ENVIRONMENT=Development
         - ASPNETCORE_URLS=http://+:80
         - ConnectionStrings__Default=Server=db,1433;Database=HomeCare.IacDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
+    restart: always
     depends_on: 
+      - db
+      - rabbitmq
+      - seq
+      - redis
+  
+  customers.api:
+    image: customers.api
+    build:
+      context: .
+      dockerfile: Services/Customers/Customers.API/Dockerfile
+    ports:
+      - "5002:80"
+    environment:
+      - EventBus__HostName=rabbitmq
+      - EventBus__Port=5672
+      - EventBus__UserName=admin
+      - EventBus__Password=admin
+      - EventBus__SubscriptionClientName=CustomerService
+      - EventBus__RetryCount=5
+      - Serilog__SeqServerUrl=http://seq:5341
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__CustomerDb=Server=db,1433;Database=HomeCare.CustomerDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
+    restart: always
+    depends_on:
       - db
       - rabbitmq
       - seq
@@ -55,6 +81,7 @@
       dockerfile: ApiGateway/Dockerfile
     ports:
       - "5000:80"
+    restart: always
     environment:
       - Serilog__SeqServerUrl=http://seq:5341
       - ASPNETCORE_ENVIRONMENT=Development
@@ -65,14 +92,18 @@
       - Routes__2__DownstreamHostAndPorts__0__Host=products.api
       - Routes__2__DownstreamHostAndPorts__0__Port=80
       - SwaggerEndPoints__2__Config__0__Url=http://products.api/swagger/v1/swagger.json
+      - Routes__0__DownstreamHostAndPorts__0__Host=customers.api
+      - Routes__0__DownstreamHostAndPorts__0__Port=80
+      - SwaggerEndPoints__0__Config__0__Url=http://customers.api/swagger/v1/swagger.json
         
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     ports:
-      - "1433:1433"
+      - "14433:1433"
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=Admin123
+    restart: always
     volumes:
       - homecaredata:/var/opt/mssql
       
@@ -83,6 +114,7 @@
       - "5342:80"
     environment:
       - ACCEPT_EULA=Y
+    restart: always
     volumes:
       - seqdata:/data
       
@@ -94,6 +126,7 @@
     environment:
       - RABBITMQ_DEFAULT_USER=admin
       - RABBITMQ_DEFAULT_PASS=admin
+    restart: always
     volumes:
       - homecaremq:/var/lib/rabbitmq
     
@@ -101,6 +134,7 @@
     image: redis
     ports:
       - "6379:6379"
+    restart: always
     volumes:
       - redisdata:/data
       
