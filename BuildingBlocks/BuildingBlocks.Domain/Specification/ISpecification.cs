@@ -16,12 +16,6 @@ public interface ISpecification<T>
     
     List<string> IncludeStrings { get; }
     
-    List<string> SearchFields { get; }
-    
-    public string? SearchTerm { get; }
-    
-    List<Expression<Func<T, bool>>> FilterConditions { get; }
-    
     string? OrderByField { get; }
     
     public bool IsDescending { get; }

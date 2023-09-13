@@ -16,8 +16,7 @@ public static class GetQuery<TEntity> where TEntity : Entity
         query = specification.IsTracking ? query.AsTracking() : query.AsNoTracking();
 
         // Filtering
-        if (specification.FilterConditions.Any())
-            specification.FilterConditions.ForEach(filter => query = query.Where(filter));
+        query = query.Where(specification.ToExpression());
 
         // Include related data
         query = specification.Includes.Aggregate(
@@ -29,19 +28,6 @@ public static class GetQuery<TEntity> where TEntity : Entity
             query,
             (current,
              include) => current.Include(include));
-
-        // Searching
-        if (!string.IsNullOrEmpty(specification.SearchTerm))
-        {
-            var searchClause = string.Empty;
-            foreach (var searchField in specification.SearchFields)
-            {
-                searchClause += searchClause == string.Empty ? string.Empty : " || ";
-                searchClause +=
-                    $"{searchField} != null && {searchField}.ToLower().Contains(\"{specification.SearchTerm}\")";
-            }
-            query = query.Where(searchClause);
-        }
 
         // Ordering
         if (specification.OrderByField != null)
