@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shopping.Domain.ShoppingAggregate;
 
-namespace Shopping.Infrastructure.Configuration;
+namespace Shopping.Infrastructure.EfCore.Configuration;
 
 public class OrderConfiguration: IEntityTypeConfiguration<Order>
 {
@@ -11,6 +11,6 @@ public class OrderConfiguration: IEntityTypeConfiguration<Order>
         builder.HasKey(p => p.Id);
 
         builder.Property(p => p.Name)
-            .IsRequired().HasMaxLength(20);
+               .IsRequired();
     }
 }

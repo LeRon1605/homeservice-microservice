@@ -4,8 +4,8 @@ using BuildingBlocks.Infrastructure.EfCore.UnitOfWorks;
 using Microsoft.EntityFrameworkCore;
 using Shopping.Application;
 using Shopping.Domain.ShoppingAggregate;
-using Shopping.Infrastructure;
-using Shopping.Infrastructure.Repositories;
+using Shopping.Infrastructure.EfCore;
+using Shopping.Infrastructure.EfCore.Repositories;
 
 namespace Shopping.API.Extensions;
 
