@@ -4,7 +4,7 @@ namespace Customers.Domain.CustomerAggregate;
 
 public class Customer : AggregateRoot
 {
-    public string CustomerName { get; set; }
+    public string CustomerName { get; private set; }
     public string? Email { get; set; }
     public string? Address { get; set; }
     public string? City { get; set; }
