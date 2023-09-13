@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Shopping.Domain.ShoppingAggregate;
 
-namespace Shopping.Infrastructure;
+namespace Shopping.Infrastructure.EfCore;
 
 public class OrderDbContext : AppDbContextBase
 {

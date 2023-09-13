@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Shopping.Domain.ShoppingAggregate;
 
-namespace Shopping.Infrastructure;
+namespace Shopping.Infrastructure.EfCore;
 
 public static class InitData
 {

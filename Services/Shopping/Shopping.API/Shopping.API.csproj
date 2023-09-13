@@ -4,6 +4,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -22,7 +23,14 @@
         <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Presentation\BuildingBlocks.Presentation.csproj" />
         <ProjectReference Include="..\Shopping.Application\Shopping.Application.csproj" />
         <ProjectReference Include="..\Shopping.Domain\Shopping.Domain.csproj" />
-        <ProjectReference Include="..\Shopping.Infrastructure\Shopping.Infrastructure.csproj" />
+        <ProjectReference Include="..\Shopping.Infrastructure.EfCore\Shopping.Infrastructure.EfCore.csproj" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <Content Include="..\..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 ﻿using BuildingBlocks.Infrastructure.EfCore.Repositories;
 using Shopping.Domain.ShoppingAggregate;
 
-namespace Shopping.Infrastructure.Repositories;
+namespace Shopping.Infrastructure.EfCore.Repositories;
 
 public class OrderRepository: EfCoreRepository<OrderDbContext,Order> ,IOrderRepository
 {

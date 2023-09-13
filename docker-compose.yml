@@ -73,6 +73,31 @@
       - rabbitmq
       - seq
       - redis
+  
+  shopping.api:
+    image: shopping.api
+    build:
+      context: .
+      dockerfile: Services/Shopping/Shopping.API/Dockerfile
+    ports:
+      - "5006:80"
+    environment:
+      - EventBus__HostName=rabbitmq
+      - EventBus__Port=5672
+      - EventBus__UserName=admin
+      - EventBus__Password=admin
+      - EventBus__SubscriptionClientName=ShoppingService
+      - EventBus__RetryCount=5
+      - Serilog__SeqServerUrl=http://seq:5341
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__OrderDb=Server=db,1433;Database=HomeCare.ShoppingDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
+    restart: always
+    depends_on:
+      - db
+      - rabbitmq
+      - seq
+      - redis
       
   apigateway:
     image: apigateway
@@ -86,16 +111,19 @@
       - Serilog__SeqServerUrl=http://seq:5341
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
+      - Routes__0__DownstreamHostAndPorts__0__Host=customers.api
+      - Routes__0__DownstreamHostAndPorts__0__Port=80
+      - SwaggerEndPoints__0__Config__0__Url=http://customers.api/swagger/v1/swagger.json
       - Routes__1__DownstreamHostAndPorts__0__Host=iac.api
       - Routes__1__DownstreamHostAndPorts__0__Port=80
       - SwaggerEndPoints__1__Config__0__Url=http://iac.api/swagger/v1/swagger.json
       - Routes__2__DownstreamHostAndPorts__0__Host=products.api
       - Routes__2__DownstreamHostAndPorts__0__Port=80
       - SwaggerEndPoints__2__Config__0__Url=http://products.api/swagger/v1/swagger.json
-      - Routes__0__DownstreamHostAndPorts__0__Host=customers.api
-      - Routes__0__DownstreamHostAndPorts__0__Port=80
-      - SwaggerEndPoints__0__Config__0__Url=http://customers.api/swagger/v1/swagger.json
-        
+      - Routes__3__DownstreamHostAndPorts__0__Host=shopping.api
+      - Routes__3__DownstreamHostAndPorts__0__Port=80
+      - SwaggerEndPoints__3__Config__0__Url=http://shopping.api/swagger/v1/swagger.json
+  
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     ports:

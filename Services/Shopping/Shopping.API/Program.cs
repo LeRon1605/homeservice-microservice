@@ -1,5 +1,7 @@
+using BuildingBlocks.Application.Identity;
 using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.Infrastructure.Serilog;
+using BuildingBlocks.Presentation.Authorization;
 using BuildingBlocks.Presentation.EventBus;
 using BuildingBlocks.Presentation.Swagger;
 using Serilog;
@@ -10,12 +12,15 @@ var builder = WebApplication.CreateBuilder(args);
 Log.Logger = ApplicationLoggerFactory.CreateSerilogLogger(builder.Configuration, "ShoppingService");
 
 builder.Services.AddSwagger("ShoppingService")
-	.AddEventBus(builder.Configuration)
-	.AddDatabase(builder.Configuration, builder.Environment)
-	.AddRepositories()
-	.AddMapper()
-	.AddCqrs()
-	   .AddHttpContextAccessor();
+				.AddEventBus(builder.Configuration)
+				.AddDatabase(builder.Configuration, builder.Environment)
+				.AddRepositories()
+				.AddMapper()
+				.AddCqrs()
+				.AddHttpContextAccessor();
+
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllers();
 
@@ -29,5 +34,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.MapControllers();
+
+await app.ApplyMigrationAsync(app.Logger);
 
 app.Run();
