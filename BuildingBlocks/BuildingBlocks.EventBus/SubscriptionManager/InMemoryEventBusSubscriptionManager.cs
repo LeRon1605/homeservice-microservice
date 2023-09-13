@@ -29,17 +29,13 @@ public class InMemoryEventBusSubscriptionManager : IEventBusSubscriptionManager
             _subscriptions.Add(eventName, new List<Type>());
         }
         
-        if (_subscriptions[eventName].Any(s => s == handlerType))
+        if (HasAlreadyRegisteredForEvent(eventName, handlerType))
         {
             throw new ArgumentException($"Handler Type {handlerType} already registered for '{eventName}'");
         }
         
-        _subscriptions[eventName].Add(typeof(TH));
-        
-        if (!_eventTypes.Contains(typeof(T)))
-        {
-            _eventTypes.Add(typeof(T));
-        }
+        AddHandlerForEvent(eventName, handlerType);
+        StoreEventType(typeof(T));
     }
 
     public void RemoveSubscription<T, TH>() where T : IntegrationEvent where TH : IIntegrationEventHandler<T>
@@ -52,7 +48,7 @@ public class InMemoryEventBusSubscriptionManager : IEventBusSubscriptionManager
             return;
         }
 
-        var handlerTypeToRemove = _subscriptions[eventName].FirstOrDefault(x => x == handlerType);
+        var handlerTypeToRemove = GetHandlerForEvent(eventName, handlerType);
         if (handlerTypeToRemove == null)
         {
             return;
@@ -65,11 +61,7 @@ public class InMemoryEventBusSubscriptionManager : IEventBusSubscriptionManager
             _subscriptions.Remove(eventName);
             OnEventRemoved?.Invoke(this, eventName);
             
-            var eventTypeToRemove = _eventTypes.FirstOrDefault(x => x.Name == eventName);
-            if (eventTypeToRemove != null)
-            {
-                _eventTypes.Remove(eventTypeToRemove);
-            }
+            RemoveEventType(eventName);
         }
     }
 
@@ -119,5 +111,37 @@ public class InMemoryEventBusSubscriptionManager : IEventBusSubscriptionManager
     public string GetEventName<T>()
     {
         return typeof(T).Name;
+    }
+    
+    private void StoreEventType(Type eventType)
+    {
+        if (!_eventTypes.Contains(eventType))
+        {
+            _eventTypes.Add(eventType);
+        }
+    }
+
+    private void AddHandlerForEvent(string eventName, Type handlerType)
+    {
+        _subscriptions[eventName].Add(handlerType);
+    }
+
+    private bool HasAlreadyRegisteredForEvent(string eventName, Type handlerType)
+    {
+        return _subscriptions[eventName].Any(s => s == handlerType);
+    }
+    
+    private void RemoveEventType(string eventName)
+    {
+        var eventTypeToRemove = _eventTypes.FirstOrDefault(x => x.Name == eventName);
+        if (eventTypeToRemove != null)
+        {
+            _eventTypes.Remove(eventTypeToRemove);
+        }
+    }
+
+    private Type? GetHandlerForEvent(string eventName, Type handlerType)
+    {
+        return _subscriptions[eventName].FirstOrDefault(x => x == handlerType);
     }
 }

@@ -169,7 +169,7 @@ public class EventBusRabbitMq : IEventBus
 
     private void StartBasicConsume()
     {
-        _logger.LogTrace("Starting RabbitMQ basic consume");
+        _logger.LogTrace("Starting RabbitMQ basic consume!");
 
         if (_consumerChannel != null)
         {
@@ -184,7 +184,7 @@ public class EventBusRabbitMq : IEventBus
         }
         else
         {
-            _logger.LogError("StartBasicConsume can't call on _consumerChannel == null");
+            _logger.LogError("No consumer channel!");
         }
     }
 
@@ -195,11 +195,6 @@ public class EventBusRabbitMq : IEventBus
 
         try
         {
-            if (message.ToLowerInvariant().Contains("throw-fake-exception"))
-            {
-                throw new InvalidOperationException($"Fake exception requested: \"{message}\"");
-            }
-
             await ProcessEvent(eventName, message);
         }
         catch (Exception ex)
@@ -235,6 +230,7 @@ public class EventBusRabbitMq : IEventBus
 
             _consumerChannel.Dispose();
             _consumerChannel = CreateConsumerChannel();
+            
             StartBasicConsume();
         };
 
