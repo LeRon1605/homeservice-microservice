@@ -1,7 +1,9 @@
 using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.EventBus;
+using BuildingBlocks.Presentation.Extension;
 using BuildingBlocks.Presentation.Swagger;
+using Customers.API.Extensions;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,13 @@ Log.Logger = ApplicationLoggerFactory.CreateSerilogLogger(builder.Configuration,
 
 builder.Services.AddSwagger("CustomerService")
                 .AddEventBus(builder.Configuration);
+builder.Services.AddSwagger("CustomerService");
+builder.Services.AddDatabase(builder.Configuration, builder.Environment)
+    .AddRepositories()
+    .AddCqrs()
+    .AddMapper()
+    .AddService()
+    .AddHttpContextAccessor();
 
 builder.Services.AddControllers();
 
