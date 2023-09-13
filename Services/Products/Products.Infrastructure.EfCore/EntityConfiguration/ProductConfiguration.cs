@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Products.Domain.Constant;
 using Products.Domain.ProductAggregate;
 
-namespace Products.Infrastructure.EntityConfiguration;
+namespace Products.Infrastructure.EfCore.EntityConfiguration;
 
 public class ProductConfiguration : IEntityTypeConfiguration<Product>
 {

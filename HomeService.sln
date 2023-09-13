@@ -36,7 +36,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Infrastructu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Products.API", "Services\Products\Products.API\Products.API.csproj", "{7D3404F0-D8E6-4AEC-92EC-316B2A0FA290}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Products.Infrastructure", "Services\Products\Products.Infrastructure\Products.Infrastructure.csproj", "{EB457731-300C-41E2-AE90-1651F2BCC25F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Products.Infrastructure.EfCore", "Services\Products\Products.Infrastructure.EfCore\Products.Infrastructure.EfCore.csproj", "{EB457731-300C-41E2-AE90-1651F2BCC25F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Products.Application", "Services\Products\Products.Application\Products.Application.csproj", "{81CDEC2B-CF33-468A-81F6-19B3ABDED611}"
 EndProject

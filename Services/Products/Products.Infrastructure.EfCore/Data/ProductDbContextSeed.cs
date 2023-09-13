@@ -1,6 +1,6 @@
 using Products.Domain.ProductAggregate;
 
-namespace Products.Infrastructure.Data;
+namespace Products.Infrastructure.EfCore.Data;
 
 public static class ProductDbContextSeed
 {

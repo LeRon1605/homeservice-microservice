@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Products.Infrastructure.Data;
+using Products.Infrastructure.EfCore.Data;
 
 namespace Products.API.Extensions;
 

@@ -1,8 +1,8 @@
 using BuildingBlocks.Domain.Data;
 using BuildingBlocks.Infrastructure.EfCore.UnitOfWorks;
 using Products.Domain.ProductAggregate;
-using Products.Infrastructure.Data;
-using Products.Infrastructure.Repositories;
+using Products.Infrastructure.EfCore.Data;
+using Products.Infrastructure.EfCore.Repositories;
 
 namespace Products.API.Extensions;
 

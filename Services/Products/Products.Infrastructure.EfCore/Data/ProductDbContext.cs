@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Products.Domain.ProductAggregate;
 
-namespace Products.Infrastructure.Data;
+namespace Products.Infrastructure.EfCore.Data;
 
 public class ProductDbContext : AppDbContextBase
 {
