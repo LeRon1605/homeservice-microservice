@@ -10,4 +10,13 @@ public class IacDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     {
         
     }
+    
+    public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
+    
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+        
+        builder.ApplyConfigurationsFromAssembly(typeof(IacDbContext).Assembly);
+    }
 }

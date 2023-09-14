@@ -26,4 +26,26 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+    <ItemGroup>
+      <Reference Include="Microsoft.IdentityModel.Tokens">
+        <HintPath>..\..\..\..\..\.nuget\packages\microsoft.identitymodel.tokens\6.24.0\lib\net6.0\Microsoft.IdentityModel.Tokens.dll</HintPath>
+      </Reference>
+      <Reference Include="System.IdentityModel.Tokens.Jwt">
+        <HintPath>..\..\..\..\..\.nuget\packages\system.identitymodel.tokens.jwt\6.24.0\lib\net6.0\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+
+
 </Project>
