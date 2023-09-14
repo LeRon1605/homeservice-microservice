@@ -22,4 +22,9 @@ public class UserRepository : IUserRepository
     {
         return await _userManager.Users.AnyAsync(x => x.PhoneNumber == email);
     }
+
+    public async Task<IdentityResult> CreateUserAsync(ApplicationUser user, string password)
+    {
+         return await _userManager.CreateAsync(user, password);
+    }
 }

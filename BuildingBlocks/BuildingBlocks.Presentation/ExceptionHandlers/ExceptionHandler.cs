@@ -61,10 +61,10 @@ public class ExceptionHandler : IExceptionHandler
             case ResourceAlreadyExistException:
                 return StatusCodes.Status409Conflict;
             case ResourceInvalidOperationException:
+            case ResourceCreateFailException:
                 return StatusCodes.Status400BadRequest;
             default:
                 return StatusCodes.Status500InternalServerError;
         }
-
     }
 }
