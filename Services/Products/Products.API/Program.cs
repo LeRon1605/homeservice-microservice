@@ -1,7 +1,7 @@
 using BuildingBlocks.Application.Identity;
-using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Authorization;
+using BuildingBlocks.Presentation.DataSeeder;
 using BuildingBlocks.Presentation.EventBus;
 using BuildingBlocks.Presentation.ExceptionHandlers;
 using FluentValidation;
@@ -18,31 +18,33 @@ builder.Host.UseSerilog();
 
 builder.Services.AddControllers();
 builder.Services.AddSwagger("ProductService")
+                .AddApplicationExceptionHandler()
                 .AddEventBus(builder.Configuration)
                 .AddDbContext(builder.Configuration)
                 .AddAutoMapper(typeof(Profiles))
                 .AddMediatR()
-                .AddValidatorsFromAssembly(typeof(GetProductDto).Assembly)
+                .AddDataSeeder()
+                .AddValidatorsFromAssembly(typeof(ProductDto).Assembly)
                 .AddRepositories();
 
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.AddHttpContextAccessor();
 
-await builder.Services.RunMigrateAsync();
-
 var app = builder.Build();
 
-var eventBus = app.Services.GetRequiredService<IEventBus>();
+// var eventBus = app.Services.GetRequiredService<IEventBus>();
 
 app.UseApplicationExceptionHandler();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
-
 app.UseAuthorization();
 
 app.MapControllers();
+
+await app.ApplyMigrationAsync(app.Logger);
+await app.SeedDataAsync();
 
 app.Run();
 

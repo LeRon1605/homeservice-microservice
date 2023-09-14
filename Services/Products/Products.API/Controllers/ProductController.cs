@@ -1,6 +1,8 @@
+using BuildingBlocks.Application.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Products.Application.Commands.ProductCommands.AddProduct;
+using Products.Application.Commands.ProductCommands.DeleteProduct;
+using Products.Application.Dtos;
 using Products.Application.Queries.ProductQuery.GetProductsWithPagination;
 
 namespace Products.API.Controllers;
@@ -17,16 +19,19 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetProducts([FromQuery] GetProductsWithPaginationQuery query)
+    [ProducesResponseType(typeof(PagedResult<ProductDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetProductsAsync([FromQuery] GetProductsWithPaginationQuery query)
     {
         var products = await _mediator.Send(query);
         return Ok(products);
     } 
     
-    [HttpPost]
-    public async Task<IActionResult> AddProduct([FromBody] AddProductCommand command)
+
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DeleteProductAsync(Guid id)
     {
-        var product = await _mediator.Send(command);
-        return CreatedAtAction(nameof(GetProducts), new {id = product.Id}, product);
+        await _mediator.Send(new DeleteProductCommand(id));
+        return NoContent();
     }
 }

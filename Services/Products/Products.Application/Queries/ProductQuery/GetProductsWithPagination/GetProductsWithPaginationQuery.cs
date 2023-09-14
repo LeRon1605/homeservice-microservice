@@ -4,7 +4,7 @@ using Products.Application.Dtos;
 
 namespace Products.Application.Queries.ProductQuery.GetProductsWithPagination;
 
-public class GetProductsWithPaginationQuery : PagingParameters, IQuery<PagedResult<GetProductDto>>
+public class GetProductsWithPaginationQuery : PagingParameters, IQuery<PagedResult<ProductDto>>
 {
     
 }

@@ -4,9 +4,9 @@ using Products.Infrastructure.EfCore.Data;
 
 namespace Products.Infrastructure.EfCore.Repositories;
 
-public class ProductReadonlyRepository : EfCoreReadOnlyRepository<ProductDbContext, Product>
+public class ProductReadOnlyRepository : EfCoreReadOnlyRepository<ProductDbContext, Product>
 {
-    public ProductReadonlyRepository(ProductDbContext dbContext) : base(dbContext)
+    public ProductReadOnlyRepository(ProductDbContext dbContext) : base(dbContext)
     {
     }
 }
