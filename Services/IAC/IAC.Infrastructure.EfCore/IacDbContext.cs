@@ -10,13 +10,18 @@ public class IacDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     {
         
     }
-    
-    public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
-    
-    protected override void OnModelCreating(ModelBuilder builder)
-    {
-        base.OnModelCreating(builder);
-        
-        builder.ApplyConfigurationsFromAssembly(typeof(IacDbContext).Assembly);
-    }
+
+	protected override void OnModelCreating(ModelBuilder builder)
+	{
+
+		base.OnModelCreating(builder);
+		foreach (var entityType in builder.Model.GetEntityTypes())
+		{
+			var tableName = entityType.GetTableName();
+			if (tableName.StartsWith("AspNet"))
+			{
+				entityType.SetTableName(tableName.Substring(6));
+			}
+		}
+	}
 }
