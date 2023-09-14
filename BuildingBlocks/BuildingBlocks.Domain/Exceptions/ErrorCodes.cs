@@ -7,9 +7,10 @@ public class ErrorCodes
     public const string ResourceAlreadyExist = "Resource:101";
     public const string ResourceAccessDenied = "Resource:103";
     public const string ResourceInvalidOperation = "Resource:104";
-
+    public const string ResourceCreateFail = "Resource:105";
+    
     public const string InvalidArgument = "Argument:100";
-
+    
     // System
     public const string SystemError = "500";
 }

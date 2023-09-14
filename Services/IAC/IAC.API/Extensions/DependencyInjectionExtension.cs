@@ -37,7 +37,8 @@ public static class DependencyInjectionExtension
     {
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IUserService, UserService>();
-        
+        services.AddScoped<IAuthenticateService, AuthenticateService>();
+
         return services;
     }
     
