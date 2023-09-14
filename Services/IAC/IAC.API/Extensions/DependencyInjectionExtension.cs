@@ -75,7 +75,6 @@ public static class DependencyInjectionExtension
             // Signin settings.
             options.SignIn.RequireConfirmedEmail = false;
         });
-        
 
         return services;
     }

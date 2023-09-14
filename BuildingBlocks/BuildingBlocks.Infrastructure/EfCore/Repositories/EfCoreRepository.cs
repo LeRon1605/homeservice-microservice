@@ -51,4 +51,9 @@ public class EfCoreRepository<TDbContext, TAggregateRoot> : IRepository<TAggrega
     {
         return DbSet.AnyAsync(e => e.Id == id);
     }
+
+    public Task<bool> AnyAsync()
+    {
+        return DbSet.AnyAsync();
+    }
 }

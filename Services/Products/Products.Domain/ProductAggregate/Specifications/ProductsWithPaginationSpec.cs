@@ -19,5 +19,9 @@ public class ProductsWithPaginationSpec : Specification<Product>
         _search = search;
         
         ApplyPaging(pageIndex, pageSize);
+        AddInclude(x => x.Group);
+        AddInclude(x => x.BuyUnit);
+        AddInclude(x => x.SellUnit);
+        AddInclude(x => x.Type);
     }
 }

@@ -14,6 +14,12 @@ namespace IAC.API.Controllers
 	        _authenticateService = authenticateService;
         }
 
+        [HttpPost("sign-up")]
+        public async Task<IActionResult> SignUpAsync([FromBody] SignUpDto signUpDto)
+        {
+	        await _authenticateService.SignUpAsync(signUpDto);
+	        return Ok();
+        }
         // [HttpPost("sign-up")]
         // public async Task<IActionResult> SignUp([FromBody] SignUpDto signUpDto)
         // {
