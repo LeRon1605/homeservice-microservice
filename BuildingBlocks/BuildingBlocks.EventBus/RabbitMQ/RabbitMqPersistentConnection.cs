@@ -10,7 +10,7 @@ namespace BuildingBlocks.EventBus.RabbitMQ;
 
 public class DefaultRabbitMQPersistentConnection : IRabbitMqPersistentConnection
 {
-    private bool Disposed;
+    private bool _disposed;
     
     private readonly IConnectionFactory _connectionFactory;
     private readonly ILogger<DefaultRabbitMQPersistentConnection> _logger;
@@ -29,7 +29,7 @@ public class DefaultRabbitMQPersistentConnection : IRabbitMqPersistentConnection
         _retryCount = retryCount;
     }
 
-    public bool IsConnected => _connection is { IsOpen: true } && !Disposed;
+    public bool IsConnected => _connection is { IsOpen: true } && !_disposed;
 
     public IModel CreateModel()
     {
@@ -43,9 +43,9 @@ public class DefaultRabbitMQPersistentConnection : IRabbitMqPersistentConnection
 
     public void Dispose()
     {
-        if (Disposed) return;
+        if (_disposed) return;
 
-        Disposed = true;
+        _disposed = true;
 
         try
         {
@@ -101,7 +101,7 @@ public class DefaultRabbitMQPersistentConnection : IRabbitMqPersistentConnection
 
     private void OnConnectionBlocked(object sender, ConnectionBlockedEventArgs e)
     {
-        if (Disposed) return;
+        if (_disposed) return;
 
         _logger.LogWarning("A RabbitMQ connection is shutdown. Trying to re-connect...");
 
@@ -110,7 +110,7 @@ public class DefaultRabbitMQPersistentConnection : IRabbitMqPersistentConnection
 
     void OnCallbackException(object sender, CallbackExceptionEventArgs e)
     {
-        if (Disposed) return;
+        if (_disposed) return;
 
         _logger.LogWarning("A RabbitMQ connection throw exception. Trying to re-connect...");
 
@@ -119,7 +119,7 @@ public class DefaultRabbitMQPersistentConnection : IRabbitMqPersistentConnection
 
     void OnConnectionShutdown(object sender, ShutdownEventArgs reason)
     {
-        if (Disposed) return;
+        if (_disposed) return;
 
         _logger.LogWarning("A RabbitMQ connection is on shutdown. Trying to re-connect...");
 

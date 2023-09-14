@@ -19,7 +19,8 @@ builder.Services.AddSwagger("IdentityService")
                 .AddApplicationExceptionHandler()
                 .AddEventBus(builder.Configuration)
                 .AddDatabase(builder.Configuration, builder.Environment)
-                .AddIdentity(builder.Configuration, builder.Environment);
+                .AddIdentity(builder.Configuration, builder.Environment)
+                .AddConfiguration(builder.Configuration);
 
 builder.Services.AddControllers();
 

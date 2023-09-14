@@ -2,7 +2,6 @@
 using BuildingBlocks.Application.Identity;
 using BuildingBlocks.Infrastructure.Cache;
 using BuildingBlocks.Presentation.Authorization;
-using Microsoft.AspNetCore.Mvc.TagHelpers.Cache;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BuildingBlocks.Presentation.Extension;

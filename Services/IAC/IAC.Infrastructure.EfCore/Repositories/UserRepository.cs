@@ -23,8 +23,13 @@ public class UserRepository : IUserRepository
         return await _userManager.Users.AnyAsync(x => x.PhoneNumber == email);
     }
 
-    public async Task<IdentityResult> CreateUserAsync(ApplicationUser user, string password)
+    public async Task<ApplicationUser?> GetByPhoneNumberAsync(string phoneNumber)
     {
-         return await _userManager.CreateAsync(user, password);
+        return await _userManager.Users.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber);
+    }
+
+    public async Task<ApplicationUser?> GetByEmailAsync(string email)
+    {
+        return await _userManager.Users.FirstOrDefaultAsync(x => x.Email == email);
     }
 }
