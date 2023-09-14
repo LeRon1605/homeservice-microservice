@@ -1,5 +1,4 @@
 using IAC.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
 
 namespace IAC.Domain.Repositories;
 

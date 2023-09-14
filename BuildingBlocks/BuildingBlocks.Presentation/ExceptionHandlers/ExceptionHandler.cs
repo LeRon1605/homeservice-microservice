@@ -1,5 +1,4 @@
-﻿using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 using BuildingBlocks.Domain.Exceptions;
 using BuildingBlocks.Domain.Exceptions.Resource;
 using Microsoft.AspNetCore.Http;

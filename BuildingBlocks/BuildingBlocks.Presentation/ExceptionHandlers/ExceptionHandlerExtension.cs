@@ -1,7 +1,5 @@
-﻿using BuildingBlocks.Presentation.ExceptionHandlers;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BuildingBlocks.Presentation.ExceptionHandlers;

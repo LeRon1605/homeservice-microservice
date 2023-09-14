@@ -1,5 +1,4 @@
-﻿using Customers.Application.Dtos;
-using Customers.Application.Queries;
+﻿using Customers.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
