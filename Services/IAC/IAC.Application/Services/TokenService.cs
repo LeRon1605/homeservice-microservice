@@ -4,6 +4,7 @@ using System.Text;
 using IAC.Application.Common;
 using IAC.Application.Services.Interfaces;
 using IAC.Domain.Entities;
+using IAC.Domain.Exceptions.Authentication;
 using IAC.Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -60,10 +61,15 @@ public class TokenService : ITokenService
         var refreshTokenLifetime = await _tokenRepository.GetExpiryTimeAsync(refreshToken);
         
         if (refreshTokenLifetime == null)
-            throw new Exception("Refresh token not found");
+            throw new RefreshTokenNotFound();
         
         if (refreshTokenLifetime < DateTime.UtcNow)
-            throw new Exception("Refresh token expired");
+            throw new RefreshTokenExpiredException();
+    }
+
+    public async Task RevokeRefreshTokenAsync(string refreshToken)
+    {
+        await _tokenRepository.RemoveAsync(refreshToken);
     }
 
     private async Task<IList<Claim>> GetUserClaimListAsync(string userId)

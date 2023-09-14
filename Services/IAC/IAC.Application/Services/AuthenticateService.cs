@@ -43,7 +43,27 @@ public class AuthenticateService : IAuthenticateService
         if (!result.Succeeded)
             throw new UserCreateFailException("Can not create user");
     }
-    
+
+    public async Task<TokenDto> RefreshTokenAsync(RefreshTokenDto refreshTokenDto)
+    {
+        await _tokenService.ValidateRefreshTokenAsync(refreshTokenDto.RefreshToken);
+        
+        var user = await _userRepository.GetByRefreshTokenAsync(refreshTokenDto.RefreshToken)
+                   ?? throw new RefreshTokenNotFound();
+        
+        var tokenDto = new TokenDto
+        {
+            AccessToken = await _tokenService.GenerateAccessTokenAsync(user.Id),
+            RefreshToken = _tokenService.GenerateRefreshToken()
+        };
+        
+        await _tokenService.RevokeRefreshTokenAsync(refreshTokenDto.RefreshToken);
+        
+        await _tokenService.AddRefreshTokenAsync(user.Id, tokenDto.RefreshToken);
+        
+        return tokenDto;
+    }
+
     public async Task<TokenDto> LoginAsync(LoginDto logInDto)
     {
         var user = await _userRepository.GetByPhoneNumberAsync(logInDto.Identifier) 

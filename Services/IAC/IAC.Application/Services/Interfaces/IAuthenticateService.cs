@@ -6,4 +6,5 @@ public interface IAuthenticateService
 {
     Task<TokenDto> LoginAsync(LoginDto logInDto);
     Task SignUpAsync(SignUpDto signUpDto);
+    Task<TokenDto> RefreshTokenAsync(RefreshTokenDto refreshTokenDto);
 }
