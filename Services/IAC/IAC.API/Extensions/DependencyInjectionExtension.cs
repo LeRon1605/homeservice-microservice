@@ -1,5 +1,6 @@
 using BuildingBlocks.Application.Seeder;
 using IAC.Application;
+using IAC.Application.Common;
 using IAC.Application.Seeder;
 using IAC.Application.Services;
 using IAC.Application.Services.Interfaces;
@@ -29,6 +30,7 @@ public static class DependencyInjectionExtension
     {
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ITokenRepository, TokenRepository>();
         
         return services;
     }
@@ -37,7 +39,8 @@ public static class DependencyInjectionExtension
     {
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IUserService, UserService>();
-        
+        services.AddScoped<IAuthenticateService, AuthenticateService>();
+        services.AddScoped<ITokenService, TokenService>();
         return services;
     }
     
@@ -72,6 +75,7 @@ public static class DependencyInjectionExtension
             // Signin settings.
             options.SignIn.RequireConfirmedEmail = false;
         });
+        
 
         return services;
     }
@@ -80,6 +84,12 @@ public static class DependencyInjectionExtension
     {
         services.AddAutoMapper(typeof(IdentityApplicationReferenceAssembly));
         
+        return services;
+    }
+    
+    public static IServiceCollection AddConfiguration(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
         return services;
     }
 }

@@ -22,4 +22,14 @@ public class UserRepository : IUserRepository
     {
         return await _userManager.Users.AnyAsync(x => x.PhoneNumber == email);
     }
+
+    public async Task<ApplicationUser?> GetByPhoneNumberAsync(string phoneNumber)
+    {
+        return await _userManager.Users.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber);
+    }
+
+    public async Task<ApplicationUser?> GetByEmailAsync(string email)
+    {
+        return await _userManager.Users.FirstOrDefaultAsync(x => x.Email == email);
+    }
 }

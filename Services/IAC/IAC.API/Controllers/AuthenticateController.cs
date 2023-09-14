@@ -1,6 +1,5 @@
 ﻿using IAC.Application.Dtos.Authentication;
 using IAC.Application.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IAC.API.Controllers
@@ -21,5 +20,12 @@ namespace IAC.API.Controllers
 	       //  var result = await _authenticateService.SignUp(signUpDto);
 	       //  return Ok(result);
         // }
+        
+        [HttpPost("log-in")]
+        public async Task<IActionResult> Login([FromBody] LoginDto logInDto)
+		{
+	        var result = await _authenticateService.LoginAsync(logInDto);
+	        return Ok(result);
+		}
     }
 }

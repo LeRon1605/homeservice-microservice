@@ -61,6 +61,11 @@ public class IdentityDataSeeder : IDataSeeder
         {
             UserName = "admin",
             Email = "admin@gmail.com",
+            FirstName = "Admin",
+            LastName = "Admin",
+            PhoneNumber = "0123456789",
+            SecurityStamp = Guid.NewGuid().ToString(),
+            EmailConfirmed = true
         };
 
         await _userManager.CreateAsync(user, "admin123");

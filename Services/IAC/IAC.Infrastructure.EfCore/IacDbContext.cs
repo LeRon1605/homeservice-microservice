@@ -10,7 +10,9 @@ public class IacDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     {
         
     }
-
+	
+    public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
+    
 	protected override void OnModelCreating(ModelBuilder builder)
 	{
 
@@ -23,5 +25,7 @@ public class IacDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
 				entityType.SetTableName(tableName.Substring(6));
 			}
 		}
+		
+		builder.ApplyConfigurationsFromAssembly(typeof(IacDbContext).Assembly);
 	}
 }
