@@ -5,12 +5,22 @@ namespace Products.API.Extensions;
 
 public static class MigrationExtension
 {
-    public static async Task RunMigrateAsync(this IServiceCollection services)
+    public static async Task ApplyMigrationAsync(this IApplicationBuilder app, ILogger logger)
     {
-        using var scope = services.BuildServiceProvider().CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
-        await dbContext.Database.MigrateAsync();
+        using var scope = app.ApplicationServices.CreateScope();
 
-        await ProductDbContextSeed.SeedAsync(dbContext);
-    } 
+        var context = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
+        if ((await context.Database.GetPendingMigrationsAsync()).Any())
+        {
+            logger.LogInformation("Migrating pending migration...");   
+
+            await context.Database.MigrateAsync();
+
+            logger.LogInformation("Migrated successfully!");
+        }
+        else
+        {
+            logger.LogInformation("No pending migration!");
+        }
+    }
 }

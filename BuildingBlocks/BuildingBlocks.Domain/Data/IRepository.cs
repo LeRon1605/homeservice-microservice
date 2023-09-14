@@ -21,4 +21,6 @@ public interface IRepository<TAggregateRoot> where TAggregateRoot : AggregateRoo
     Task<bool> AnyAsync(ISpecification<TAggregateRoot> specification);
     
     Task<bool> AnyAsync(Guid id);
+
+    Task<bool> AnyAsync();
 }
