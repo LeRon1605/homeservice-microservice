@@ -15,6 +15,9 @@ public static class IServiceCollectionExtensions
 
 	public static IServiceCollection AddService(this IServiceCollection services)
 	{
-		return services.AddScoped<ICurrentUser, CurrentUser>();
+		services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUser, CurrentUser>();
+
+        return services;
 	}
 }
