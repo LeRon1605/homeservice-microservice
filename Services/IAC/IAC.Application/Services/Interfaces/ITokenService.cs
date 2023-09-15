@@ -1,3 +1,5 @@
+using IAC.Domain.Entities;
+
 namespace IAC.Application.Services.Interfaces;
 
 public interface ITokenService
@@ -9,4 +11,6 @@ public interface ITokenService
     Task AddRefreshTokenAsync(string userId, string refreshToken);
 
     Task ValidateRefreshTokenAsync(string refreshToken);
+    
+    Task RevokeRefreshTokenAsync(string refreshToken);
 }

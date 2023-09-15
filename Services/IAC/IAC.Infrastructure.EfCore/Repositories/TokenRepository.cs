@@ -1,4 +1,5 @@
 using IAC.Domain.Entities;
+using IAC.Domain.Exceptions.Authentication;
 using IAC.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,10 +39,8 @@ public class TokenRepository : ITokenRepository
 
     public async Task RemoveAsync(string refreshToken)
     {
-        var refreshTokenEntity = new RefreshToken
-        {
-            Token = refreshToken
-        };
+        var refreshTokenEntity = await _context.RefreshTokens.SingleOrDefaultAsync(rt => rt.Token == refreshToken)
+                                 ?? throw new RefreshTokenNotFound();
         
         _context.RefreshTokens.Remove(refreshTokenEntity);
 

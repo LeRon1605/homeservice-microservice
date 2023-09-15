@@ -26,7 +26,7 @@ builder.Services.AddSwagger("ProductService")
                 .AddAutoMapper(typeof(Profiles))
                 .AddMediatR()
                 .AddDataSeeder()
-                .AddValidatorsFromAssembly(typeof(ProductDto).Assembly)
+                .AddValidatorsFromAssembly(typeof(GetProductDto).Assembly)
                 .AddRepositories();
 
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();

@@ -7,4 +7,6 @@ public static class ErrorCodes
     public const string UserCreateFail = "User:000003";
     public const string UserNotFound = "User:000001";
     public const string InvalidPassword = "User:000002";
+    public const string RefreshTokenNotFound = "RefreshToken:000001";
+    public const string RefreshTokenExpired = "RefreshToken:000002";
 }

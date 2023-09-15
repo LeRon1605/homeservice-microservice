@@ -32,4 +32,9 @@ public class UserRepository : IUserRepository
     {
         return await _userManager.Users.FirstOrDefaultAsync(x => x.Email == email);
     }
+
+    public async Task<ApplicationUser?> GetByRefreshTokenAsync(string refreshToken)
+    {
+        return await _userManager.Users.FirstOrDefaultAsync(x => x.RefreshTokens.Any(y => y.Token == refreshToken));
+    }
 }
