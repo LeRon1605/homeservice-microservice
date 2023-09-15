@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Products.Application.Commands.ProductCommands.DeleteProduct;
 using Products.Application.Dtos;
+using Products.Application.Queries.ProductQuery.GetAllProductGroup;
 using Products.Application.Queries.ProductQuery.GetProductsWithPagination;
 
 namespace Products.API.Controllers;
@@ -25,6 +26,14 @@ public class ProductController : ControllerBase
         var products = await _mediator.Send(query);
         return Ok(products);
     } 
+    
+    [HttpGet("groups")]
+    [ProducesResponseType(typeof(IEnumerable<ProductGroupDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetProductGroupsAsync([FromQuery] GetAllProductGroupQuery query)
+    {
+        var productGroups = await _mediator.Send(query);
+        return Ok(productGroups);
+    }
     
 
     [HttpDelete("{id:guid}")]

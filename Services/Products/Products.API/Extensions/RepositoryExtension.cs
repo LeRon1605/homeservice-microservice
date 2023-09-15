@@ -15,6 +15,8 @@ public static class RepositoryExtension
     {
         services.AddScoped<IRepository<Product>, ProductRepository>();
         services.AddScoped<IReadOnlyRepository<Product>, ProductReadOnlyRepository>();
+        services.AddScoped<IReadOnlyRepository<ProductGroup>, ProductGroupReadOnlyRepository>();
+        services.AddScoped<IReadOnlyRepository<ProductType>, ProductTypeReadOnlyRepository>();
         
         services.AddScoped<IRepository<ProductGroup>, ProductGroupRepository>();
         services.AddScoped<IRepository<ProductUnit>, ProductUnitRepository>();

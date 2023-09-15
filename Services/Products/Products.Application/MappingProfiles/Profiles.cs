@@ -1,6 +1,8 @@
 using AutoMapper;
 using Products.Application.Dtos;
 using Products.Domain.ProductAggregate;
+using Products.Domain.ProductGroupAggregate;
+using Products.Domain.ProductTypeAggregate;
 
 namespace Products.Application.MappingProfiles;
 
@@ -26,5 +28,8 @@ public class Profiles : Profile
                         ? null
                         : new ProductUnitDto { Id = src.SellUnitId!.Value, Name = src.SellUnit.Name }));
 
+        CreateMap<ProductGroup, ProductGroupDto>();
+
+        CreateMap<ProductType, ProductTypeDto>();
     } 
 }
