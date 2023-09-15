@@ -26,5 +26,6 @@ public class Profiles : Profile
                         ? null
                         : new ProductUnitDto { Id = src.SellUnitId!.Value, Name = src.SellUnit.Name }));
 
+        CreateMap<ProductImage, ProductImageDto>();
     } 
 }

@@ -1,6 +1,7 @@
 using BuildingBlocks.Application.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Products.Application.Commands.ProductCommands.AddProduct;
 using Products.Application.Commands.ProductCommands.DeleteProduct;
 using Products.Application.Dtos;
 using Products.Application.Queries.ProductQuery.GetProductsWithPagination;
@@ -26,6 +27,13 @@ public class ProductController : ControllerBase
         return Ok(products);
     } 
     
+    [HttpPost]
+    public async Task<IActionResult> CreateProductAsync([FromBody] ProductCreateDto productCreateDto)
+    {
+        var product = await _mediator.Send(new AddProductCommand(productCreateDto));
+        return Ok(product);
+        // return CreatedAtAction(nameof(GetProductbyId), new { id = product.Id }, product);
+    } 
 
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
