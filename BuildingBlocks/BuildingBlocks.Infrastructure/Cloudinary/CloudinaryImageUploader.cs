@@ -22,20 +22,28 @@ public class CloudinaryImageUploader : IImageUploader
     {
         var uploadParams = new ImageUploadParams()
         {
-            File = new FileDescription(name, stream),
+            File = new FileDescription($"{Guid.NewGuid()}-{name}", stream),
             UseFilename = true,
             UniqueFilename = false,
-            Overwrite = true
+            Overwrite = false,
+            Folder = "HomeService"
         };
 
-        var result = await _cloudinary.UploadAsync(uploadParams);
-        if (result.Error == null)
+        try
         {
-            return UploaderResult.Success(result.Url.ToString());
+            var result = await _cloudinary.UploadAsync(uploadParams);
+            if (result.Error == null)
+            {
+                return UploaderResult.Success(result.Url.ToString());
+            }
+    
+            _logger.LogError("Upload file {name} to cloudinary failed: {error}", name, result.Error.Message);
+            return UploaderResult.Failed(result.Error.Message);
         }
-        
-        _logger.LogError("Upload file {name} to cloudinary failed: {error}", name, result.Error.Message);
-        return UploaderResult.Failed(result.Error.Message);
-
+        catch (Exception e)
+        {
+            _logger.LogError("Upload file {name} to cloudinary failed: {error}", name, e.Message);
+            return UploaderResult.Failed("Could not connect to server!");
+        }
     }
 }

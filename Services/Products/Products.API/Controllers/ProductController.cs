@@ -2,6 +2,7 @@ using BuildingBlocks.Application.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Products.Application.Commands.ProductCommands.DeleteProduct;
+using Products.Application.Commands.ProductCommands.UploadProductImage;
 using Products.Application.Dtos;
 using Products.Application.Queries.ProductQuery.GetProductsWithPagination;
 
@@ -33,5 +34,12 @@ public class ProductController : ControllerBase
     {
         await _mediator.Send(new DeleteProductCommand(id));
         return NoContent();
+    }
+    
+    [HttpPost("images")]
+    public async Task<IActionResult> UploadProductImageAsync([FromForm] IFormFile file)
+    {
+        var result = await _mediator.Send(new UploadProductImageCommand(file));
+        return Ok(result);
     }
 }
