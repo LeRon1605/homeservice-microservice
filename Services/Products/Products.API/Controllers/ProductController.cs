@@ -19,7 +19,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(PagedResult<ProductDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PagedResult<GetProductDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProductsAsync([FromQuery] GetProductsWithPaginationQuery query)
     {
         var products = await _mediator.Send(query);

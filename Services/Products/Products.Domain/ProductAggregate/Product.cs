@@ -9,6 +9,7 @@ namespace Products.Domain.ProductAggregate;
 
 public class Product : AggregateRoot
 {
+    public string ProductCode { get; private set; }
     public string Name { get; private set; }
     public string? Description { get; private set; }
     public bool IsObsolete { get; private set; }
@@ -32,6 +33,7 @@ public class Product : AggregateRoot
     public List<ProductImage> Images { get; private set; }
         
     public Product(
+        string productCode,
         string name,
         Guid productTypeId, 
         Guid productGroupId,
@@ -42,7 +44,8 @@ public class Product : AggregateRoot
         Guid? sellUnitId = null,
         decimal? sellPrice = null)
     {
-        Name = Guard.Against.NullOrEmpty(name, nameof(Name));
+        ProductCode = Guard.Against.NullOrWhiteSpace(productCode, nameof(ProductCode));
+        Name = Guard.Against.NullOrWhiteSpace(name, nameof(Name));
         ProductTypeId = Guard.Against.Default(productTypeId, nameof(ProductTypeId));
         ProductGroupId = Guard.Against.Default(productGroupId, nameof(ProductGroupId));
         IsObsolete = false;

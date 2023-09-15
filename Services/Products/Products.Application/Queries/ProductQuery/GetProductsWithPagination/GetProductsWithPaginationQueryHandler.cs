@@ -8,7 +8,7 @@ using Products.Domain.ProductAggregate.Specifications;
 
 namespace Products.Application.Queries.ProductQuery.GetProductsWithPagination;
 
-public class GetProductsWithPaginationQueryHandler : IQueryHandler<GetProductsWithPaginationQuery, PagedResult<ProductDto>>
+public class GetProductsWithPaginationQueryHandler : IQueryHandler<GetProductsWithPaginationQuery, PagedResult<GetProductDto>>
 {
     private readonly IReadOnlyRepository<Product> _productRepository;
     private readonly IMapper _mapper;
@@ -20,14 +20,15 @@ public class GetProductsWithPaginationQueryHandler : IQueryHandler<GetProductsWi
         _mapper = mapper;
     }
 
-    public async Task<PagedResult<ProductDto>> Handle(GetProductsWithPaginationQuery request,
+    public async Task<PagedResult<GetProductDto>> Handle(GetProductsWithPaginationQuery request,
                                                    CancellationToken cancellationToken)
     {
-        var getProductsSpec = new ProductsWithPaginationSpec(request.Search, request.PageIndex, request.PageSize);
+        var getProductsSpec = new ProductsWithPaginationSpec(request.Search, request.PageIndex, request.PageSize, 
+            request.IsObsolete, request.GroupId, request.TypeId);
         
         var (products, totalCount) = await _productRepository.FindWithTotalCountAsync(getProductsSpec);
-        var productsDto = _mapper.Map<IEnumerable<ProductDto>>(products);
+        var productsDto = _mapper.Map<IEnumerable<GetProductDto>>(products);
         
-        return new PagedResult<ProductDto>(productsDto, totalCount, request.PageIndex, request.PageSize);
+        return new PagedResult<GetProductDto>(productsDto, totalCount, request.PageIndex, request.PageSize);
     }
 }

@@ -6,17 +6,29 @@ namespace Products.Domain.ProductAggregate.Specifications;
 public class ProductsWithPaginationSpec : Specification<Product>
 {
     private readonly string? _search;
+    private readonly string? _groupId;
+    private readonly string? _typeId;
+    private readonly bool? _isObsolete;
     
     public override Expression<Func<Product, bool>> ToExpression()
     {
-        return string.IsNullOrWhiteSpace(_search)
-                   ? p => true
-                   : p => p.Name != null && p.Name.ToLower().Contains(_search.ToLower());
+        return p => (string.IsNullOrWhiteSpace(_search) || p.Name.ToLower().Contains(_search.ToLower()))
+                   && (!_isObsolete.HasValue || p.IsObsolete == _isObsolete)
+                   && (string.IsNullOrWhiteSpace(_groupId) || p.ProductGroupId.ToString() == _groupId)
+                   && (string.IsNullOrWhiteSpace(_typeId) || p.ProductTypeId.ToString() == _typeId);
     }
 
-    public ProductsWithPaginationSpec(string? search, int pageIndex, int pageSize)
+    public ProductsWithPaginationSpec(string? search, 
+                                      int pageIndex, 
+                                      int pageSize, 
+                                      bool? isObsolete, 
+                                      string? groupId, 
+                                      string? typeId)
     {
         _search = search;
+        _groupId = groupId;
+        _typeId = typeId;
+        _isObsolete = isObsolete;
         
         ApplyPaging(pageIndex, pageSize);
         AddInclude(x => x.Group);

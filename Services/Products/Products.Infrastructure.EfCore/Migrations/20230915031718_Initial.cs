@@ -52,6 +52,7 @@ namespace Products.Infrastructure.EfCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductCode = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsObsolete = table.Column<bool>(type: "bit", nullable: false),
@@ -117,6 +118,12 @@ namespace Products.Infrastructure.EfCore.Migrations
                 name: "IX_Products_BuyUnitId",
                 table: "Products",
                 column: "BuyUnitId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_ProductCode",
+                table: "Products",
+                column: "ProductCode",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_ProductGroupId",
