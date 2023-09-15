@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Products.Application.Commands.ProductCommands.DeleteProduct;
 using Products.Application.Dtos;
 using Products.Application.Queries.ProductQuery.GetAllProductGroup;
+using Products.Application.Queries.ProductQuery.GetAllProductType;
 using Products.Application.Queries.ProductQuery.GetProductsWithPagination;
 
 namespace Products.API.Controllers;
@@ -33,6 +34,14 @@ public class ProductController : ControllerBase
     {
         var productGroups = await _mediator.Send(query);
         return Ok(productGroups);
+    }
+    
+    [HttpGet("types")]
+    [ProducesResponseType(typeof(IEnumerable<ProductTypeDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetProductTypesAsync([FromQuery] GetAllProductTypeQuery query)
+    {
+        var productTypes = await _mediator.Send(query);
+        return Ok(productTypes);
     }
     
 
