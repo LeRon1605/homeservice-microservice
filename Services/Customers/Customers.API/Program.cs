@@ -1,5 +1,6 @@
 using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.Infrastructure.Serilog;
+using BuildingBlocks.Presentation.DataSeeder;
 using BuildingBlocks.Presentation.EventBus;
 using BuildingBlocks.Presentation.Extension;
 using BuildingBlocks.Presentation.Swagger;
@@ -17,7 +18,7 @@ builder.Services.AddSwagger("CustomerService")
                 .AddCqrs()
                 .AddMapper()
                 .AddService()
-                .AddHttpContextAccessor();
+                .AddSeeder();
 
 builder.Services.AddControllers();
 
@@ -33,5 +34,6 @@ app.UseSwaggerUI();
 app.MapControllers();
 
 await app.ApplyMigrationAsync(app.Logger);
+await app.SeedDataAsync();
 
 app.Run();
