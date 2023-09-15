@@ -115,6 +115,7 @@ public class ProductDataSeeder : IDataSeeder
         for (var i = 0; i < 10; i++)
         {
             var product = new Product(
+                $"PROD-{i}",
                 $"Product - {i}",
                 productTypes[random.Next(0, productTypes.Count)].Id,
                 productGroups[random.Next(0, productTypes.Count)].Id,

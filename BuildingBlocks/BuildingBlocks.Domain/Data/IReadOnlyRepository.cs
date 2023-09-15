@@ -14,4 +14,6 @@ public interface IReadOnlyRepository<TEntity> where TEntity : Entity
     Task<int> CountAsync(ISpecification<TEntity> specification);
     
     Task<(IEnumerable<TEntity>, int)> FindWithTotalCountAsync(ISpecification<TEntity> specification);
+
+    Task<bool> AnyAsync(ISpecification<TEntity> specification);
 }

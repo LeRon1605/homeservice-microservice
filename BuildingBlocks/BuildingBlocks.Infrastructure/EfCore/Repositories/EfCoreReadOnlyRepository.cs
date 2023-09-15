@@ -40,8 +40,13 @@ public class EfCoreReadOnlyRepository<TDbContext, TEntity> : IReadOnlyRepository
     public async Task<(IEnumerable<TEntity>, int)> FindWithTotalCountAsync(ISpecification<TEntity> spec)
     {
         var query = GetQuery<TEntity>.From(DbSet, spec);
-        var count = await query.CountAsync();
+        var count = await DbSet.CountAsync(spec.ToExpression());
         var data = await query.ToListAsync();
         return (data, count); 
+    }
+
+    public async Task<bool> AnyAsync(ISpecification<TEntity> specification)
+    {
+        return await GetQuery<TEntity>.From(DbSet, specification).AnyAsync();
     }
 }

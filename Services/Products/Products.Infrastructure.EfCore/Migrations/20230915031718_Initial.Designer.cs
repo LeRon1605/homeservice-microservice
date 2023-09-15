@@ -12,7 +12,7 @@ using Products.Infrastructure.EfCore.Data;
 namespace Products.Infrastructure.EfCore.Migrations
 {
     [DbContext(typeof(ProductDbContext))]
-    [Migration("20230914080810_Initial")]
+    [Migration("20230915031718_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -49,6 +49,11 @@ namespace Products.Infrastructure.EfCore.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("ProductCode")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
                     b.Property<Guid>("ProductGroupId")
                         .HasColumnType("uniqueidentifier");
 
@@ -65,6 +70,9 @@ namespace Products.Infrastructure.EfCore.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BuyUnitId");
+
+                    b.HasIndex("ProductCode")
+                        .IsUnique();
 
                     b.HasIndex("ProductGroupId");
 
@@ -145,25 +153,33 @@ namespace Products.Infrastructure.EfCore.Migrations
 
             modelBuilder.Entity("Products.Domain.ProductAggregate.Product", b =>
                 {
-                    b.HasOne("Products.Domain.ProductUnitAggregate.ProductUnit", null)
+                    b.HasOne("Products.Domain.ProductUnitAggregate.ProductUnit", "BuyUnit")
                         .WithMany()
                         .HasForeignKey("BuyUnitId");
 
-                    b.HasOne("Products.Domain.ProductGroupAggregate.ProductGroup", null)
+                    b.HasOne("Products.Domain.ProductGroupAggregate.ProductGroup", "Group")
                         .WithMany()
                         .HasForeignKey("ProductGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Products.Domain.ProductTypeAggregate.ProductType", null)
+                    b.HasOne("Products.Domain.ProductTypeAggregate.ProductType", "Type")
                         .WithMany()
                         .HasForeignKey("ProductTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Products.Domain.ProductUnitAggregate.ProductUnit", null)
+                    b.HasOne("Products.Domain.ProductUnitAggregate.ProductUnit", "SellUnit")
                         .WithMany()
                         .HasForeignKey("SellUnitId");
+
+                    b.Navigation("BuyUnit");
+
+                    b.Navigation("Group");
+
+                    b.Navigation("SellUnit");
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("Products.Domain.ProductAggregate.ProductImage", b =>

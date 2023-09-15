@@ -8,11 +8,24 @@ public class Profiles : Profile
 {
     public Profiles()
     {
-        CreateMap<Product, ProductDto>()
-            .ForMember(dest => dest.Buy, options => options.MapFrom(src => new ProductPriceDto() { Price = src.BuyPrice, Unit = new ProductUnitDto() { Id = src.BuyUnitId, Name = src.BuyUnit.Name } }))
-            .ForMember(dest => dest.Sell, options => options.MapFrom(src => new ProductPriceDto() { Price = src.SellPrice, Unit = new ProductUnitDto() { Id = src.SellUnitId, Name = src.SellUnit.Name } }))
-            .ForMember(dest => dest.Group, options => options.MapFrom(src => new ProductGroupDto() { Id = src.ProductGroupId, Name = src.Group.Name }))
-            .ForMember(dest => dest.Type, options => options.MapFrom(src => new ProductTypeDto() { Id = src.ProductTypeId, Name = src.Type.Name }));
+        CreateMap<Product, GetProductDto>()
+            .ForMember(dest => dest.Group,
+                options => options.MapFrom(src => new ProductGroupDto()
+                    { Id = src.ProductGroupId, Name = src.Group.Name }))
+            .ForMember(dest => dest.Type,
+                options => options.MapFrom(src => new ProductTypeDto()
+                    { Id = src.ProductTypeId, Name = src.Type.Name }))
+            .ForMember(dest => dest.BuyUnit,
+                options => options.MapFrom(src =>
+                    src.BuyUnit == null
+                        ? null
+                        : new ProductUnitDto { Id = src.BuyUnitId!.Value, Name = src.BuyUnit.Name }))
+            .ForMember(dest => dest.SellUnit,
+                options => options.MapFrom(src =>
+                    src.SellUnit == null
+                        ? null
+                        : new ProductUnitDto { Id = src.SellUnitId!.Value, Name = src.SellUnit.Name }));
 
+        CreateMap<ProductImage, ProductImageDto>();
     } 
 }
