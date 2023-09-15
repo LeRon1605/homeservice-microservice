@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
+      <PackageReference Include="CloudinaryDotNet" Version="1.22.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.DynamicLinq" Version="7.3.4" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.10" />
