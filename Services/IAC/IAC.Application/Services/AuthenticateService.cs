@@ -1,4 +1,6 @@
-﻿using IAC.Application.Dtos.Authentication;
+﻿using AutoMapper;
+using IAC.Application.Dtos.Authentication;
+using IAC.Application.Dtos.Users;
 using IAC.Application.Services.Interfaces;
 using IAC.Domain.Entities;
 using IAC.Domain.Exceptions.Authentication;
@@ -13,14 +15,17 @@ public class AuthenticateService : IAuthenticateService
     private readonly IUserRepository _userRepository;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ITokenService _tokenService;
+    private readonly IMapper _mapper;
 
     public AuthenticateService(IUserRepository userRepository,
                                ITokenService tokenService,
-                               UserManager<ApplicationUser> userManager)
+                               UserManager<ApplicationUser> userManager,
+                               IMapper mapper)
     {
         _userRepository = userRepository;
         _tokenService = tokenService;
         _userManager = userManager;
+        _mapper = mapper;
     }
     public async Task SignUpAsync(SignUpDto signUpDto)
     {
@@ -75,11 +80,14 @@ public class AuthenticateService : IAuthenticateService
         var isValid = await _userManager.CheckPasswordAsync(user, logInDto.Password);
         if (!isValid)
             throw new InvalidPasswordException();
+        
+        var userDto = _mapper.Map<UserDto>(user);
 
         var tokenDto = new TokenDto
         {
             AccessToken = await _tokenService.GenerateAccessTokenAsync(user.Id),
-            RefreshToken = _tokenService.GenerateRefreshToken()
+            RefreshToken = _tokenService.GenerateRefreshToken(),
+            User = userDto
         };
         
         await _tokenService.AddRefreshTokenAsync(user.Id, tokenDto.RefreshToken);
