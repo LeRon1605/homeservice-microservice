@@ -20,4 +20,16 @@ public static class IServiceCollectionExtensions
 
         return services;
 	}
+	
+	public static IServiceCollection AddApplicationCors(this IServiceCollection services)
+	{
+		services.AddCors(o => o.AddPolicy("HomeService", builder =>
+		{
+			builder.WithOrigins("*")
+				.AllowAnyMethod()
+				.AllowAnyHeader();
+		}));
+
+		return services;
+	}
 }
