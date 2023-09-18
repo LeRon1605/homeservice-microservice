@@ -21,7 +21,6 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Infrastructure\BuildingBlocks.Infrastructure.csproj" />
       <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Presentation\BuildingBlocks.Presentation.csproj" />
-      <ProjectReference Include="..\..\Common\Common.csproj" />
       <ProjectReference Include="..\Customers.Application\Customers.Application.csproj" />
       <ProjectReference Include="..\Customers.Domain\Customers.Domain.csproj" />
       <ProjectReference Include="..\Customers.Infrastructure.EfCore\Customers.Infrastructure.EfCore.csproj" />

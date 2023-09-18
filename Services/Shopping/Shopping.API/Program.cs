@@ -1,10 +1,10 @@
 using BuildingBlocks.Application.Identity;
 using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.Infrastructure.Serilog;
+using BuildingBlocks.Presentation.Authentication;
 using BuildingBlocks.Presentation.Authorization;
 using BuildingBlocks.Presentation.EventBus;
 using BuildingBlocks.Presentation.Swagger;
-using Common.Authentication;
 using Serilog;
 using Shopping.API.Extensions;
 
