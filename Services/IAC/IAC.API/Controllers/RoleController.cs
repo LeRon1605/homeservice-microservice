@@ -1,6 +1,8 @@
 using IAC.Application.Dtos.Roles;
 using IAC.Application.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Polly;
 
 namespace IAC.API.Controllers;
 
@@ -14,7 +16,7 @@ public class RoleController : ControllerBase
     {
         _roleService = roleService;
     }
-
+    
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(RoleDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetRoleByIdAsync(string id)
