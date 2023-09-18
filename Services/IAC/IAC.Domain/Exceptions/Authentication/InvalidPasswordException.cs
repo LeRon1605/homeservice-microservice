@@ -1,8 +1,8 @@
-using BuildingBlocks.Domain.Exceptions;
+using BuildingBlocks.Domain.Exceptions.Common;
 
 namespace IAC.Domain.Exceptions.Authentication;
 
-public class InvalidPasswordException : CoreException
+public class InvalidPasswordException : InvalidInputException
 {
     public InvalidPasswordException() : base("Invalid password", ErrorCodes.InvalidPassword)
     {
