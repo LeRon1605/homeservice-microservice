@@ -9,6 +9,7 @@ using FluentValidation;
 using Products.Application.Dtos;
 using Products.Application.MappingProfiles;
 using BuildingBlocks.Presentation.Swagger;
+using Common.Authentication;
 using Products.API.Extensions;
 using Serilog;
 
@@ -25,6 +26,7 @@ builder.Services.AddSwagger("ProductService")
                 .AddDbContext(builder.Configuration)
                 .AddAutoMapper(typeof(Profiles))
                 .AddMediatR()
+                .AddHomeServiceAuthentication(builder.Configuration)
                 .AddDataSeeder()
                 .AddValidatorsFromAssembly(typeof(GetProductDto).Assembly)
                 .AddRepositories();
@@ -41,6 +43,7 @@ app.UseApplicationExceptionHandler();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

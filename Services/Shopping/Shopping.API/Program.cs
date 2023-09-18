@@ -4,6 +4,7 @@ using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Authorization;
 using BuildingBlocks.Presentation.EventBus;
 using BuildingBlocks.Presentation.Swagger;
+using Common.Authentication;
 using Serilog;
 using Shopping.API.Extensions;
 
@@ -17,6 +18,7 @@ builder.Services.AddSwagger("ShoppingService")
 				.AddRepositories()
 				.AddMapper()
 				.AddCqrs()
+				.AddHomeServiceAuthentication(builder.Configuration)
 				.AddHttpContextAccessor();
 
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
@@ -32,6 +34,8 @@ var eventBus = app.Services.GetRequiredService<IEventBus>();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseAuthentication();
 
 app.MapControllers();
 

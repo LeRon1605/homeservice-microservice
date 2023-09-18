@@ -1,20 +1,18 @@
 ﻿using System.Security.Claims;
 using BuildingBlocks.Application.Identity;
 using Grpc.Core;
-using IAC.API.Proto;
+using IAC.Application.Grpc.Proto;
 using IAC.Domain.Entities;
-using IAC.Domain.Exceptions.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
-namespace IAC.API.Grpc;
+namespace IAC.Application.Grpc.Services;
 
-public class AuthService : AuthProvider.AuthProviderBase
+public class AuthGrpcService : AuthProvider.AuthProviderBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ICurrentUser _currentUser;
 
-    public AuthService(
+    public AuthGrpcService(
         UserManager<ApplicationUser> userManager,
         ICurrentUser currentUser)
     {
@@ -24,13 +22,17 @@ public class AuthService : AuthProvider.AuthProviderBase
 
     public override async Task GetClaim(Empty empty, IServerStreamWriter<ClaimResponse> responseStream, ServerCallContext context)
     {
-        var us1er = context.GetHttpContext().User.Identity.IsAuthenticated;
-        var userId = context.GetHttpContext().User.Identity.Name;
+        if (!_currentUser.IsAuthenticated)
+        {
+            throw new RpcException(new Status(StatusCode.Unauthenticated, "User is not authenticated"));    
+        }
+        
+        var userId = _currentUser.Id;
 
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
         {
-            throw new UserNotFoundException(userId);
+            throw new RpcException(new Status(StatusCode.NotFound, "User not found!"));
         }
 
         var claims = await GetUserClaims(user);

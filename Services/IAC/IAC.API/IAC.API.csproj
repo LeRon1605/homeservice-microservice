@@ -25,9 +25,6 @@
       <ProjectReference Include="..\IAC.Infrastructure.EfCore\IAC.Infrastructure.EfCore.csproj" />
     </ItemGroup>
 
-	<ItemGroup>
-		<Protobuf Include="Proto\Auth.proto" GrpcServices="Server" />
-	</ItemGroup>
 
 
     <ItemGroup>
@@ -35,6 +32,8 @@
         <Link>.dockerignore</Link>
       </Content>
     </ItemGroup>
+
+
 
 
 </Project>

@@ -1,9 +1,8 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Shopping.Application.Queries;
 
-namespace Shopping_.API.Controllers
+namespace Shopping.API.Controllers
 {
 	[Route("api/orders")]
 	[ApiController]
@@ -19,6 +18,7 @@ namespace Shopping_.API.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetOrdersAsync([FromQuery] OrderFilterAndPagingQuery query)
 		{
+			var user = HttpContext.User;
 			var orders = await _mediator.Send(query);
 			return Ok(orders);
 		}

@@ -58,7 +58,7 @@ public static class DependencyInjectionExtension
 
                     ValidIssuer = configuration["JWTSettings:ValidIssuer"],
                     ValidAudience = configuration["JWTSettings:ValidAudience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("JWTSettings:SecurityKey")),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTSettings:SecurityKey"])),
                 };
             });
 
@@ -77,7 +77,6 @@ public static class DependencyInjectionExtension
     public static IServiceCollection AddIdentity(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
     {
         services.AddScoped<IDataSeeder, IdentityDataSeeder>();
-        // services.AddScoped<IDataSeeder, IdentityDataSeeder>();
         
         services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<IacDbContext>()
