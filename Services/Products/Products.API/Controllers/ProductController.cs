@@ -30,6 +30,13 @@ public class ProductController : ControllerBase
         return Ok(products);
     } 
     
+    [HttpPost]
+    public async Task<IActionResult> CreateProductAsync([FromBody] ProductCreateDto productCreateDto)
+    {
+        var product = await _mediator.Send(new AddProductCommand(productCreateDto));
+        return Ok(product);
+        // return CreatedAtAction(nameof(GetProductbyId), new { id = product.Id }, product);
+    } 
     [HttpGet("groups")]
     [ProducesResponseType(typeof(IEnumerable<ProductGroupDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProductGroupsAsync([FromQuery] GetAllProductGroupQuery query)
@@ -46,14 +53,6 @@ public class ProductController : ControllerBase
         return Ok(productTypes);
     }
     
-    [HttpPost]
-    public async Task<IActionResult> CreateProductAsync([FromBody] ProductCreateDto productCreateDto)
-    {
-        var product = await _mediator.Send(new AddProductCommand(productCreateDto));
-        return Ok(product);
-        // return CreatedAtAction(nameof(GetProductbyId), new { id = product.Id }, product);
-    } 
-
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> DeleteProductAsync(Guid id)

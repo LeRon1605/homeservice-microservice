@@ -18,6 +18,9 @@
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__DefaultConnection=Server=db,1433;Database=HomeCare.ProductDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
       - GrpcUrls__Identity=http://iac.api:3000
+      - Cloudinary__CloudName=dboijruhe
+      - Cloudinary__ApiKey=431114562135728
+      - Cloudinary__ApiSecret=tmDw4SrmffqZp2hA2tiDDZgemTU
     restart: always
     depends_on:
       - db

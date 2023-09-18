@@ -21,5 +21,5 @@ public class PagingParameters
         set => _pageSize = value is >= 1 and <= MaxPageSize ? value : DefaultPageSize;
     }
     
-    public string Search { get; set; } = "";
+    public string? Search { get; set; } = "";
 }
