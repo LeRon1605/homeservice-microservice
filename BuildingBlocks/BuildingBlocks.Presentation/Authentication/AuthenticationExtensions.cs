@@ -1,8 +1,8 @@
-using Commons.Grpc.Proto;
+using BuildingBlocks.Presentation.Grpc.Proto;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Common.Authentication;
+namespace BuildingBlocks.Presentation.Authentication;
 
 public static class AuthenticationExtensions
 {

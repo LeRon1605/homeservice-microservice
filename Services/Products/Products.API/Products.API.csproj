@@ -20,7 +20,6 @@
       <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Application\BuildingBlocks.Application.csproj" />
       <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Infrastructure\BuildingBlocks.Infrastructure.csproj" />
       <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Presentation\BuildingBlocks.Presentation.csproj" />
-      <ProjectReference Include="..\..\Common\Common.csproj" />
       <ProjectReference Include="..\Products.Application\Products.Application.csproj" />
       <ProjectReference Include="..\Products.Infrastructure.EfCore\Products.Infrastructure.EfCore.csproj" />
     </ItemGroup>

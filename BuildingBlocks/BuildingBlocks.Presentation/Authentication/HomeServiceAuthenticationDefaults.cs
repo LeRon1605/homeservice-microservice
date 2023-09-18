@@ -1,4 +1,4 @@
-namespace Common.Authentication;
+namespace BuildingBlocks.Presentation.Authentication;
 
 public static class HomeServiceAuthenticationDefaults
 {

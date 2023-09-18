@@ -1,12 +1,12 @@
 using System.Security.Claims;
 using System.Text.Encodings.Web;
-using Commons.Grpc.Proto;
+using BuildingBlocks.Presentation.Grpc.Proto;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Common.Authentication;
+namespace BuildingBlocks.Presentation.Authentication;
 
 public class HomeServiceAuthenticationHandler : AuthenticationHandler<HomeServiceAuthenticationOption>
 {

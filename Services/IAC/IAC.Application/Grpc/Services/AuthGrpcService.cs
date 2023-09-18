@@ -19,7 +19,7 @@ public class AuthGrpcService : AuthProvider.AuthProviderBase
         _userManager = userManager;
         _currentUser = currentUser;
     }
-
+    
     public override async Task GetClaim(Empty empty, IServerStreamWriter<ClaimResponse> responseStream, ServerCallContext context)
     {
         if (!_currentUser.IsAuthenticated)
@@ -56,6 +56,7 @@ public class AuthGrpcService : AuthProvider.AuthProviderBase
             new(ClaimTypes.Email, user.Email),
         };
 
+        // Todo: caching
         foreach (var role in await _userManager.GetRolesAsync(user))
         {
             claims.Add(new(ClaimTypes.Role, role));
