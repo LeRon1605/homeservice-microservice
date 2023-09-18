@@ -1,7 +1,9 @@
 ﻿using System.Reflection;
+using BuildingBlocks.Application.Seeder;
 using BuildingBlocks.Domain.Data;
 using BuildingBlocks.Infrastructure.EfCore.UnitOfWorks;
 using Customers.Application;
+using Customers.Application.Seeders;
 using Customers.Domain.CustomerAggregate;
 using Customers.Infrastructure.EfCore;
 using Customers.Infrastructure.EfCore.Repositories;
@@ -46,4 +48,11 @@ public static class IServiceCollectionExtension
 
         return services;
     }
+    
+    public static IServiceCollection AddSeeder(this IServiceCollection services)
+	{
+		services.AddScoped<IDataSeeder, CustomerSeeder>();
+		
+		return services;
+	}
 }

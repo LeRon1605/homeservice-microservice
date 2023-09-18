@@ -49,4 +49,9 @@ public class EfCoreReadOnlyRepository<TDbContext, TEntity> : IReadOnlyRepository
         var data = await query.ToListAsync();
         return (data, count); 
     }
+
+    public async Task<bool> AnyAsync(ISpecification<TEntity> specification)
+    {
+        return await GetQuery<TEntity>.From(DbSet, specification).AnyAsync();
+    }
 }

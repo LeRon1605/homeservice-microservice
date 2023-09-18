@@ -3,7 +3,7 @@ using Customers.Domain.CustomerAggregate;
 
 namespace Customers.Infrastructure.EfCore.Repositories;
 
-public class ReadOnlyCustomerRepository : EfCoreReadOnlyRepository<CustomerDbContext,Customer>, IReadOnlyCustomerRepository
+public class ReadOnlyCustomerRepository : EfCoreReadOnlyRepository<CustomerDbContext,Customer>
 {
     public ReadOnlyCustomerRepository(CustomerDbContext dbContext) : base(dbContext)
     {

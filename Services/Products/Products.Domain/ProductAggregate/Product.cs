@@ -1,6 +1,9 @@
+using System.Net.Mime;
 using Ardalis.GuardClauses;
+using BuildingBlocks.Domain.Data;
 using BuildingBlocks.Domain.Models;
 using Products.Domain.ProductAggregate.Exceptions;
+using Products.Domain.ProductAggregate.Specifications;
 using Products.Domain.ProductGroupAggregate;
 using Products.Domain.ProductTypeAggregate;
 using Products.Domain.ProductUnitAggregate;
@@ -82,5 +85,32 @@ public class Product : AggregateRoot
     private bool HasImage(string url)
     {
         return Images.Any(x => x.Url == url);
+    }
+
+    public static async Task<Product> InitAsync(
+            string productCode,
+            string name,
+            Guid productTypeId, 
+            Guid productGroupId,
+            string? description ,
+            bool isObsolete ,
+            Guid? buyUnitId,
+            decimal? buyPrice,
+            Guid? sellUnitId,
+            decimal? sellPrice,
+            string[] urls,
+            IRepository<Product> productRepository)
+    {
+        if (await productRepository.AnyAsync(new ProductCodeSpecification(productCode)))
+            throw new DuplicateProductCodeException("Code is existing");
+        var product = new Product(productCode, name, productTypeId, productGroupId, description, isObsolete, buyUnitId,
+            buyPrice, sellUnitId, sellPrice);
+        
+        foreach (var url in urls)
+        {
+            product.AddImage(url);
+        }
+
+        return product;
     }
 }

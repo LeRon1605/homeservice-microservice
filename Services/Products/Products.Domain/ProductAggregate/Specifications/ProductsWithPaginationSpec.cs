@@ -32,6 +32,7 @@ public class ProductsWithPaginationSpec : Specification<Product>
         
         ApplyPaging(pageIndex, pageSize);
         AddInclude(x => x.Group);
+        AddInclude(x => x.Images);
         AddInclude(x => x.BuyUnit);
         AddInclude(x => x.SellUnit);
         AddInclude(x => x.Type);

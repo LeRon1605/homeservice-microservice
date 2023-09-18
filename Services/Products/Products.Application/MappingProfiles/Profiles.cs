@@ -31,5 +31,7 @@ public class Profiles : Profile
         CreateMap<ProductGroup, ProductGroupDto>();
 
         CreateMap<ProductType, ProductTypeDto>();
+
+        CreateMap<ProductImage, ProductImageDto>();
     } 
 }
