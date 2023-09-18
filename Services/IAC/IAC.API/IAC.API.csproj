@@ -9,12 +9,14 @@
 
     <ItemGroup>
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.9"/>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
+        <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.57.0" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.9" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -23,13 +25,16 @@
       <ProjectReference Include="..\IAC.Infrastructure.EfCore\IAC.Infrastructure.EfCore.csproj" />
     </ItemGroup>
 
+	<ItemGroup>
+		<Protobuf Include="Proto\Auth.proto" GrpcServices="Server" />
+	</ItemGroup>
+
 
     <ItemGroup>
       <Content Include="..\..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
     </ItemGroup>
-
 
 
 </Project>
