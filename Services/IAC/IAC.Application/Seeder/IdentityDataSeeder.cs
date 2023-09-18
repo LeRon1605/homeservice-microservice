@@ -68,7 +68,7 @@ public class IdentityDataSeeder : IDataSeeder
             EmailConfirmed = true
         };
 
-        await _userManager.CreateAsync(user, "admin123");
+        await _userManager.CreateAsync(user, "Admin@123");
         await _userManager.AddToRoleAsync(user, AppRole.Admin);
     }
 }

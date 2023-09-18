@@ -37,7 +37,7 @@ public class AuthenticateService : IAuthenticateService
         {
             FirstName = signUpDto.FirstName,
             LastName = signUpDto.LastName,
-            UserName = signUpDto.Email,
+            UserName = signUpDto.PhoneNumber,
             PhoneNumber = signUpDto.PhoneNumber,
             Email = signUpDto.Email,
             PasswordHash = signUpDto.Password
@@ -46,7 +46,7 @@ public class AuthenticateService : IAuthenticateService
 
         var result = await _userManager.CreateAsync(user, signUpDto.Password);
         if (!result.Succeeded)
-            throw new UserCreateFailException("Can not create user");
+            throw new UserCreateFailException(result.Errors.First().Description);
     }
 
     public async Task<TokenDto> RefreshTokenAsync(RefreshTokenDto refreshTokenDto)
