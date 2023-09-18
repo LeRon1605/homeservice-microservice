@@ -24,4 +24,13 @@ public class CustomerController : ControllerBase
         var customers = await _mediator.Send(query);
         return Ok(customers);
     }
+    
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(CustomerDto), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetCustomerAsync([FromRoute] Guid id)
+    {
+        var customer = await _mediator.Send(new CustomerByIdQuery(id));
+        return Ok(customer);
+    }
+    
 }
