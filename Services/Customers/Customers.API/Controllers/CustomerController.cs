@@ -34,6 +34,13 @@ public class CustomerController : ControllerBase
         return Ok(customer);
     }
     
+    [HttpPost]
+    public async Task<IActionResult> CreateCustomerAsync([FromBody] CustomerCreateDto customerCreateDto)
+    {
+        var customer = await _mediator.Send(new AddCustomerCommand(customerCreateDto));
+        return Ok(customer);
+    }
+    
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> DeleteCustomerAsync([FromRoute] Guid id)
@@ -41,4 +48,6 @@ public class CustomerController : ControllerBase
         await _mediator.Send(new DeleteCustomerCommand(id));
         return NoContent();
     }
+    
+    
 }
