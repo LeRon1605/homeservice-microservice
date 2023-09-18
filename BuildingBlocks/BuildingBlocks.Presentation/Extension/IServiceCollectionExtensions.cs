@@ -15,6 +15,21 @@ public static class IServiceCollectionExtensions
 
 	public static IServiceCollection AddService(this IServiceCollection services)
 	{
-		return services.AddScoped<ICurrentUser, CurrentUser>();
+		services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUser, CurrentUser>();
+
+        return services;
+	}
+	
+	public static IServiceCollection AddApplicationCors(this IServiceCollection services)
+	{
+		services.AddCors(o => o.AddPolicy("HomeService", builder =>
+		{
+			builder.WithOrigins("*")
+				.AllowAnyMethod()
+				.AllowAnyHeader();
+		}));
+
+		return services;
 	}
 }

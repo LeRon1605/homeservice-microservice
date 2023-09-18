@@ -3,7 +3,7 @@ using BuildingBlocks.Domain.Specification;
 
 namespace Customers.Domain.CustomerAggregate.Specifications;
 
-public class CustomerFilterSpecification : Specification<Customer>, ISpecification<Customer>
+public class CustomerFilterSpecification : Specification<Customer>
 {
     private readonly string? _search;
     
@@ -16,7 +16,7 @@ public class CustomerFilterSpecification : Specification<Customer>, ISpecificati
     public override Expression<Func<Customer, bool>> ToExpression()
     {
         return string.IsNullOrWhiteSpace(_search)
-            ? p => true
-            : p => p.CustomerName.ToLower().Contains(_search.ToLower());
+                ? p => true
+                : p => p.Name.ToLower().Contains(_search.ToLower());
     }
 }

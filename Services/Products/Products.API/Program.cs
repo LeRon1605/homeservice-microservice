@@ -1,6 +1,7 @@
 using BuildingBlocks.Application.Identity;
 using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Authorization;
+using BuildingBlocks.Presentation.Cloudinary;
 using BuildingBlocks.Presentation.DataSeeder;
 using BuildingBlocks.Presentation.EventBus;
 using BuildingBlocks.Presentation.ExceptionHandlers;
@@ -18,6 +19,7 @@ builder.Host.UseSerilog();
 
 builder.Services.AddControllers();
 builder.Services.AddSwagger("ProductService")
+                .AddCloudinary(builder.Configuration)
                 .AddApplicationExceptionHandler()
                 .AddEventBus(builder.Configuration)
                 .AddDbContext(builder.Configuration)

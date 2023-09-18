@@ -8,7 +8,7 @@ using Customers.Domain.CustomerAggregate.Specifications;
 
 namespace Customers.Application.Queries;
 
-public class CustomerFilterAndPagingQueryHandler : IQueryHandler<CustomerFilterAndPagingQuery, PagedResult<CustomerFilterAndPagingDto>>
+public class CustomerFilterAndPagingQueryHandler : IQueryHandler<CustomerFilterAndPagingQuery, PagedResult<CustomerDto>>
 {
     private readonly IReadOnlyRepository<Customer> _customerRepository;
     private readonly IMapper _mapper;
@@ -20,14 +20,14 @@ public class CustomerFilterAndPagingQueryHandler : IQueryHandler<CustomerFilterA
         _mapper = mapper;
     }
 
-    public async Task<PagedResult<CustomerFilterAndPagingDto>> Handle(CustomerFilterAndPagingQuery request,
+    public async Task<PagedResult<CustomerDto>> Handle(CustomerFilterAndPagingQuery request,
         CancellationToken cancellationToken)
     {
         var getCustomerSpecification = new CustomerFilterSpecification(request.Search, request.PageIndex, request.PageSize);
         
         var (customers, totalCount) = await _customerRepository.FindWithTotalCountAsync(getCustomerSpecification);
-        var customerFilterAndPagingDto = _mapper.Map<IEnumerable<CustomerFilterAndPagingDto>>(customers);
+        var customerFilterAndPagingDto = _mapper.Map<IEnumerable<CustomerDto>>(customers);
         
-        return new PagedResult<CustomerFilterAndPagingDto>(customerFilterAndPagingDto, totalCount, request.PageIndex, request.PageSize);
+        return new PagedResult<CustomerDto>(customerFilterAndPagingDto, totalCount, request.PageIndex, request.PageSize);
     }
 }

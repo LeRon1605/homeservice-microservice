@@ -1,4 +1,5 @@
 using BuildingBlocks.Infrastructure.Serilog;
+using BuildingBlocks.Presentation.Extension;
 using BuildingBlocks.Presentation.Swagger;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
@@ -13,11 +14,13 @@ builder.Services.AddControllers();
 builder.Services.AddSwagger("HomeAppService");
 builder.Services.AddOcelot();
 builder.Services.AddSwaggerForOcelot(builder.Configuration);
+builder.Services.AddApplicationCors();
 
 builder.Host.UseSerilog();
 
 var app = builder.Build();
 
+app.UseCors("HomeService");
 app.UseSwagger();
 app.UseSwaggerForOcelotUI().UseOcelot();
 

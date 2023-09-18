@@ -4,6 +4,7 @@ using BuildingBlocks.Domain.Data;
 using Microsoft.Extensions.Logging;
 using Products.Application.Dtos;
 using Products.Domain.ProductAggregate;
+using Products.Domain.ProductAggregate.Specifications;
 using Products.Domain.ProductAggregate.Exceptions;
 using Products.Domain.ProductAggregate.Specifications;
 using Products.Domain.ProductGroupAggregate;

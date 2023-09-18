@@ -3,7 +3,6 @@ using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Application.Dtos;
 namespace Customers.Application.Queries;
 
-public class CustomerFilterAndPagingQuery : PagingParameters, IQuery<PagedResult<CustomerFilterAndPagingDto>>
+public class CustomerFilterAndPagingQuery : PagingParameters, IQuery<PagedResult<CustomerDto>>
 {
-    
 }

@@ -22,12 +22,12 @@ public class ProductsWithPaginationSpec : Specification<Product>
                                       int pageIndex, 
                                       int pageSize, 
                                       bool? isObsolete, 
-                                      string? groupId, 
-                                      string? typeId)
+                                      Guid? groupId, 
+                                      Guid? typeId)
     {
         _search = search;
-        _groupId = groupId;
-        _typeId = typeId;
+        _groupId = groupId.ToString();
+        _typeId = typeId.ToString();
         _isObsolete = isObsolete;
         
         ApplyPaging(pageIndex, pageSize);
