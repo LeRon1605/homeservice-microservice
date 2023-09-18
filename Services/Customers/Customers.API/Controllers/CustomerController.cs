@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.Application.Dtos;
+using Customers.Application.Commands;
 using Customers.Application.Dtos;
 using Customers.Application.Queries;
 using MediatR;
@@ -25,7 +26,7 @@ public class CustomerController : ControllerBase
         return Ok(customers);
     }
     
-    [HttpGet("{id}")]
+    [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(CustomerDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCustomerAsync([FromRoute] Guid id)
     {
@@ -33,4 +34,11 @@ public class CustomerController : ControllerBase
         return Ok(customer);
     }
     
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DeleteCustomerAsync([FromRoute] Guid id)
+    {
+        await _mediator.Send(new DeleteCustomerCommand(id));
+        return NoContent();
+    }
 }
