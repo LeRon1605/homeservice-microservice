@@ -9,9 +9,13 @@ namespace IAC.API.Controllers;
 public class AuthenticateController : ControllerBase
 {
 	private readonly IAuthenticateService _authenticateService;
-	public AuthenticateController(IAuthenticateService authenticateService)
+	private readonly ITokenService _tokenService;
+	public AuthenticateController(
+		IAuthenticateService authenticateService,
+		ITokenService tokenService)
 	{
 		_authenticateService = authenticateService;
+		_tokenService = tokenService;
 	}
 
 	[HttpPost("sign-up")]
@@ -33,5 +37,12 @@ public class AuthenticateController : ControllerBase
 	{
 		var result = await _authenticateService.RefreshTokenAsync(refreshTokenDto);
 		return Ok(result);
+	}
+	
+	[HttpPost("refresh-token/revoke")]
+	public async Task<IActionResult> RevokeRefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
+	{
+		await _tokenService.RevokeRefreshTokenAsync(refreshTokenDto.RefreshToken);
+		return Ok();
 	}
 }

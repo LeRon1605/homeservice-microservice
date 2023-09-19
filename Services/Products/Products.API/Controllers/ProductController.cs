@@ -8,6 +8,7 @@ using Products.Application.Commands.ProductCommands.UploadProductImage;
 using Products.Application.Dtos;
 using Products.Application.Queries.ProductQuery.GetAllProductGroup;
 using Products.Application.Queries.ProductQuery.GetAllProductType;
+using Products.Application.Queries.ProductQuery.GetProductById;
 using Products.Application.Queries.ProductQuery.GetProductsWithPagination;
 
 namespace Products.API.Controllers;
@@ -31,18 +32,18 @@ public class ProductController : ControllerBase
         return Ok(products);
     }
 
-    // [HttpGet("id:guid")]
-    // public async Task<IActionResult> GetProductById(Guid id)
-    // {
-    //     var product = await _mediator.Send()
-    // }
-    //
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetProductById(Guid id)
+    {
+        var product = await _mediator.Send(new GetProductByIdQuery(id));
+        return Ok(product);
+    }
+    
     [HttpPost]
     public async Task<IActionResult> CreateProductAsync([FromBody] ProductCreateDto productCreateDto)
     {
         var product = await _mediator.Send(new AddProductCommand(productCreateDto));
-        return Ok(product);
-        // return CreatedAtAction(nameof(GetProductbyId), new { id = product.Id }, product);
+        return CreatedAtAction(nameof(GetProductById), new { id = product.Id }, product);
     } 
     
     [HttpPut("{id:guid}")]
