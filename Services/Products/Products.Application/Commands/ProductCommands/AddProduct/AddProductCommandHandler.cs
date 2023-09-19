@@ -71,7 +71,7 @@ public class AddProductCommandHandler : ICommandHandler<AddProductCommand, GetPr
 
     private async Task CheckProductTypeExistAsync(Guid id)
     {
-        if (await _productTypeRepository.AnyAsync(id))
+        if (!await _productTypeRepository.AnyAsync(id))
         {
             throw new ProductTypeNotFoundException(id);
         }
