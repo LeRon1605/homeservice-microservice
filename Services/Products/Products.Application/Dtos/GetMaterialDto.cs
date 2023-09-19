@@ -8,16 +8,13 @@ public class GetMaterialDto
     
     public string MaterialCode { get; set; } = null!;
     
-    public Guid ProductTypeId { get; set; }
+    public ProductTypeDto Type { get; set; } = null!;
     
-    public Guid? SellUnitId { get; set; }
+    public ProductUnitDto? SellUnit { get; set; }
     
     public decimal? SellPrice { get; set; }
     
     public decimal? Cost { get; set; }
     
     public bool IsObsolete { get; set; }
-    
-    public ProductTypeDto Type { get; set; }
-    public ProductUnitDto? SellUnit { get; set; }
 }

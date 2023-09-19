@@ -6,9 +6,6 @@ namespace Products.Application.Queries.MaterialQuery.GetMaterialWithPagination;
 
 public class GetMaterialsWithPaginationQuery : PagingParameters ,IQuery<PagedResult<GetMaterialDto>>
 {
-    public string? Search { get; set; }
-    public int PageIndex { get; set; }
-    public int PageSize { get; set; }
     public bool? IsObsolete { get; set; }
     public Guid? TypeId { get; set; }
     

@@ -1,5 +1,4 @@
 using BuildingBlocks.Infrastructure.EfCore.Repositories;
-using Products.Domain.MaterialAggregate;
 using Products.Domain.ProductUnitAggregate;
 using Products.Infrastructure.EfCore.Data;
 

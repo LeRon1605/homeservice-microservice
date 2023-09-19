@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using BuildingBlocks.Domain.Specification;
+﻿using BuildingBlocks.Domain.Specification;
 
 namespace Customers.Domain.CustomerAggregate.Specifications;
 

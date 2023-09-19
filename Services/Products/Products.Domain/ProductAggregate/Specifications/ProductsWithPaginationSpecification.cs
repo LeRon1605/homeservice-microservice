@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using BuildingBlocks.Domain.Specification;
 
 namespace Products.Domain.ProductAggregate.Specifications;

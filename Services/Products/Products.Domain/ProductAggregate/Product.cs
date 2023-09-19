@@ -1,4 +1,3 @@
-using System.Net.Mime;
 using Ardalis.GuardClauses;
 using BuildingBlocks.Domain.Data;
 using BuildingBlocks.Domain.Models;

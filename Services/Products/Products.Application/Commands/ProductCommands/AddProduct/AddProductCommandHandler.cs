@@ -6,11 +6,6 @@ using Products.Application.Commands.ProductCommands.Validator;
 using Products.Application.Dtos;
 using Products.Domain.ProductAggregate;
 using Products.Domain.ProductAggregate.Specifications;
-using Products.Domain.ProductAggregate.Exceptions;
-using Products.Domain.ProductAggregate.Specifications;
-using Products.Domain.ProductGroupAggregate;
-using Products.Domain.ProductTypeAggregate;
-using Products.Domain.ProductUnitAggregate;
 
 namespace Products.Application.Commands.ProductCommands.AddProduct;
 

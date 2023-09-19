@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using BuildingBlocks.Domain.Specification;
 
 namespace Products.Domain.MaterialAggregate.Specifications;
@@ -26,5 +25,6 @@ public class MaterialsWithPaginationSpecification : Specification<Material>
         
         ApplyPaging(pageIndex,pageSize);
         AddInclude(x => x.Type);
+        AddInclude(x => x.SellUnit);
     }
 }

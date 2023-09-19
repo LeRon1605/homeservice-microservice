@@ -23,6 +23,7 @@ public static class RepositoryExtension
         services.AddScoped<IRepository<ProductGroup>, ProductGroupRepository>();
         services.AddScoped<IRepository<ProductUnit>, ProductUnitRepository>();
         services.AddScoped<IRepository<ProductType>, ProductTypeRepository>();
+        services.AddScoped<IRepository<Material>, MaterialRepository>();
         
         services.AddScoped<IUnitOfWork, EfCoreUnitOfWork<ProductDbContext>>();
         

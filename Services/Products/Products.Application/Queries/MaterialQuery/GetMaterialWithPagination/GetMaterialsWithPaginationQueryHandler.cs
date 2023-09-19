@@ -5,7 +5,6 @@ using BuildingBlocks.Domain.Data;
 using Products.Application.Dtos;
 using Products.Domain.MaterialAggregate;
 using Products.Domain.MaterialAggregate.Specifications;
-using Products.Domain.ProductAggregate;
 
 namespace Products.Application.Queries.MaterialQuery.GetMaterialWithPagination;
 

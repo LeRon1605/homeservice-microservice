@@ -1,9 +1,8 @@
-﻿using System.Linq.Expressions;
-using BuildingBlocks.Domain.Specification;
+﻿using BuildingBlocks.Domain.Specification;
 
 namespace Shopping.Domain.ShoppingAggregate.Specifications;
 
-public class OrderFilterSpecification: Specification<Order>, ISpecification<Order>
+public class OrderFilterSpecification: Specification<Order>
 {
     public OrderFilterSpecification(string? search, int pageIndex, int pageSize)
     {
