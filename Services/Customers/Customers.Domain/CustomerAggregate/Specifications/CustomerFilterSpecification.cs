@@ -5,18 +5,14 @@ namespace Customers.Domain.CustomerAggregate.Specifications;
 
 public class CustomerFilterSpecification : Specification<Customer>
 {
-    private readonly string? _search;
-    
     public CustomerFilterSpecification(string? search, int pageIndex, int pageSize)
     {
-        _search = search;
         ApplyPaging(pageIndex, pageSize);
-    }
 
-    public override Expression<Func<Customer, bool>> ToExpression()
-    {
-        return string.IsNullOrWhiteSpace(_search)
-                ? p => true
-                : p => p.Name.ToLower().Contains(_search.ToLower());
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            AddSearchTerm(search);
+            AddSearchField(nameof(Customer.Name));
+        }
     }
 }

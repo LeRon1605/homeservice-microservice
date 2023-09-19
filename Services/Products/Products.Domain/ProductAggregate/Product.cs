@@ -101,7 +101,7 @@ public class Product : AggregateRoot
             string[] urls,
             IRepository<Product> productRepository)
     {
-        if (await productRepository.AnyAsync(new ProductCodeSpecification(productCode)))
+        if (await productRepository.AnyAsync(new IsProductCodeExistsSpecification(productCode)))
             throw new DuplicateProductCodeException("Code is existing");
         var product = new Product(productCode, name, productTypeId, productGroupId, description, isObsolete, buyUnitId,
             buyPrice, sellUnitId, sellPrice);
@@ -150,7 +150,7 @@ public class Product : AggregateRoot
     {
         if (ProductCode != productCode)
         {
-            if (await productRepository.AnyAsync(new ProductCodeSpecification(productCode)))
+            if (await productRepository.AnyAsync(new IsProductCodeExistsSpecification(productCode)))
                 throw new DuplicateProductCodeException("Code is existing");
             ProductCode = productCode;
         }
