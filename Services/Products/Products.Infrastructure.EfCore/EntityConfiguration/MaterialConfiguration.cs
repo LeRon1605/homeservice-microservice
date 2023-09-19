@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Products.Domain.Constant;
 using Products.Domain.MaterialAggregate;
 using Products.Domain.ProductTypeAggregate;
+using Products.Domain.ProductUnitAggregate;
 
 namespace Products.Infrastructure.EfCore.EntityConfiguration;
 
@@ -30,9 +31,18 @@ public class MaterialConfiguration : IEntityTypeConfiguration<Material>
                .HasPrecision(20, 2)
                .IsRequired(false);
         
+        builder.Property(x => x.Cost)
+                .HasPrecision(20, 2)
+                .IsRequired(false);
+        
         builder.HasOne<ProductType>(x => x.Type)
                .WithMany()
                .HasForeignKey(x => x.ProductTypeId);
+        
+        builder.HasOne<ProductUnit>(x => x.SellUnit)
+                .WithMany()
+                .HasForeignKey(x => x.SellUnitId)
+                .IsRequired(false);
 
     }
 }

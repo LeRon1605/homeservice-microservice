@@ -6,9 +6,9 @@ public class GetMaterialDto
     
     public string Name { get; set; } = null!;
     
-    public Guid ProductTypeId { get; set; }
+    public ProductTypeDto ProductType { get; set; } = null!;
     
-    public Guid? SellUnitId { get; set; }
+    public ProductUnitDto? SellUnit { get; set; }
     
     public decimal? SellPrice { get; set; }
     

@@ -11,7 +11,7 @@ public class Material : AggregateRoot
     public string Name { get; private set; }
     
     public Guid ProductTypeId { get; private set; }
-    public ProductType Type { get; private set; }
+    public ProductType? Type { get; private set; }
     
     public Guid? SellUnitId { get; private set; }
     public ProductUnit? SellUnit { get; private set; }

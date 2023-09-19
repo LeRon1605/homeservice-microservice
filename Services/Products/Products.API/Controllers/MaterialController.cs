@@ -1,6 +1,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Products.Application.Commands.MaterialCommands.AddMaterial;
 using Products.Application.Dtos;
+using Products.Domain.MaterialAggregate;
 
 namespace Products.API.Controllers;
 
@@ -14,5 +16,15 @@ public class MaterialController : ControllerBase
     {
         _mediator = mediator;
     }
+    
+    [HttpPost]
+    public async Task<ActionResult<GetMaterialDto>> AddMaterial(AddMaterialCommand command)
+    {
+        var material = await _mediator.Send(command);
+        return Ok(material);
+        // return CreatedAtAction(nameof("GetMaterialById"), new {id = material.Id}, material);
+    }
+    
+    
     
 }
