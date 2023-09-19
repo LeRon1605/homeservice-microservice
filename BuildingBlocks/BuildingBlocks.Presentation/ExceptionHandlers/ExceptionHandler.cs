@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using BuildingBlocks.Domain.Exceptions;
+using BuildingBlocks.Domain.Exceptions.Common;
 using BuildingBlocks.Domain.Exceptions.Resource;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
@@ -61,6 +62,8 @@ public class ExceptionHandler : IExceptionHandler
                 return StatusCodes.Status409Conflict;
             case ResourceInvalidOperationException:
             case ResourceCreateFailException:
+                return StatusCodes.Status400BadRequest;
+            case InvalidInputException:
                 return StatusCodes.Status400BadRequest;
             default:
                 return StatusCodes.Status500InternalServerError;

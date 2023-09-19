@@ -10,6 +10,7 @@ public class ErrorCodes
     public const string ResourceCreateFail = "Resource:105";
     
     public const string InvalidArgument = "Argument:100";
+    public const string InvalidInput = "Input:100";
     
     // System
     public const string SystemError = "500";

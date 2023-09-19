@@ -1,5 +1,6 @@
 using BuildingBlocks.Application.Identity;
 using BuildingBlocks.Infrastructure.Serilog;
+using BuildingBlocks.Presentation.Authentication;
 using BuildingBlocks.Presentation.Authorization;
 using BuildingBlocks.Presentation.Cloudinary;
 using BuildingBlocks.Presentation.DataSeeder;
@@ -25,6 +26,7 @@ builder.Services.AddSwagger("ProductService")
                 .AddDbContext(builder.Configuration)
                 .AddAutoMapper(typeof(Profiles))
                 .AddMediatR()
+                .AddHomeServiceAuthentication(builder.Configuration)
                 .AddDataSeeder()
                 .AddValidatorsFromAssembly(typeof(GetProductDto).Assembly)
                 .AddRepositories();
@@ -41,6 +43,7 @@ app.UseApplicationExceptionHandler();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
