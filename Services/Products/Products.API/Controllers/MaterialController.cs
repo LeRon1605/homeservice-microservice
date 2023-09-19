@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Products.Application.Dtos;
 
 namespace Products.API.Controllers;
 
@@ -13,4 +14,5 @@ public class MaterialController : ControllerBase
     {
         _mediator = mediator;
     }
+    
 }
