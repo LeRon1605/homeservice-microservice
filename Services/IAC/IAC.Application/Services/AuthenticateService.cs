@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using BuildingBlocks.Domain.Data;
 using IAC.Application.Dtos.Authentication;
 using IAC.Application.Dtos.Users;
 using IAC.Application.Services.Interfaces;
+using IAC.Domain.Constants;
 using IAC.Domain.Entities;
 using IAC.Domain.Exceptions.Authentication;
+using IAC.Domain.Exceptions.Roles;
 using IAC.Domain.Exceptions.Users;
 using IAC.Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -16,16 +19,19 @@ public class AuthenticateService : IAuthenticateService
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ITokenService _tokenService;
     private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
 
     public AuthenticateService(IUserRepository userRepository,
                                ITokenService tokenService,
                                UserManager<ApplicationUser> userManager,
-                               IMapper mapper)
+                               IMapper mapper,
+                               IUnitOfWork unitOfWork)
     {
         _userRepository = userRepository;
         _tokenService = tokenService;
         _userManager = userManager;
         _mapper = mapper;
+        _unitOfWork = unitOfWork;
     }
     public async Task SignUpAsync(SignUpDto signUpDto)
     {
@@ -42,11 +48,27 @@ public class AuthenticateService : IAuthenticateService
             Email = signUpDto.Email,
             PasswordHash = signUpDto.Password
         };
-        //TO DO: Create Role for admin & user
 
+        await _unitOfWork.BeginTransactionAsync();
+        
         var result = await _userManager.CreateAsync(user, signUpDto.Password);
         if (!result.Succeeded)
-            throw new UserCreateFailException(result.Errors.First().Description);
+        {
+            await _unitOfWork.RollbackTransactionAsync();
+            throw new UserCreateFailException(result.Errors.First().Description);   
+        }
+        
+        try
+        {
+            await _userManager.AddToRoleAsync(user, AppRole.Customer);
+        }
+        catch
+        {
+            await _unitOfWork.RollbackTransactionAsync();
+            throw new RoleNotFoundException(nameof(ApplicationRole.Name), AppRole.Customer);
+        }
+
+        await _unitOfWork.CommitTransactionAsync();
     }
 
     public async Task<TokenDto> RefreshTokenAsync(RefreshTokenDto refreshTokenDto)

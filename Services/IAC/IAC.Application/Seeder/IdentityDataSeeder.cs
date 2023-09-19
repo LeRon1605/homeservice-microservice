@@ -26,18 +26,18 @@ public class IdentityDataSeeder : IDataSeeder
     {
         try
         {
-            if (
-                !_roleManager.Roles.Any()
-            )
+            _logger.LogInformation("Begin seeding identity data...");
+            
+            await SeedAdminRoleAsync();
+
+            await SeedCustomerRoleAsync();
+
+            if (!_userManager.Users.Any())
             {
-                _logger.LogInformation("Begin seeding identity data...");
-
-                await SeedAdminRoleAsync();
-
                 await SeedDefaultAdminAccountAsync();
-
-                _logger.LogInformation("Seed identity data successfully!");
             }
+            
+            _logger.LogInformation("Seed identity data successfully!");
         }
         catch (Exception ex)
         {
@@ -52,6 +52,16 @@ public class IdentityDataSeeder : IDataSeeder
         if (!result.Succeeded)
         {
             _logger.LogWarning("Seeding admin role failed!");
+        }
+    }
+
+    private async Task SeedCustomerRoleAsync()
+    {
+        var customerRole = new ApplicationRole(AppRole.Customer);
+        var result = await _roleManager.CreateAsync(customerRole);
+        if (!result.Succeeded)
+        {
+            _logger.LogWarning("Seeding customer role failed!");
         }
     }
     
