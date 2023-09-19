@@ -29,7 +29,7 @@ public class AuthenticateService : IAuthenticateService
     }
     public async Task SignUpAsync(SignUpDto signUpDto)
     {
-        bool isUserExist = await _userRepository.IsPhoneExist(signUpDto.PhoneNumber)
+        var isUserExist = await _userRepository.IsPhoneExist(signUpDto.PhoneNumber)
             && await _userRepository.IsEmailExist(signUpDto.Email);
         if (isUserExist)
             throw new UserExistException("User is already exist");
@@ -54,7 +54,7 @@ public class AuthenticateService : IAuthenticateService
         await _tokenService.ValidateRefreshTokenAsync(refreshTokenDto.RefreshToken);
         
         var user = await _userRepository.GetByRefreshTokenAsync(refreshTokenDto.RefreshToken)
-                   ?? throw new RefreshTokenNotFound();
+                   ?? throw new RefreshTokenNotFoundException();
         
         var tokenDto = new TokenDto
         {
@@ -68,7 +68,7 @@ public class AuthenticateService : IAuthenticateService
         
         return tokenDto;
     }
-
+    
     public async Task<TokenDto> LoginAsync(LoginDto logInDto)
     {
         var user = await _userRepository.GetByPhoneNumberAsync(logInDto.Identifier) 

@@ -40,7 +40,7 @@ public class TokenRepository : ITokenRepository
     public async Task RemoveAsync(string refreshToken)
     {
         var refreshTokenEntity = await _context.RefreshTokens.SingleOrDefaultAsync(rt => rt.Token == refreshToken)
-                                 ?? throw new RefreshTokenNotFound();
+                                 ?? throw new RefreshTokenNotFoundException();
         
         _context.RefreshTokens.Remove(refreshTokenEntity);
 

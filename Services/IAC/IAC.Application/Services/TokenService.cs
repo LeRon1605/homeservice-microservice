@@ -61,7 +61,7 @@ public class TokenService : ITokenService
         var refreshTokenLifetime = await _tokenRepository.GetExpiryTimeAsync(refreshToken);
         
         if (refreshTokenLifetime == null)
-            throw new RefreshTokenNotFound();
+            throw new RefreshTokenNotFoundException();
         
         if (refreshTokenLifetime < DateTime.UtcNow)
             throw new RefreshTokenExpiredException();
