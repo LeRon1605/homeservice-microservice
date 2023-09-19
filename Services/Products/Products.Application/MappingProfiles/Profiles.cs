@@ -3,6 +3,7 @@ using Products.Application.Dtos;
 using Products.Domain.ProductAggregate;
 using Products.Domain.ProductGroupAggregate;
 using Products.Domain.ProductTypeAggregate;
+using Products.Domain.ProductUnitAggregate;
 
 namespace Products.Application.MappingProfiles;
 
@@ -31,6 +32,8 @@ public class Profiles : Profile
         CreateMap<ProductGroup, ProductGroupDto>();
 
         CreateMap<ProductType, ProductTypeDto>();
+
+        CreateMap<ProductUnit, ProductUnitDto>();
 
         CreateMap<ProductImage, ProductImageDto>();
     } 
