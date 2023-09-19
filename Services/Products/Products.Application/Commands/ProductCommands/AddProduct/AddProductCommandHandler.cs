@@ -2,6 +2,7 @@ using AutoMapper;
 using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
 using Microsoft.Extensions.Logging;
+using Products.Application.Commands.ProductCommands.Validator;
 using Products.Application.Dtos;
 using Products.Domain.ProductAggregate;
 using Products.Domain.ProductAggregate.Specifications;
@@ -12,6 +13,7 @@ public class AddProductCommandHandler : ICommandHandler<AddProductCommand, GetPr
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IRepository<Product> _productRepository;
+    private readonly IProductValidator _productValidator;
     private readonly IMapper _mapper;
     private readonly ILogger<AddProductCommandHandler> _logger;
    
@@ -19,12 +21,14 @@ public class AddProductCommandHandler : ICommandHandler<AddProductCommand, GetPr
     public AddProductCommandHandler(IUnitOfWork unitOfWork,
         IRepository<Product> productRepository,
         IMapper mapper,
-        ILogger<AddProductCommandHandler> logger)
+        ILogger<AddProductCommandHandler> logger,
+        IProductValidator productValidator)
     {
         _unitOfWork = unitOfWork;
         _productRepository = productRepository;
         _mapper = mapper;
         _logger = logger;
+        _productValidator = productValidator;
     }
 
     public async Task<GetProductDto> Handle(AddProductCommand request, CancellationToken cancellationToken)
@@ -37,7 +41,10 @@ public class AddProductCommandHandler : ICommandHandler<AddProductCommand, GetPr
             request.Urls,
             _productRepository
             );
-        
+
+        await _productValidator.CheckProductTypeExistAsync(request.TypeId);
+        await _productValidator.CheckProductGroupExistAsync(request.GroupId);
+        await _productValidator.CheckProductUnitExistAsync(request.BuyUnitId, request.SellUnitId);
         
         _logger.LogInformation("Adding product with name: {Name}", productCreated.Name);
         _productRepository.Add(productCreated);
@@ -45,7 +52,7 @@ public class AddProductCommandHandler : ICommandHandler<AddProductCommand, GetPr
         await _unitOfWork.SaveChangesAsync();
 
         _logger.LogInformation("Product with name: {Name} added successfully", productCreated.Name);
-        var productSpecification = new ProductSpecification(productCreated.Id);
+        var productSpecification = new ProductByIdSpecification(productCreated.Id);
 
         var product = await _productRepository.FindAsync(productSpecification);
         

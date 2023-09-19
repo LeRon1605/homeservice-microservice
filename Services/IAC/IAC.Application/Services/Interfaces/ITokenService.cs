@@ -1,4 +1,3 @@
-using IAC.Domain.Entities;
 
 namespace IAC.Application.Services.Interfaces;
 

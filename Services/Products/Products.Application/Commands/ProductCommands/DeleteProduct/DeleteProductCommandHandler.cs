@@ -11,18 +11,15 @@ public class DeleteProductCommandHandler : ICommandHandler<DeleteProductCommand>
 {
      private readonly IUnitOfWork _unitOfWork;
      private readonly IRepository<Product> _productRepository;
-     private readonly IMapper _mapper;
      private readonly ILogger<DeleteProductCommand> _logger;
 
      public DeleteProductCommandHandler(
         IUnitOfWork unitOfWork,
         IRepository<Product> productRepository,
-        IMapper mapper,
         ILogger<DeleteProductCommand> logger)
      {
          _unitOfWork = unitOfWork;
          _productRepository = productRepository;
-         _mapper = mapper;
          _logger = logger;
      }
 

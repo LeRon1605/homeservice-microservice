@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option csharp_namespace = "BuildingBlocks.Presentation.Grpc.Proto";
+
+service AuthProvider {
+    rpc GetClaim(Empty) returns (stream ClaimResponse);
+}
+
+message Empty {
+
+}
+
+message ClaimResponse {
+    string type = 1;
+    string value = 2;
+}

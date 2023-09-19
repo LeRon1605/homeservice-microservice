@@ -6,18 +6,22 @@ public abstract class Specification<T> : ISpecification<T>
 {
     public bool IsTracking { get; set; }
     public List<Expression<Func<T, object>>> Includes { get; } = new();
+    public List<Expression<Func<T, bool>>> Filters { get; } = new();
     public List<string> IncludeStrings { get; } = new();
     public string? OrderByField { get; private set; }
     public bool IsDescending { get; private set; }
     public int Take { get; private set; }
     public int Skip { get; private set; }
 
-
-    public bool IsSatisfiedBy(T entity) => ToExpression().Compile().Invoke(entity);
+    public List<string> SearchFields { get; } = new();
+    public string? SearchTerm { get; private set; }
     
-    public abstract Expression<Func<T, bool>> ToExpression();
 
-    public ISpecification<T> And(ISpecification<T> specification) => new AndSpecification<T>(this, specification);
+    protected void AddFilter(Expression<Func<T, bool>> filter) => Filters.Add(filter);
+    
+    protected void AddSearchTerm(string? searchTerm) => SearchTerm = searchTerm?.ToLower().Trim();
+    
+    protected void AddSearchField(string searchField) => SearchFields.Add(searchField);
     
     protected void SetTracking(bool isTracking) => IsTracking = isTracking;
 
@@ -34,6 +38,6 @@ public abstract class Specification<T> : ISpecification<T>
         Take = pageSize;
         Skip = (pageIndex - 1) * pageSize;
     }
-    
+
     
 }

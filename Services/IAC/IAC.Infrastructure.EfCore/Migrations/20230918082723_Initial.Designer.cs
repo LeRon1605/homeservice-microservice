@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IAC.Infrastructure.EfCore.Migrations
 {
     [DbContext(typeof(IacDbContext))]
-    [Migration("20230914085609_Initial")]
+    [Migration("20230918082723_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

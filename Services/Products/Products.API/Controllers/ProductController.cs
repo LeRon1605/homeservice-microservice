@@ -3,10 +3,13 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Products.Application.Commands.ProductCommands.AddProduct;
 using Products.Application.Commands.ProductCommands.DeleteProduct;
+using Products.Application.Commands.ProductCommands.UpdateProduct;
 using Products.Application.Commands.ProductCommands.UploadProductImage;
 using Products.Application.Dtos;
 using Products.Application.Queries.ProductQuery.GetAllProductGroup;
 using Products.Application.Queries.ProductQuery.GetAllProductType;
+using Products.Application.Queries.ProductQuery.GetAllProductUnit;
+using Products.Application.Queries.ProductQuery.GetProductById;
 using Products.Application.Queries.ProductQuery.GetProductsWithPagination;
 
 namespace Products.API.Controllers;
@@ -28,6 +31,27 @@ public class ProductController : ControllerBase
     {
         var products = await _mediator.Send(query);
         return Ok(products);
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetProductById(Guid id)
+    {
+        var product = await _mediator.Send(new GetProductByIdQuery(id));
+        return Ok(product);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> CreateProductAsync([FromBody] ProductCreateDto productCreateDto)
+    {
+        var product = await _mediator.Send(new AddProductCommand(productCreateDto));
+        return CreatedAtAction(nameof(GetProductById), new { id = product.Id }, product);
+    } 
+    
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdateProductAsync(Guid id, ProductUpdateDto productUpdateDto)
+    {
+        var product = await _mediator.Send(new UpdateProductCommand(id, productUpdateDto));
+        return Ok(product);
     } 
     
     [HttpGet("groups")]
@@ -46,14 +70,14 @@ public class ProductController : ControllerBase
         return Ok(productTypes);
     }
     
-    [HttpPost]
-    public async Task<IActionResult> CreateProductAsync([FromBody] ProductCreateDto productCreateDto)
+    [HttpGet("units")]
+    [ProducesResponseType(typeof(IEnumerable<ProductUnitDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetProductUnitsAsync([FromQuery] GetAllProductUnitQuery query)
     {
-        var product = await _mediator.Send(new AddProductCommand(productCreateDto));
-        return Ok(product);
-        // return CreatedAtAction(nameof(GetProductbyId), new { id = product.Id }, product);
-    } 
-
+        var productUnits = await _mediator.Send(query);
+        return Ok(productUnits);
+    }
+    
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> DeleteProductAsync(Guid id)

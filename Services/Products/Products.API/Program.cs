@@ -1,5 +1,6 @@
 using BuildingBlocks.Application.Identity;
 using BuildingBlocks.Infrastructure.Serilog;
+using BuildingBlocks.Presentation.Authentication;
 using BuildingBlocks.Presentation.Authorization;
 using BuildingBlocks.Presentation.Cloudinary;
 using BuildingBlocks.Presentation.DataSeeder;
@@ -19,15 +20,19 @@ builder.Host.UseSerilog();
 
 builder.Services.AddControllers();
 builder.Services.AddSwagger("ProductService")
-                .AddCloudinary(builder.Configuration)
-                .AddApplicationExceptionHandler()
-                .AddEventBus(builder.Configuration)
-                .AddDbContext(builder.Configuration)
-                .AddAutoMapper(typeof(Profiles))
-                .AddMediatR()
-                .AddDataSeeder()
-                .AddValidatorsFromAssembly(typeof(GetProductDto).Assembly)
-                .AddRepositories();
+    .AddCloudinary(builder.Configuration)
+    .AddApplicationExceptionHandler()
+    .AddEventBus(builder.Configuration)
+    .AddDbContext(builder.Configuration)
+    .AddAutoMapper(typeof(Profiles))
+    .AddMediatR()
+    .AddHomeServiceAuthentication(builder.Configuration)
+    .AddDataSeeder()
+    .AddValidatorsFromAssembly(typeof(GetProductDto).Assembly)
+    .AddServices()
+    .AddRepositories();
+                
+                
 
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.AddHttpContextAccessor();
@@ -41,6 +46,7 @@ app.UseApplicationExceptionHandler();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

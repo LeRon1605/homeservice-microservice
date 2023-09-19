@@ -1,4 +1,3 @@
-using System.Net.Mime;
 using Ardalis.GuardClauses;
 using BuildingBlocks.Domain.Data;
 using BuildingBlocks.Domain.Models;
@@ -51,7 +50,7 @@ public class Product : AggregateRoot
         Name = Guard.Against.NullOrWhiteSpace(name, nameof(Name));
         ProductTypeId = Guard.Against.Default(productTypeId, nameof(ProductTypeId));
         ProductGroupId = Guard.Against.Default(productGroupId, nameof(ProductGroupId));
-        IsObsolete = false;
+        IsObsolete = isObsolete;
         Description = description;
         BuyUnitId = buyUnitId;
         BuyPrice = buyPrice;
@@ -101,7 +100,7 @@ public class Product : AggregateRoot
             string[] urls,
             IRepository<Product> productRepository)
     {
-        if (await productRepository.AnyAsync(new ProductCodeSpecification(productCode)))
+        if (await productRepository.AnyAsync(new IsProductCodeExistsSpecification(productCode)))
             throw new DuplicateProductCodeException("Code is existing");
         var product = new Product(productCode, name, productTypeId, productGroupId, description, isObsolete, buyUnitId,
             buyPrice, sellUnitId, sellPrice);
@@ -112,5 +111,47 @@ public class Product : AggregateRoot
         }
 
         return product;
+    }
+
+    public async Task UpdateAsync(
+        string productCode,
+        string name,
+        Guid productTypeId, 
+        Guid productGroupId,
+        string? description ,
+        bool isObsolete ,
+        Guid? buyUnitId,
+        decimal? buyPrice,
+        Guid? sellUnitId,
+        decimal? sellPrice,
+        string[] urls,
+        IRepository<Product> productRepository)
+    {
+
+        await SetCodeAsync(productCode, productRepository);
+        Name = name;
+        ProductTypeId = productTypeId;
+        ProductGroupId = productGroupId;
+        Description = description;
+        IsObsolete = isObsolete;
+        BuyUnitId = buyUnitId;
+        BuyPrice = buyPrice;
+        SellUnitId = sellUnitId;
+        SellPrice = sellPrice;
+        var images = new List<ProductImage>();
+        
+        urls.ToList().ForEach(url => images.Add(new ProductImage(url, Id)));
+        Images.Clear();
+        Images.AddRange(images);
+    }
+
+    private async Task SetCodeAsync(string productCode, IRepository<Product> productRepository)
+    {
+        if (ProductCode != productCode)
+        {
+            if (await productRepository.AnyAsync(new IsProductCodeExistsSpecification(productCode)))
+                throw new DuplicateProductCodeException("Code is existing");
+            ProductCode = productCode;
+        }
     }
 }

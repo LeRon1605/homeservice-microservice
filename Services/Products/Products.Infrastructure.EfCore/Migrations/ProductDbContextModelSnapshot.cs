@@ -22,6 +22,51 @@ namespace Products.Infrastructure.EfCore.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Products.Domain.MaterialAggregate.Material", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("Cost")
+                        .HasPrecision(20, 2)
+                        .HasColumnType("decimal(20,2)");
+
+                    b.Property<bool>("IsObsolete")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MaterialCode")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<Guid>("ProductTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("SellPrice")
+                        .HasPrecision(20, 2)
+                        .HasColumnType("decimal(20,2)");
+
+                    b.Property<Guid?>("SellUnitId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MaterialCode")
+                        .IsUnique();
+
+                    b.HasIndex("ProductTypeId");
+
+                    b.HasIndex("SellUnitId");
+
+                    b.ToTable("Materials");
+                });
+
             modelBuilder.Entity("Products.Domain.ProductAggregate.Product", b =>
                 {
                     b.Property<Guid>("Id")
@@ -146,6 +191,23 @@ namespace Products.Infrastructure.EfCore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProductUnit");
+                });
+
+            modelBuilder.Entity("Products.Domain.MaterialAggregate.Material", b =>
+                {
+                    b.HasOne("Products.Domain.ProductTypeAggregate.ProductType", "Type")
+                        .WithMany()
+                        .HasForeignKey("ProductTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Products.Domain.ProductUnitAggregate.ProductUnit", "SellUnit")
+                        .WithMany()
+                        .HasForeignKey("SellUnitId");
+
+                    b.Navigation("SellUnit");
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("Products.Domain.ProductAggregate.Product", b =>

@@ -4,11 +4,10 @@ namespace BuildingBlocks.Domain.Specification;
 
 public interface ISpecification<T>
 {
-    bool IsSatisfiedBy(T entity);
+    List<Expression<Func<T, bool>>> Filters { get; }
     
-    Expression<Func<T, bool>> ToExpression();
-    
-    ISpecification<T> And(ISpecification<T> specification);
+    string? SearchTerm { get; }
+    List<string> SearchFields { get; }
     
     bool IsTracking { get; set; }
     
