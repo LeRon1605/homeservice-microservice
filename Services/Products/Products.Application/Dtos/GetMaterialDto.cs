@@ -6,7 +6,9 @@ public class GetMaterialDto
     
     public string Name { get; set; } = null!;
     
-    public ProductTypeDto ProductType { get; set; } = null!;
+    public string MaterialCode { get; set; } = null!;
+    
+    public ProductTypeDto Type { get; set; } = null!;
     
     public ProductUnitDto? SellUnit { get; set; }
     

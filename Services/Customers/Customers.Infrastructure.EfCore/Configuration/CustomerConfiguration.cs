@@ -1,6 +1,5 @@
 ﻿using Customers.Domain.Constants;
 using Customers.Domain.CustomerAggregate;
-using Customers.Domain.CustomerAggregate.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

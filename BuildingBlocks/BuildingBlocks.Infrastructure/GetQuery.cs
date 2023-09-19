@@ -16,7 +16,10 @@ public static class GetQuery<TEntity> where TEntity : Entity
         query = specification.IsTracking ? query.AsTracking() : query.AsNoTracking();
 
         // Filtering
-        query = query.Where(specification.ToExpression());
+        foreach (var filter in specification.Filters)
+        {
+            query = query.Where(filter);
+        }
 
         // Include related data
         query = specification.Includes.Aggregate(
@@ -28,18 +31,24 @@ public static class GetQuery<TEntity> where TEntity : Entity
             query,
             (current,
              include) => current.Include(include));
+        
+        // Searching
+        if (!string.IsNullOrWhiteSpace(specification.SearchTerm))
+        {
+            var searchClause = string.Empty;
+            foreach (var searchField in specification.SearchFields)
+            {
+                searchClause += searchClause == string.Empty ? string.Empty : " || ";
+                searchClause += $"{searchField} != null && {searchField}.ToLower().Contains(\"{specification.SearchTerm}\")";
+            }
+            query = query.Where(searchClause);
+        }
 
-        // Ordering
-        if (specification.OrderByField != null)
-            query = specification.IsDescending
-                        ? query.OrderBy(specification.OrderByField + " desc")
-                        : query.OrderBy(specification.OrderByField);
-
-        // Paging
-        if (specification is { Take: > 0, Skip: >= 0 })
-            query = query
-                .Skip(specification.Skip)
-                .Take(specification.Take);
+        // // Ordering
+        // if (specification.OrderByField != null)
+        //     query = specification.IsDescending
+        //                 ? query.OrderBy(specification.OrderByField + " desc")
+        //                 : query.OrderBy(specification.OrderByField);
 
         return query;
     }

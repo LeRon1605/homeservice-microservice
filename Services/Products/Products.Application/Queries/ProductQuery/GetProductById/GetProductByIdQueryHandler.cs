@@ -4,6 +4,7 @@ using BuildingBlocks.Domain.Data;
 using Products.Application.Dtos;
 using Products.Domain.ProductAggregate;
 using Products.Domain.ProductAggregate.Exceptions;
+using Products.Domain.ProductAggregate.Specifications;
 
 namespace Products.Application.Queries.ProductQuery.GetProductById;
 
@@ -19,7 +20,7 @@ public class GetProductByIdQueryHandler : IQueryHandler<GetProductByIdQuery, Get
     }
     public async Task<GetProductDto> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
     {
-        var product = await _productRepository.GetByIdAsync(request.Id);
+        var product = await _productRepository.FindAsync(new ProductByIdSpecification(request.Id));
         if (product == null)
         {
             throw new ProductNotFoundException(request.Id);

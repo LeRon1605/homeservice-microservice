@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
 using BuildingBlocks.Application.Identity;
 using BuildingBlocks.Domain.Models;
-using BuildingBlocks.Domain.Models.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

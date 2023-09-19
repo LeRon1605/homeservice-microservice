@@ -12,7 +12,7 @@ using Products.Infrastructure.EfCore.Data;
 namespace Products.Infrastructure.EfCore.Migrations
 {
     [DbContext(typeof(ProductDbContext))]
-    [Migration("20230919063751_Initial")]
+    [Migration("20230919121901_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

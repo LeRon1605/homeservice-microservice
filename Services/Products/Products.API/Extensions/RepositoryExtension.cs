@@ -26,5 +26,8 @@ public static class RepositoryExtension
         services.AddScoped<IRepository<Material>, MaterialRepository>();
         
         services.AddScoped<IUnitOfWork, EfCoreUnitOfWork<ProductDbContext>>();
+        
+        services.AddScoped<IRepository<Material>, MaterialRepository>();
+        services.AddScoped<IReadOnlyRepository<Material>, MaterialReadOnlyRepository>();
     }   
 }
