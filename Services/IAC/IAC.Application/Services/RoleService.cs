@@ -44,7 +44,7 @@ public class RoleService : IRoleService
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
         {
-            throw new UserNotFoundException(userId);
+            throw new UserNotFoundException(nameof(ApplicationUser.Id), userId);
         }
         
         var roles = await _roleRepository.GetByUserIdAsync(userId);

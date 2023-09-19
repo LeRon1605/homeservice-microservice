@@ -7,4 +7,8 @@ public class UserNotFoundException : ResourceNotFoundException
     public UserNotFoundException(string id) : base("User", "phone/email", id, ErrorCodes.UserNotFound)
     {
     }
+    
+    public UserNotFoundException(string column, string value) : base("User", "Id", value, ErrorCodes.UserNotFound)
+    {
+    }
 }
