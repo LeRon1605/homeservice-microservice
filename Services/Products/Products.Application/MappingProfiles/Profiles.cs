@@ -1,5 +1,6 @@
 using AutoMapper;
 using Products.Application.Dtos;
+using Products.Domain.MaterialAggregate;
 using Products.Domain.ProductAggregate;
 using Products.Domain.ProductGroupAggregate;
 using Products.Domain.ProductTypeAggregate;
@@ -36,5 +37,7 @@ public class Profiles : Profile
         CreateMap<ProductUnit, ProductUnitDto>();
 
         CreateMap<ProductImage, ProductImageDto>();
+
+        CreateMap<Material, GetMaterialDto>();
     } 
 }

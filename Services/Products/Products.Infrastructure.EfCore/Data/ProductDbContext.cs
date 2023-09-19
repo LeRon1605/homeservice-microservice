@@ -3,6 +3,7 @@ using BuildingBlocks.Infrastructure.EfCore;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Products.Domain.MaterialAggregate;
 using Products.Domain.ProductAggregate;
 
 namespace Products.Infrastructure.EfCore.Data;
@@ -11,6 +12,7 @@ public class ProductDbContext : AppDbContextBase
 {
 
     public DbSet<Product> Products { get; set; } = default!;
+    public DbSet<Material> Materials { get; set; } = default!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
