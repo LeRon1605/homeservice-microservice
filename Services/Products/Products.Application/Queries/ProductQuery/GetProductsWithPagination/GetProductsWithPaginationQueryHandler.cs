@@ -23,7 +23,7 @@ public class GetProductsWithPaginationQueryHandler : IQueryHandler<GetProductsWi
     public async Task<PagedResult<GetProductDto>> Handle(GetProductsWithPaginationQuery request,
                                                    CancellationToken cancellationToken)
     {
-        var getProductsSpec = new ProductsWithPaginationSpec(request.Search, request.PageIndex, request.PageSize, 
+        var getProductsSpec = new ProductsWithPaginationSpecification(request.Search, request.PageIndex, request.PageSize, 
             request.IsObsolete, request.GroupId, request.TypeId);
         
         var (products, totalCount) = await _productRepository.FindWithTotalCountAsync(getProductsSpec);

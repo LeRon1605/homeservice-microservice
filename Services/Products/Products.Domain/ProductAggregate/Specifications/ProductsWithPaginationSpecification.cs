@@ -3,9 +3,9 @@ using BuildingBlocks.Domain.Specification;
 
 namespace Products.Domain.ProductAggregate.Specifications;
 
-public class ProductsWithPaginationSpec : Specification<Product>
+public class ProductsWithPaginationSpecification : Specification<Product>
 {
-    public ProductsWithPaginationSpec(string? search, 
+    public ProductsWithPaginationSpecification(string? search, 
                                       int pageIndex, 
                                       int pageSize, 
                                       bool? isObsolete, 

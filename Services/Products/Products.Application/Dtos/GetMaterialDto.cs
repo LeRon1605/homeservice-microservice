@@ -6,6 +6,8 @@ public class GetMaterialDto
     
     public string Name { get; set; } = null!;
     
+    public string MaterialCode { get; set; } = null!;
+    
     public Guid ProductTypeId { get; set; }
     
     public Guid? SellUnitId { get; set; }
