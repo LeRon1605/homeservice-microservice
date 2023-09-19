@@ -12,7 +12,9 @@ public class ProductsWithPaginationSpec : Specification<Product>
     
     public override Expression<Func<Product, bool>> ToExpression()
     {
-        return p => (string.IsNullOrWhiteSpace(_search) || p.Name.ToLower().Contains(_search.ToLower()))
+        return p => (string.IsNullOrWhiteSpace(_search) 
+                     || p.Name.ToLower().Contains(_search.ToLower())
+                     || p.ProductCode.ToLower().Contains(_search.ToLower()))
                    && (!_isObsolete.HasValue || p.IsObsolete == _isObsolete)
                    && (string.IsNullOrWhiteSpace(_groupId) || p.ProductGroupId.ToString() == _groupId)
                    && (string.IsNullOrWhiteSpace(_typeId) || p.ProductTypeId.ToString() == _typeId);

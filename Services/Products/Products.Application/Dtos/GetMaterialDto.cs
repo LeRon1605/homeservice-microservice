@@ -15,4 +15,7 @@ public class GetMaterialDto
     public decimal? Cost { get; set; }
     
     public bool IsObsolete { get; set; }
+    
+    public ProductTypeDto Type { get; set; }
+    public ProductUnitDto? SellUnit { get; set; }
 }
