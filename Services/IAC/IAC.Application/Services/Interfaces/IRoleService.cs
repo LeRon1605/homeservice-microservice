@@ -5,4 +5,6 @@ namespace IAC.Application.Services.Interfaces;
 public interface IRoleService
 {
     Task<RoleDto> GetByIdAsync(string id);
+
+    Task<IEnumerable<RoleDto>> GetByUserAsync(string userId);
 }

@@ -1,5 +1,7 @@
 using System.Text;
 using BuildingBlocks.Application.Seeder;
+using BuildingBlocks.Domain.Data;
+using BuildingBlocks.Infrastructure.EfCore.UnitOfWorks;
 using IAC.Application;
 using IAC.Application.Common;
 using IAC.Application.Seeder;
@@ -31,6 +33,7 @@ public static class DependencyInjectionExtension
     
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
+        services.AddScoped<IUnitOfWork, EfCoreUnitOfWork<IacDbContext>>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ITokenRepository, TokenRepository>();

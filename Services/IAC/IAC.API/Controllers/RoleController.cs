@@ -24,4 +24,12 @@ public class RoleController : ControllerBase
         var role = await _roleService.GetByIdAsync(id);
         return Ok(role);
     }
+    
+    [HttpGet("users/{userId}")]
+    [ProducesResponseType(typeof(IEnumerable<RoleDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetRolesForUserAsync(string userId)
+    {
+        var roles = await _roleService.GetByUserAsync(userId);
+        return Ok(roles);
+    }
 }
