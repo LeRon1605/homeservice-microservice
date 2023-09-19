@@ -113,4 +113,46 @@ public class Product : AggregateRoot
 
         return product;
     }
+
+    public async Task UpdateAsync(
+        string productCode,
+        string name,
+        Guid productTypeId, 
+        Guid productGroupId,
+        string? description ,
+        bool isObsolete ,
+        Guid? buyUnitId,
+        decimal? buyPrice,
+        Guid? sellUnitId,
+        decimal? sellPrice,
+        string[] urls,
+        IRepository<Product> productRepository)
+    {
+
+        await SetCodeAsync(productCode, productRepository);
+        Name = name;
+        ProductTypeId = productTypeId;
+        ProductGroupId = productGroupId;
+        Description = description;
+        IsObsolete = isObsolete;
+        BuyUnitId = buyUnitId;
+        BuyPrice = buyPrice;
+        SellUnitId = sellUnitId;
+        SellPrice = sellPrice;
+        var images = new List<ProductImage>();
+        
+        urls.ToList().ForEach(url => images.Add(new ProductImage(url, Id)));
+        Images.Clear();
+        Images.AddRange(images);
+    }
+
+    private async Task SetCodeAsync(string productCode, IRepository<Product> productRepository)
+    {
+        if (ProductCode != productCode)
+        {
+            if (await productRepository.AnyAsync(new ProductCodeSpecification(productCode)))
+                throw new DuplicateProductCodeException("Code is existing");
+            ProductCode = productCode;
+        }
+    }
 }

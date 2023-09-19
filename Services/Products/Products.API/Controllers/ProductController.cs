@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Products.Application.Commands.ProductCommands.AddProduct;
 using Products.Application.Commands.ProductCommands.DeleteProduct;
+using Products.Application.Commands.ProductCommands.UpdateProduct;
 using Products.Application.Commands.ProductCommands.UploadProductImage;
 using Products.Application.Dtos;
 using Products.Application.Queries.ProductQuery.GetAllProductGroup;
@@ -28,8 +29,14 @@ public class ProductController : ControllerBase
     {
         var products = await _mediator.Send(query);
         return Ok(products);
-    } 
-    
+    }
+
+    // [HttpGet("id:guid")]
+    // public async Task<IActionResult> GetProductById(Guid id)
+    // {
+    //     var product = await _mediator.Send()
+    // }
+    //
     [HttpPost]
     public async Task<IActionResult> CreateProductAsync([FromBody] ProductCreateDto productCreateDto)
     {
@@ -37,6 +44,14 @@ public class ProductController : ControllerBase
         return Ok(product);
         // return CreatedAtAction(nameof(GetProductbyId), new { id = product.Id }, product);
     } 
+    
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdateProductAsync(Guid id, ProductUpdateDto productUpdateDto)
+    {
+        var product = await _mediator.Send(new UpdateProductCommand(id, productUpdateDto));
+        return Ok(product);
+    } 
+    
     [HttpGet("groups")]
     [ProducesResponseType(typeof(IEnumerable<ProductGroupDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProductGroupsAsync([FromQuery] GetAllProductGroupQuery query)
