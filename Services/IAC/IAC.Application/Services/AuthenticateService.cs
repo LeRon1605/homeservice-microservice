@@ -48,7 +48,7 @@ public class AuthenticateService : IAuthenticateService
             && await _userRepository.IsEmailExist(signUpDto.Email);
         if (isUserExist)
             throw new UserExistException("User is already exist");
-        var user = new ApplicationUser()
+        var user = new ApplicationUser
         {
             FullName = signUpDto.FullName,
             UserName = signUpDto.PhoneNumber,
@@ -59,33 +59,33 @@ public class AuthenticateService : IAuthenticateService
 
         await _unitOfWork.BeginTransactionAsync();
         
-        var result = await _userManager.CreateAsync(user, signUpDto.Password);
-        if (!result.Succeeded)
-        {
-            await _unitOfWork.RollbackTransactionAsync();
-            throw new UserCreateFailException(result.Errors.First().Description);   
-        }
-        
         try
         {
-            await _userManager.AddToRoleAsync(user, AppRole.Customer);
+            var result = await _userManager.CreateAsync(user, signUpDto.Password);
+            if (!result.Succeeded)
+                throw new UserCreateFailException(result.Errors.First().Description);   
+            
+            var addRoleResult = await _userManager.AddToRoleAsync(user, AppRole.Customer);
+            if (!addRoleResult.Succeeded)
+                throw new RoleNotFoundException(nameof(ApplicationRole.Name), AppRole.Customer);
+            
+            var eventMessage = new UserSignedUpIntegrationEvent(Guid.Parse(user.Id), signUpDto.FullName, signUpDto.Email, signUpDto.PhoneNumber);
+            
+            try 
+            {
+                _eventBus.Publish(eventMessage);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error Publishing integration event: {IntegrationEventId}", eventMessage.Id);
+                throw;
+            }
+            
+            await _unitOfWork.CommitTransactionAsync();
         }
         catch
         {
             await _unitOfWork.RollbackTransactionAsync();
-            throw new RoleNotFoundException(nameof(ApplicationRole.Name), AppRole.Customer);
-        }
-        
-        await _unitOfWork.CommitTransactionAsync();
-        
-        var eventMessage = new UserSignUpIntegrationEvent(signUpDto.FullName);
-        try
-        {
-            _eventBus.Publish(eventMessage);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error Publishing integration event: {IntegrationEventId}", eventMessage.Id);
             throw;
         }
     }
