@@ -13,7 +13,7 @@ public class Customer : AggregateRoot
     public CustomerAddress Address { get; private set; }
 
     public Customer(
-        string name,
+        string? name = null,
         string? contactName = null,
         string? email = null,
         string? address = null,
@@ -22,15 +22,55 @@ public class Customer : AggregateRoot
         string? postalCode = null,
         string? phone = null)
     {
-        Name = Guard.Against.NullOrWhiteSpace(name, nameof(Name));
+        Name = name ?? "Retail Customer";
         ContactName = contactName;
         Email = email;
-        Address = new CustomerAddress(address, city, state, postalCode);
         Phone = phone;
+        Address = new CustomerAddress(address, city, state, postalCode);
     }
 
     private Customer()
     {
-        
+    }
+    
+    public void Update(string? name = null,
+                       string? contactName = null,
+                       string? email = null,
+                       string? address = null,
+                       string? city = null,
+                       string? state = null,
+                       string? postalCode = null,
+                       string? phone = null)
+    {
+        Name = name ?? "Retail Customer";
+        ContactName = contactName;
+        Email = email;
+        Phone = phone;
+        Address = new CustomerAddress(address, city, state, postalCode);
+    }
+    
+    public void Delete()
+    {
+        // TODO:
+        // Add domain event
+        // Check constraints? (customer has no orders, etc.)
+    }
+    
+    public Customer CreateWithId(
+                           Guid id,
+                           string? name = "Retail Customer",
+                           string? contactName = null,
+                           string? email = null,
+                           string? address = null,
+                           string? city = null,
+                           string? state = null,
+                           string? postalCode = null,
+                           string? phone = null)
+    {
+        var customer = new Customer(name, contactName, email, address, city, state, postalCode, phone)
+        {
+            Id = id
+        };
+        return customer;
     }
 }

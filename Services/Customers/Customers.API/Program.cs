@@ -3,6 +3,7 @@ using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Authentication;
 using BuildingBlocks.Presentation.DataSeeder;
 using BuildingBlocks.Presentation.EventBus;
+using BuildingBlocks.Presentation.ExceptionHandlers;
 using BuildingBlocks.Presentation.Extension;
 using BuildingBlocks.Presentation.Swagger;
 using Customers.API.Extensions;
@@ -17,7 +18,9 @@ builder.Services.AddSwagger("CustomerService")
                 .AddDatabase(builder.Configuration, builder.Environment)
                 .AddRepositories()
                 .AddHomeServiceAuthentication(builder.Configuration)
+                .AddApplicationExceptionHandler()
                 .AddCqrs()
+                .AddValidators()
                 .AddMapper()
                 .AddService()
                 .AddSeeder();
@@ -30,6 +33,7 @@ var app = builder.Build();
 
 var eventBus = app.Services.GetRequiredService<IEventBus>();
 
+app.UseApplicationExceptionHandler();
 app.UseSwagger();
 app.UseSwaggerUI();
 

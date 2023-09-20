@@ -2,6 +2,7 @@
 using BuildingBlocks.Domain.Exceptions;
 using BuildingBlocks.Domain.Exceptions.Common;
 using BuildingBlocks.Domain.Exceptions.Resource;
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -40,7 +41,11 @@ public class ExceptionHandler : IExceptionHandler
                 response.Code = coreException.ErrorCode;
                 response.Message = coreException.Message;
                 break;
-
+            case ValidationException validationException:
+                response.Code = ErrorCodes.InvalidInput;
+                response.Message = validationException.Message;
+                // response.ValidationErrors = validationException.Errors;
+                break;
             default:
                 response.Code = ErrorCodes.SystemError;
                 response.Message = _env.IsDevelopment() ? exception.Message : "Something went wrong, please try again!";

@@ -13,7 +13,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
 
         builder.Property(x => x.Name)
                .IsRequired()
-               .HasMaxLength(StringLength.CustomerName);
+               .HasMaxLength(StringLength.Name);
 
         builder.Property(x => x.ContactName)
                .IsRequired(false);
