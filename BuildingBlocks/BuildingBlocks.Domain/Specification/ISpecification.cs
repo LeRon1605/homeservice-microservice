@@ -9,7 +9,7 @@ public interface ISpecification<T>
     string? SearchTerm { get; }
     List<string> SearchFields { get; }
     
-    bool IsTracking { get; set; }
+    bool IsNoTracking { get; set; }
     
     List<Expression<Func<T, object>>> Includes { get; }
     

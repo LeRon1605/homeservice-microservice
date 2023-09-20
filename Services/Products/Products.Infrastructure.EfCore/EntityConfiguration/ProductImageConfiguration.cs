@@ -9,6 +9,10 @@ public class ProductImageConfiguration : IEntityTypeConfiguration<ProductImage>
     public void Configure(EntityTypeBuilder<ProductImage> builder)
     {
         builder.HasKey(x => x.Id);
+        
+        builder.Property(x => x.Id)
+               .ValueGeneratedNever()
+               .IsRequired();
 
         builder.Property(x => x.Url)
                .IsRequired();
