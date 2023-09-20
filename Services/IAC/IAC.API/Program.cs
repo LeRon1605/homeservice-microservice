@@ -3,11 +3,14 @@ using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Authorization;
 using BuildingBlocks.Presentation.DataSeeder;
+using BuildingBlocks.Presentation.EfCore;
 using BuildingBlocks.Presentation.EventBus;
 using BuildingBlocks.Presentation.ExceptionHandlers;
+using BuildingBlocks.Presentation.Extension;
 using BuildingBlocks.Presentation.Swagger;
 using IAC.API.Extensions;
 using IAC.Application.Grpc.Services;
+using IAC.Infrastructure.EfCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,14 +23,12 @@ builder.Services.AddSwagger("IdentityService")
                 .AddServices()
                 .AddApplicationExceptionHandler()
                 .AddEventBus(builder.Configuration)
-                .AddDatabase(builder.Configuration, builder.Environment)
+                .AddEfCoreDbContext<IacDbContext>(builder.Configuration)
                 .AddIdentity(builder.Configuration, builder.Environment)
                 .AddApplicationAuthentication(builder.Configuration)
                 .AddConfiguration(builder.Configuration)
+                .AddCurrentUser()
                 .AddGrpc();
-
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
 builder.Services.AddControllers();
 
@@ -50,7 +51,7 @@ app.UseAuthorization();
 app.MapGrpcService<AuthGrpcService>();
 app.MapControllers();
 
-await app.ApplyMigrationAsync(app.Logger);
+await app.ApplyMigrationAsync<IacDbContext>(app.Logger);
 await app.SeedDataAsync();
 
 app.Run();

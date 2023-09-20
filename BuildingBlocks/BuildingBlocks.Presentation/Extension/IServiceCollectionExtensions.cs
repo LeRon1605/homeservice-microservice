@@ -13,7 +13,7 @@ public static class IServiceCollectionExtensions
         return services.AddScoped<ICacheService, CacheService>();
     }
 
-	public static IServiceCollection AddService(this IServiceCollection services)
+	public static IServiceCollection AddCurrentUser(this IServiceCollection services)
 	{
 		services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUser, CurrentUser>();

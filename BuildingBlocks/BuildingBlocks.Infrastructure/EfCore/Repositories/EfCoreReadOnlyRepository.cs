@@ -5,18 +5,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BuildingBlocks.Infrastructure.EfCore.Repositories;
 
-public class EfCoreReadOnlyRepository<TDbContext, TEntity> : IReadOnlyRepository<TEntity>
+public class EfCoreReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity>
     where TEntity : Entity
-    where TDbContext : DbContext
 {
     private DbSet<TEntity>? _dbSet;
     
-    private readonly TDbContext _dbContext;
+    private readonly DbContext _dbContext;
     private DbSet<TEntity> DbSet => _dbSet ??= _dbContext.Set<TEntity>();
     
-    public EfCoreReadOnlyRepository(TDbContext dbContext)
+    public EfCoreReadOnlyRepository(DbContextFactory dbContextFactory)
     {
-        _dbContext = dbContext;
+        _dbContext = dbContextFactory.DbContext;
     }
     
     public async Task<TEntity?> GetByIdAsync(Guid id) 

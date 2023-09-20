@@ -3,26 +3,26 @@ using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Authentication;
 using BuildingBlocks.Presentation.Authorization;
+using BuildingBlocks.Presentation.EfCore;
 using BuildingBlocks.Presentation.EventBus;
+using BuildingBlocks.Presentation.Extension;
 using BuildingBlocks.Presentation.Swagger;
 using Serilog;
 using Shopping.API.Extensions;
+using Shopping.Infrastructure.EfCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = ApplicationLoggerFactory.CreateSerilogLogger(builder.Configuration, "ShoppingService");
 
 builder.Services.AddSwagger("ShoppingService")
-				.AddEventBus(builder.Configuration)
-				.AddDatabase(builder.Configuration, builder.Environment)
-				.AddRepositories()
-				.AddMapper()
-				.AddCqrs()
-				.AddHomeServiceAuthentication(builder.Configuration)
-				.AddHttpContextAccessor();
-
-builder.Services.AddScoped<ICurrentUser, CurrentUser>();
-builder.Services.AddHttpContextAccessor();
+                .AddEfCoreDbContext<OrderDbContext>(builder.Configuration)
+                .AddEventBus(builder.Configuration)
+                .AddRepositories()
+                .AddMapper()
+                .AddCqrs()
+                .AddHomeServiceAuthentication(builder.Configuration)
+                .AddCurrentUser();
 
 builder.Services.AddControllers();
 
@@ -39,6 +39,6 @@ app.UseAuthentication();
 
 app.MapControllers();
 
-await app.ApplyMigrationAsync(app.Logger);
+await app.ApplyMigrationAsync<OrderDbContext>(app.Logger);
 
 app.Run();
