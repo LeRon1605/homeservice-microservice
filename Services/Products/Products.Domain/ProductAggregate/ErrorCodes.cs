@@ -7,7 +7,4 @@ public static class ErrorCodes
     public const string ProductImageDuplicate = "ProductImage:002";
     public const string ProductImageUploadFailed = "ProductImage:003";
     public const string ProductCodeDuplicate = "ProductCode: 003";
-    public const string ProductTypeNotFound = "ProductType: 004";
-    public const string ProductGroupNotFound = "ProductGroup: 005";
-    public const string ProductUnitNotFound = "ProductUnit: 006";
 }

@@ -5,48 +5,36 @@ using Microsoft.Extensions.Logging;
 using Products.Application.Commands.ProductCommands.AddProduct;
 using Products.Application.Dtos;
 using Products.Domain.MaterialAggregate;
-using Products.Domain.MaterialAggregate.Exceptions;
-using Products.Domain.MaterialAggregate.Specifications;
-using Products.Domain.ProductAggregate.Exceptions;
-using Products.Domain.ProductTypeAggregate;
+using Products.Domain.MaterialAggregate.DomainServices;
 
 namespace Products.Application.Commands.MaterialCommands.AddMaterial;
 
 public class AddMaterialCommandHandler : ICommandHandler<AddMaterialCommand, GetMaterialDto>
 {
     private readonly IRepository<Material> _materialRepository;
-    private readonly IRepository<ProductType> _productTypeRepository;
+    private readonly IMaterialDomainService _materialDomainService;
     
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<AddProductCommandHandler> _logger;
     private readonly IMapper _mapper;
 
-    public AddMaterialCommandHandler(IRepository<Material> repository,
-                                     IUnitOfWork unitOfWork,
-                                     ILogger<AddProductCommandHandler> logger,
-                                     IMapper mapper,
-                                     IRepository<ProductType> productTypeRepository)
+    public AddMaterialCommandHandler(
+        IRepository<Material> repository,
+        IMaterialDomainService materialDomainService,
+        IUnitOfWork unitOfWork,
+        ILogger<AddProductCommandHandler> logger,
+        IMapper mapper)
     {
         _materialRepository = repository;
+        _materialDomainService = materialDomainService;
         _unitOfWork = unitOfWork;
         _logger = logger;
         _mapper = mapper;
-        _productTypeRepository = productTypeRepository;
     }
 
     public async Task<GetMaterialDto> Handle(AddMaterialCommand request, CancellationToken cancellationToken)
     {
-        var isProductTypeExisted = await _productTypeRepository.AnyAsync(request.ProductTypeId); 
-        var isMaterialCodeDuplicated = await _materialRepository.AnyAsync(
-                                           new MaterialCodeDuplicatedSpecification(request.MaterialCode));
-        
-        if (!isProductTypeExisted)
-            throw new ProductTypeNotFoundException(request.ProductTypeId);
-        
-        if (isMaterialCodeDuplicated)
-            throw new MaterialCodeExistedException(request.MaterialCode);
-        
-        var material = new Material(request.MaterialCode,
+        var material = await _materialDomainService.CreateAsync(request.MaterialCode,
                                     request.Name,
                                     request.ProductTypeId,
                                     request.SellUnitId,
