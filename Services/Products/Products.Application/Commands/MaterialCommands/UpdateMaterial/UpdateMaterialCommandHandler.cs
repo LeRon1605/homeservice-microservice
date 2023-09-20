@@ -6,23 +6,24 @@ using Products.Application.Dtos;
 using Products.Domain.MaterialAggregate;
 using Products.Domain.MaterialAggregate.DomainServices;
 using Products.Domain.MaterialAggregate.Exceptions;
+using Products.Domain.MaterialAggregate.Specifications;
 
-namespace Products.Application.Commands.MaterialCommands.EditMaterial;
+namespace Products.Application.Commands.MaterialCommands.UpdateMaterial;
 
-public class EditMaterialCommandHandler : ICommandHandler<EditMaterialCommand, GetMaterialDto>
+public class UpdateMaterialCommandHandler : ICommandHandler<UpdateMaterialCommand, GetMaterialDto>
 {
     private readonly IRepository<Material> _materialRepository;
     private readonly IMaterialDomainService _materialDomainService;
     
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ILogger<EditMaterialCommandHandler> _logger;
+    private readonly ILogger<UpdateMaterialCommandHandler> _logger;
     private readonly IMapper _mapper;
 
-    public EditMaterialCommandHandler(
+    public UpdateMaterialCommandHandler(
         IRepository<Material> repository,
         IMaterialDomainService materialDomainService,
         IUnitOfWork unitOfWork,
-        ILogger<EditMaterialCommandHandler> logger,
+        ILogger<UpdateMaterialCommandHandler> logger,
         IMapper mapper)
     {
         _materialRepository = repository;
@@ -32,7 +33,7 @@ public class EditMaterialCommandHandler : ICommandHandler<EditMaterialCommand, G
         _mapper = mapper;
     }
     
-    public async Task<GetMaterialDto> Handle(EditMaterialCommand request, CancellationToken cancellationToken)
+    public async Task<GetMaterialDto> Handle(UpdateMaterialCommand request, CancellationToken cancellationToken)
     {
         var material = await _materialRepository.GetByIdAsync(request.Id);
         if (material == null)
@@ -51,7 +52,8 @@ public class EditMaterialCommandHandler : ICommandHandler<EditMaterialCommand, G
 
         _materialRepository.Update(material);
         await _unitOfWork.SaveChangesAsync();
-        
-        return _mapper.Map<GetMaterialDto>(material);
+
+        var updatedMaterial = await _materialRepository.FindAsync(new MaterialByIdSpecification(material.Id));
+        return _mapper.Map<GetMaterialDto>(updatedMaterial);
     }
 }
