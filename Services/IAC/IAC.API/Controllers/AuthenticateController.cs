@@ -12,7 +12,8 @@ public class AuthenticateController : ControllerBase
 	private readonly ITokenService _tokenService;
 	public AuthenticateController(
 		IAuthenticateService authenticateService,
-		ITokenService tokenService)
+		ITokenService tokenService
+		)
 	{
 		_authenticateService = authenticateService;
 		_tokenService = tokenService;

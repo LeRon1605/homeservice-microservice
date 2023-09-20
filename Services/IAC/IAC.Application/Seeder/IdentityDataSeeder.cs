@@ -71,8 +71,7 @@ public class IdentityDataSeeder : IDataSeeder
         {
             UserName = "admin",
             Email = "admin@gmail.com",
-            FirstName = "Admin",
-            LastName = "Admin",
+            FullName = "Admin",
             PhoneNumber = "0123456789",
             SecurityStamp = Guid.NewGuid().ToString(),
             EmailConfirmed = true
