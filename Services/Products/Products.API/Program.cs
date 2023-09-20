@@ -30,6 +30,7 @@ builder.Services.AddSwagger("ProductService")
     .AddDataSeeder()
     .AddValidatorsFromAssembly(typeof(GetProductDto).Assembly)
     .AddServices()
+    .AddDomainServices()
     .AddRepositories();
                 
                 

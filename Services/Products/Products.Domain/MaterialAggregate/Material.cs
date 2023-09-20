@@ -21,7 +21,7 @@ public class Material : AggregateRoot
     
     public bool IsObsolete { get; private set; }
     
-    public Material(
+    internal Material(
         string materialCode,
         string name,
         Guid productTypeId,
@@ -30,12 +30,47 @@ public class Material : AggregateRoot
         decimal? cost = null,
         bool isObsolete = false)
     {
+        SetMaterialCode(materialCode);
+        SetName(name);
+        SetProductType(productTypeId);
+        SetSellUnit(sellUnitId);
+        SetSellPrice(sellPrice);
+        SetCost(cost);
+        IsObsoleteYet(isObsolete);
+    }
+    
+    internal void SetMaterialCode(string materialCode)
+    {
         MaterialCode = Guard.Against.NullOrWhiteSpace(materialCode, nameof(MaterialCode));
+    }
+
+    internal void SetName(string name)
+    {
         Name = Guard.Against.NullOrWhiteSpace(name, nameof(Name));
+    }
+
+    internal void SetProductType(Guid productTypeId)
+    {
         ProductTypeId = Guard.Against.Default(productTypeId, nameof(ProductTypeId));
+    }
+    
+    internal void SetSellUnit(Guid? sellUnitId)
+    {
         SellUnitId = sellUnitId;
+    }
+    
+    internal void SetSellPrice(decimal? sellPrice)
+    {
         SellPrice = sellPrice;
+    }
+    
+    internal void SetCost(decimal? cost)
+    {
         Cost = cost;
+    }
+    
+    internal void IsObsoleteYet(bool isObsolete)
+    {
         IsObsolete = isObsolete;
     }
 }
