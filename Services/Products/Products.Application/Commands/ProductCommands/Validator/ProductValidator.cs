@@ -1,8 +1,11 @@
 ﻿using BuildingBlocks.Domain.Data;
 using Products.Domain.ProductAggregate.Exceptions;
 using Products.Domain.ProductGroupAggregate;
+using Products.Domain.ProductGroupAggregate.Exceptions;
 using Products.Domain.ProductTypeAggregate;
+using Products.Domain.ProductTypeAggregate.Exceptions;
 using Products.Domain.ProductUnitAggregate;
+using Products.Domain.ProductUnitAggregate.Exceptions;
 
 namespace Products.Application.Commands.ProductCommands.Validator;
 
