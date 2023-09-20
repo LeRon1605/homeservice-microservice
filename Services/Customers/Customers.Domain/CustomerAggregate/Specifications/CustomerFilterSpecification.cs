@@ -12,6 +12,9 @@ public class CustomerFilterSpecification : Specification<Customer>
         {
             AddSearchTerm(search);
             AddSearchField(nameof(Customer.Name));
+            AddSearchField(nameof(Customer.ContactName));
+            AddSearchField(nameof(Customer.Email));
+            AddSearchField(nameof(Customer.Phone));
         }
     }
 }

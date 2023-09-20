@@ -1,9 +1,10 @@
 using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
 using Customers.Domain.CustomerAggregate;
+using Customers.Domain.Exceptions;
 using Microsoft.Extensions.Logging;
 
-namespace Customers.Application.Commands;
+namespace Customers.Application.Commands.DeleteCustomer;
 
 public class DeleteCustomerCommandHandler : ICommandHandler<DeleteCustomerCommand>
 {
@@ -27,13 +28,15 @@ public class DeleteCustomerCommandHandler : ICommandHandler<DeleteCustomerComman
         var customer = await _customerRepository.GetByIdAsync(request.Id);
         if (customer is null)
         {
-            _logger.LogWarning("Customer with id: {Id} was not found!", request.Id);
-            return;
+            _logger.LogWarning("Customer with id: {customerId} was not found!", request.Id);
+            throw new CustomerNotFoundException(request.Id);
         }
 
+        // This delete method is not implemented
+        customer.Delete();
         _customerRepository.Delete(customer);
         await _unitOfWork.SaveChangesAsync();
         
-        _logger.LogInformation("Customer with id: {Id} was deleted!", request.Id);
+        _logger.LogInformation("Customer with id: {customerId} was deleted!", request.Id);
     }
 }

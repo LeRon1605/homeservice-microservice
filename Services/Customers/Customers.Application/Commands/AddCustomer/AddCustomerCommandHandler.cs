@@ -3,9 +3,11 @@ using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
 using Customers.Application.Dtos;
 using Customers.Domain.CustomerAggregate;
+using Customers.Domain.CustomerAggregate.Specifications;
+using Customers.Domain.Exceptions;
 using Microsoft.Extensions.Logging;
 
-namespace Customers.API.Controllers;
+namespace Customers.Application.Commands.AddCustomer;
 
 public class AddCustomerCommandHandler : ICommandHandler<AddCustomerCommand, CustomerDto>
 {
@@ -28,6 +30,14 @@ public class AddCustomerCommandHandler : ICommandHandler<AddCustomerCommand, Cus
     public async Task<CustomerDto> Handle(AddCustomerCommand request,
                                           CancellationToken cancellationToken)
     {
+        var isEmailAlreadyExist = await _customerRepository.AnyAsync(new CustomerEmailAlreadyExistSpecification(request.Email));
+        if (isEmailAlreadyExist)
+            throw new CustomerEmailAlreadyExistException(request.Email!);
+        
+        var isPhoneAlreadyExist = await _customerRepository.AnyAsync(new CustomerPhoneAlreadyExistSpecification(request.Phone));
+        if (isPhoneAlreadyExist)
+            throw new CustomerPhoneAlreadyExistException(request.Phone!);
+        
         var customer = new Customer(request.Name, request.ContactName, request.Email, request.Address, 
             request.City, request.State, request.PostalCode, request.Phone);
         

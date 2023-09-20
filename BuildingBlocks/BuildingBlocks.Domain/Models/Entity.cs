@@ -6,7 +6,7 @@ namespace BuildingBlocks.Domain.Models;
 
 public abstract class Entity : IEntity
 {
-    public Guid Id { get; private set; }
+    public Guid Id { get; protected set; }
 
     private List<IDomainEvent> _domainEvents = null!;
     public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();

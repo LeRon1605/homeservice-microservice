@@ -1,6 +1,6 @@
 using BuildingBlocks.Application.CQRS;
 
-namespace Customers.Application.Commands;
+namespace Customers.Application.Commands.DeleteCustomer;
 
 public class DeleteCustomerCommand : ICommand
 {

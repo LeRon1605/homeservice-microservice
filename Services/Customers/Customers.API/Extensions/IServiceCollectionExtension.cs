@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using BuildingBlocks.Application.Behaviors;
 using BuildingBlocks.Application.Seeder;
 using BuildingBlocks.Domain.Data;
 using BuildingBlocks.Infrastructure.EfCore.UnitOfWorks;
@@ -7,6 +8,7 @@ using Customers.Application.Seeders;
 using Customers.Domain.CustomerAggregate;
 using Customers.Infrastructure.EfCore;
 using Customers.Infrastructure.EfCore.Repositories;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Customers.API.Extensions;
@@ -44,6 +46,7 @@ public static class IServiceCollectionExtension
         services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssemblyContaining(typeof(CustomerApplicationAssemblyReference));
+            cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
 
         return services;
@@ -52,6 +55,13 @@ public static class IServiceCollectionExtension
     public static IServiceCollection AddSeeder(this IServiceCollection services)
 	{
 		services.AddScoped<IDataSeeder, CustomerSeeder>();
+		
+		return services;
+	}
+    
+    public static IServiceCollection AddValidators(this IServiceCollection services)
+	{
+		services.AddValidatorsFromAssemblyContaining(typeof(CustomerApplicationAssemblyReference));
 		
 		return services;
 	}
