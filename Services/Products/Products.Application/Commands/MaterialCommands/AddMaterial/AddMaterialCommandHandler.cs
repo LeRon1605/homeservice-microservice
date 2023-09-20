@@ -6,6 +6,7 @@ using Products.Application.Commands.ProductCommands.AddProduct;
 using Products.Application.Dtos;
 using Products.Domain.MaterialAggregate;
 using Products.Domain.MaterialAggregate.DomainServices;
+using Products.Domain.MaterialAggregate.Specifications;
 
 namespace Products.Application.Commands.MaterialCommands.AddMaterial;
 
@@ -48,6 +49,7 @@ public class AddMaterialCommandHandler : ICommandHandler<AddMaterialCommand, Get
 
         _logger.LogTrace("Material {materialId} is successfully added", material.Id);
 
-        return _mapper.Map<GetMaterialDto>(material);
+        var createdMaterial = await _materialRepository.FindAsync(new MaterialByIdSpecification(material.Id));
+        return _mapper.Map<GetMaterialDto>(createdMaterial);
     }
 }
