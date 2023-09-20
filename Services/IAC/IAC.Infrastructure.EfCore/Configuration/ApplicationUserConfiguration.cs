@@ -8,12 +8,9 @@ public class ApplicationUserConfiguration: IEntityTypeConfiguration<ApplicationU
 {
     public void Configure(EntityTypeBuilder<ApplicationUser> builder)
     {
-        builder.Property(x => x.FirstName)
+        builder.Property(x => x.FullName)
             .IsRequired();
-
-        builder.Property(x => x.LastName)
-            .IsRequired();
-
+        
         builder.Property(x => x.PhoneNumber)
             .IsRequired();
     }
