@@ -22,13 +22,15 @@ public class AddSignedUpCustomerCommandHandler : ICommandHandler<AddSignedUpCust
         _logger = logger;
     }
 
-    public Task Handle(AddSignedUpCustomerCommand request,
+    public async Task Handle(AddSignedUpCustomerCommand request,
                        CancellationToken cancellationToken)
     {
         var customer = Customer.CreateWithId(request.Id, request.FullName, request.Phone, request.Email);
+        
         _customerRepository.Add(customer);
-        _unitOfWork.SaveChangesAsync();
+        
+        await _unitOfWork.SaveChangesAsync();
+        
         _logger.LogInformation("Customer {customerId} is successfully created.", customer.Id);
-        return Task.CompletedTask;
     }
 }

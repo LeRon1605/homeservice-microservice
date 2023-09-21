@@ -13,7 +13,7 @@ public class EditCustomerCommandValidator : AbstractValidator<EditCustomerComman
 
         RuleFor(command => command.ContactName)
             .MaximumLength(StringLength.Name)
-            .When(x => !string.IsNullOrWhiteSpace(x.ContactName));
+            .NotEmpty();
         
         RuleFor(command => command.Email)
             .MaximumLength(StringLength.Email)
@@ -35,10 +35,10 @@ public class EditCustomerCommandValidator : AbstractValidator<EditCustomerComman
         RuleFor(command => command.PostalCode)
             .MaximumLength(StringLength.PostalCode)
             .When(x => !string.IsNullOrWhiteSpace(x.PostalCode));
-        
+
         RuleFor(command => command.Phone)
             .MaximumLength(StringLength.Phone)
             .Must(x => x.All(char.IsDigit))
-            .When(x => !string.IsNullOrWhiteSpace(x.Phone));
+            .NotEmpty();
     }
 }

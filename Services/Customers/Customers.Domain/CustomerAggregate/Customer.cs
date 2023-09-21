@@ -7,25 +7,25 @@ namespace Customers.Domain.CustomerAggregate;
 public class Customer : AggregateRoot
 {
     public string Name { get; private set; }
-    public string? ContactName { get; private set; }
+    public string ContactName { get; private set; }
     public string? Email { get; private set; }
-    public string? Phone { get; private set; }
+    public string Phone { get; private set; }
     public CustomerAddress Address { get; private set; }
 
     public Customer(
-        string? name = null,
-        string? contactName = null,
+        string? name,
+        string? contactName,
+        string? phone,
         string? email = null,
         string? address = null,
         string? city = null,
         string? state = null,
-        string? postalCode = null,
-        string? phone = null)
+        string? postalCode = null)
     {
-        Name = name ?? "Retail Customer";
-        ContactName = contactName;
+        Name = Guard.Against.NullOrWhiteSpace(name, nameof(name));
+        ContactName = Guard.Against.NullOrWhiteSpace(contactName, nameof(contactName));
+        Phone = Guard.Against.NullOrWhiteSpace(phone, nameof(phone));
         Email = email;
-        Phone = phone;
         Address = new CustomerAddress(address, city, state, postalCode);
     }
 
@@ -33,19 +33,19 @@ public class Customer : AggregateRoot
     {
     }
     
-    public void Update(string? name = null,
-                       string? contactName = null,
+    public void Update(string? name,
+                       string? contactName,
+                       string? phone,
                        string? email = null,
                        string? address = null,
                        string? city = null,
                        string? state = null,
-                       string? postalCode = null,
-                       string? phone = null)
+                       string? postalCode = null)
     {
-        Name = name ?? "Retail Customer";
-        ContactName = contactName;
+        Name = Guard.Against.NullOrWhiteSpace(name, nameof(name));
+        ContactName = Guard.Against.NullOrWhiteSpace(contactName, nameof(contactName));
+        Phone = Guard.Against.NullOrWhiteSpace(phone, nameof(phone));
         Email = email;
-        Phone = phone;
         Address = new CustomerAddress(address, city, state, postalCode);
     }
     
@@ -58,16 +58,15 @@ public class Customer : AggregateRoot
     
     public static Customer CreateWithId(
                            Guid id,
-                           string? name = "Retail Customer",
-                           string? contactName = null,
+                           string? contactName,
+                           string? phone,
                            string? email = null,
                            string? address = null,
                            string? city = null,
                            string? state = null,
-                           string? postalCode = null,
-                           string? phone = null)
+                           string? postalCode = null)
     {
-        var customer = new Customer(name, contactName, email, address, city, state, postalCode, phone)
+        var customer = new Customer("Retail Customer", contactName, phone, email, address, city, state, postalCode)
         {
             Id = id
         };

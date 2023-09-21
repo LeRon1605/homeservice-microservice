@@ -1,4 +1,5 @@
 using BuildingBlocks.Application.Identity;
+using BuildingBlocks.Application.IntegrationEvent;
 using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Authorization;
@@ -10,6 +11,8 @@ using BuildingBlocks.Presentation.Extension;
 using BuildingBlocks.Presentation.Swagger;
 using IAC.API.Extensions;
 using IAC.Application.Grpc.Services;
+using IAC.Application.IntegrationEvents.Events;
+using IAC.Application.IntegrationEvents.Handlers;
 using IAC.Infrastructure.EfCore;
 using Serilog;
 
@@ -32,6 +35,9 @@ builder.Services.AddSwagger("IdentityService")
 
 builder.Services.AddControllers();
 
+builder.Services
+    .AddScoped<IIntegrationEventHandler<CustomerInfoChangedIntegrationEvent>, CustomerInfoChangedIntegrationEventHandler>();
+
 builder.Host.UseSerilog();
 
 var app = builder.Build();
@@ -39,6 +45,8 @@ var app = builder.Build();
 app.UseApplicationExceptionHandler();
 
 var eventBus = app.Services.GetRequiredService<IEventBus>();
+
+eventBus.Subscribe<CustomerInfoChangedIntegrationEvent, IIntegrationEventHandler<CustomerInfoChangedIntegrationEvent>>();
 
 app.UseSwagger();
 app.UseSwaggerUI();

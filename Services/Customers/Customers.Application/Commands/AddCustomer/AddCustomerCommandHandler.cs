@@ -38,8 +38,8 @@ public class AddCustomerCommandHandler : ICommandHandler<AddCustomerCommand, Cus
         if (isPhoneAlreadyExist)
             throw new CustomerPhoneAlreadyExistException(request.Phone!);
         
-        var customer = new Customer(request.Name, request.ContactName, request.Email, request.Address, 
-            request.City, request.State, request.PostalCode, request.Phone);
+        var customer = new Customer(request.Name, request.ContactName, request.Phone, request.Email, request.Address, 
+            request.City, request.State, request.PostalCode);
         
         _customerRepository.Add(customer);
         await _unitOfWork.SaveChangesAsync();
