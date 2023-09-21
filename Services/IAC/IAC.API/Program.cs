@@ -38,6 +38,9 @@ builder.Services.AddControllers();
 builder.Services
     .AddScoped<IIntegrationEventHandler<CustomerInfoChangedIntegrationEvent>, CustomerInfoChangedIntegrationEventHandler>();
 
+builder.Services
+    .AddScoped<IIntegrationEventHandler<CustomerDeletedIntegrationEvent>, CustomerDeletedIntegrationEventHandler>();
+
 builder.Host.UseSerilog();
 
 var app = builder.Build();
@@ -47,6 +50,7 @@ app.UseApplicationExceptionHandler();
 var eventBus = app.Services.GetRequiredService<IEventBus>();
 
 eventBus.Subscribe<CustomerInfoChangedIntegrationEvent, IIntegrationEventHandler<CustomerInfoChangedIntegrationEvent>>();
+eventBus.Subscribe<CustomerDeletedIntegrationEvent, IIntegrationEventHandler<CustomerDeletedIntegrationEvent>>();
 
 app.UseSwagger();
 app.UseSwaggerUI();
