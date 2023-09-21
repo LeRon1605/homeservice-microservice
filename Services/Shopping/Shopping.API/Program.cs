@@ -3,6 +3,7 @@ using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Authentication;
 using BuildingBlocks.Presentation.Authorization;
+using BuildingBlocks.Presentation.DataSeeder;
 using BuildingBlocks.Presentation.EfCore;
 using BuildingBlocks.Presentation.EventBus;
 using BuildingBlocks.Presentation.Extension;
@@ -30,7 +31,7 @@ builder.Host.UseSerilog();
 
 var app = builder.Build();
 
-var eventBus = app.Services.GetRequiredService<IEventBus>();
+// var eventBus = app.Services.GetRequiredService<IEventBus>();
 
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -40,5 +41,6 @@ app.UseAuthentication();
 app.MapControllers();
 
 await app.ApplyMigrationAsync<OrderDbContext>(app.Logger);
+await app.SeedDataAsync();
 
 app.Run();
