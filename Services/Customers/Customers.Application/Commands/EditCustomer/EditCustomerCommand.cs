@@ -5,19 +5,18 @@ namespace Customers.Application.Commands.EditCustomer;
 
 public class EditCustomerCommand : ICommand<CustomerDto>
 {
-    public Guid Id { get; init; }
+    public Guid Id { get; set; }
     
-    public string? Name { get; set; }
-    public string? ContactName { get; set; }
-    public string? Email { get; set; }
-    public string? Address { get; set; }
-    public string? City { get; set; }
-    public string? State { get; set; }
-    public string? PostalCode { get; set; }
-    public string? Phone { get; set; }
+    public string? Name { get; init; }
+    public string? ContactName { get; init; }
+    public string? Email { get; init; }
+    public string? Address { get; init; }
+    public string? City { get; init; }
+    public string? State { get; init; }
+    public string? PostalCode { get; init; }
+    public string? Phone { get; init; }
     
-    public EditCustomerCommand(Guid id,
-                               string name,
+    public EditCustomerCommand(string name,
                                string? contactName,
                                string? email,
                                string? address,
@@ -26,7 +25,6 @@ public class EditCustomerCommand : ICommand<CustomerDto>
                                string? postalCode,
                                string? phone)
     {
-        Id = id;
         Name = name;
         ContactName = contactName;
         Email = email;
