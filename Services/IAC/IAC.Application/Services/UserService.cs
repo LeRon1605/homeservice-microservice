@@ -31,6 +31,18 @@ public class UserService : IUserService
         await _userManager.UpdateAsync(user); 
     }
 
+    public async Task DeleteUserAsync(Guid userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+
+        if (user is null)
+        {
+            throw new UserNotFoundException(userId);
+        }
+
+        await _userManager.DeleteAsync(user);
+    }
+
     public async Task<bool> AnyAsync(Guid userId)
     {
         var user = await _userManager.FindByIdAsync(userId.ToString());

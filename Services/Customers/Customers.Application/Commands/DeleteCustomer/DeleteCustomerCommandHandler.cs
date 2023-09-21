@@ -1,5 +1,8 @@
 using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
+using BuildingBlocks.Domain.Event;
+using BuildingBlocks.EventBus.Interfaces;
+using Customers.Application.IntegrationEvents.Events;
 using Customers.Domain.CustomerAggregate;
 using Customers.Domain.Exceptions;
 using Microsoft.Extensions.Logging;
@@ -11,15 +14,18 @@ public class DeleteCustomerCommandHandler : ICommandHandler<DeleteCustomerComman
     private readonly ICustomerRepository _customerRepository;
     private readonly ILogger<DeleteCustomerCommandHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IEventBus _eventBus;
     
 
     public DeleteCustomerCommandHandler(ICustomerRepository customerRepository,
                                         ILogger<DeleteCustomerCommandHandler> logger,
-                                        IUnitOfWork unitOfWork)
+                                        IUnitOfWork unitOfWork,
+                                        IEventBus eventBus)
     {
         _customerRepository = customerRepository;
         _logger = logger;
         _unitOfWork = unitOfWork;
+        _eventBus = eventBus;
     }
 
     public async Task Handle(DeleteCustomerCommand request,
@@ -36,6 +42,12 @@ public class DeleteCustomerCommandHandler : ICommandHandler<DeleteCustomerComman
         customer.Delete();
         _customerRepository.Delete(customer);
         await _unitOfWork.SaveChangesAsync();
+        
+        _logger.LogInformation("Publishing CustomerDeletedIntegrationEvent for customer with id: {customerId}", request.Id);
+        
+        _eventBus.Publish(new CustomerDeletedIntegrationEvent(customer.Id)); 
+        
+        _logger.LogInformation("Published CustomerDeletedIntegrationEvent for customer with id: {customerId}", request.Id);
         
         _logger.LogInformation("Customer with id: {customerId} was deleted!", request.Id);
     }

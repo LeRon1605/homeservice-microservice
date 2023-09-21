@@ -20,6 +20,8 @@ public class CustomerInfoChangedIntegrationEventHandler : IIntegrationEventHandl
 
     public async Task Handle(CustomerInfoChangedIntegrationEvent @event)
     {
+        _logger.LogInformation("Received CustomerInfoChangedIntegrationEvent for customer with id: {customerId}", @event.CustomerId);
+        
         if (!await _userService.AnyAsync(@event.CustomerId))
             return;
         
