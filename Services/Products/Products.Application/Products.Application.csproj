@@ -10,6 +10,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Application\BuildingBlocks.Application.csproj" />
+      <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.EventBus\BuildingBlocks.EventBus.csproj" />
       <ProjectReference Include="..\Products.Domain\Products.Domain.csproj" />
     </ItemGroup>
 
@@ -18,45 +19,8 @@
     <ItemGroup>
       <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
       <PackageReference Include="Bogus" Version="34.0.2" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </ItemGroup>
-
-
-
-
-
-
-
-
-
-
+    <ItemGroup>
+        <Folder Include="IntegrationEvents\EventHandling\" />
+    </ItemGroup>
 </Project>
