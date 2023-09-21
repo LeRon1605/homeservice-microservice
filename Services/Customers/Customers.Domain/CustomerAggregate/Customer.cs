@@ -56,7 +56,7 @@ public class Customer : AggregateRoot
         // Check constraints? (customer has no orders, etc.)
     }
     
-    public Customer CreateWithId(
+    public static Customer CreateWithId(
                            Guid id,
                            string? name = "Retail Customer",
                            string? contactName = null,

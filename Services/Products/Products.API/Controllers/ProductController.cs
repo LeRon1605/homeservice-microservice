@@ -6,9 +6,6 @@ using Products.Application.Commands.ProductCommands.DeleteProduct;
 using Products.Application.Commands.ProductCommands.UpdateProduct;
 using Products.Application.Commands.ProductCommands.UploadProductImage;
 using Products.Application.Dtos;
-using Products.Application.Queries.ProductQuery.GetAllProductGroup;
-using Products.Application.Queries.ProductQuery.GetAllProductType;
-using Products.Application.Queries.ProductQuery.GetAllProductUnit;
 using Products.Application.Queries.ProductQuery.GetProductById;
 using Products.Application.Queries.ProductQuery.GetProductsWithPagination;
 
@@ -53,30 +50,6 @@ public class ProductController : ControllerBase
         var product = await _mediator.Send(new UpdateProductCommand(id, productUpdateDto));
         return Ok(product);
     } 
-    
-    [HttpGet("groups")]
-    [ProducesResponseType(typeof(IEnumerable<ProductGroupDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetProductGroupsAsync([FromQuery] GetAllProductGroupQuery query)
-    {
-        var productGroups = await _mediator.Send(query);
-        return Ok(productGroups);
-    }
-    
-    [HttpGet("types")]
-    [ProducesResponseType(typeof(IEnumerable<ProductTypeDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetProductTypesAsync([FromQuery] GetAllProductTypeQuery query)
-    {
-        var productTypes = await _mediator.Send(query);
-        return Ok(productTypes);
-    }
-    
-    [HttpGet("units")]
-    [ProducesResponseType(typeof(IEnumerable<ProductUnitDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetProductUnitsAsync([FromQuery] GetAllProductUnitQuery query)
-    {
-        var productUnits = await _mediator.Send(query);
-        return Ok(productUnits);
-    }
     
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

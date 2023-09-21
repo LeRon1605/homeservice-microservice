@@ -4,6 +4,7 @@ using BuildingBlocks.Domain.Exceptions.Common;
 using BuildingBlocks.Domain.Exceptions.Resource;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -28,9 +29,21 @@ public class ExceptionHandler : IExceptionHandler
         context.Response.StatusCode = GetResponseStatusCode(exception);
 
         var errorResponse = GetErrorResponse(exception);
-        await context.Response.WriteAsync(JsonSerializer.Serialize(errorResponse));
+
+        var problemDetails = new ProblemDetails()
+        {
+            Title = _env.IsDevelopment() ? exception.GetType().Name : "An error occurred on the server.",
+            Detail = errorResponse.Message,
+            Status = GetResponseStatusCode(exception)
+        };
+
+        if (exception is ValidationException validationException)
+            problemDetails.Extensions.Add("errors",
+                validationException.Errors.Select(x => new { x.PropertyName, x.ErrorMessage }));
+        problemDetails.Extensions.Add("errorCode", GetErrorResponse(exception).Code);
+        await context.Response.WriteAsync(JsonSerializer.Serialize(problemDetails));
     }
-    
+
     private ErrorResponse GetErrorResponse(Exception exception)
     {
         var response = new ErrorResponse();

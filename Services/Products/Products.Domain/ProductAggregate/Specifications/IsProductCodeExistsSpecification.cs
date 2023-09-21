@@ -6,6 +6,6 @@ public class IsProductCodeExistsSpecification : Specification<Product>
 {
     public IsProductCodeExistsSpecification(string productCode)
     {
-        AddFilter(p => string.Equals(p.ProductCode, productCode, StringComparison.CurrentCultureIgnoreCase));
+        AddFilter(p => p.ProductCode.ToLower() == productCode.ToLower());
     }
 }

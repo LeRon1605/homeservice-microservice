@@ -4,7 +4,7 @@ namespace BuildingBlocks.Domain.Specification;
 
 public abstract class Specification<T> : ISpecification<T>
 {
-    public bool IsTracking { get; set; }
+    public bool IsNoTracking { get; set; }
     public List<Expression<Func<T, object>>> Includes { get; } = new();
     public List<Expression<Func<T, bool>>> Filters { get; } = new();
     public List<string> IncludeStrings { get; } = new();
@@ -23,7 +23,7 @@ public abstract class Specification<T> : ISpecification<T>
     
     protected void AddSearchField(string searchField) => SearchFields.Add(searchField);
     
-    protected void SetTracking(bool isTracking) => IsTracking = isTracking;
+    protected void SetTracking(bool isTracking) => IsNoTracking = isTracking;
 
     protected void AddInclude(Expression<Func<T, object>> includeExpression) => Includes.Add(includeExpression);
 

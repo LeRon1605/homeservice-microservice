@@ -1,3 +1,4 @@
+using BuildingBlocks.Application.IntegrationEvent;
 using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Authentication;
@@ -9,6 +10,8 @@ using BuildingBlocks.Presentation.Extension;
 using BuildingBlocks.Presentation.Swagger;
 using Customers.API.Extensions;
 using Customers.Infrastructure.EfCore;
+using Customers.Application.IntegrationEvents.Events;
+using Customers.Application.IntegrationEvents.Handlers;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,12 +31,17 @@ builder.Services.AddSwagger("CustomerService")
                 .AddSeeder();
 
 builder.Services.AddControllers();
+builder.Services
+    .AddScoped<IIntegrationEventHandler<UserSignedUpIntegrationEvent>, UserSignedUpIntegrationEventHandler>();
 
 builder.Host.UseSerilog();
 
 var app = builder.Build();
 
 var eventBus = app.Services.GetRequiredService<IEventBus>();
+
+eventBus.Subscribe<UserSignedUpIntegrationEvent, IIntegrationEventHandler<UserSignedUpIntegrationEvent>>();
+
 
 app.UseApplicationExceptionHandler();
 app.UseSwagger();

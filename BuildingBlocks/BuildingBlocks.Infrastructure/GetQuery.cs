@@ -13,7 +13,7 @@ public static class GetQuery<TEntity> where TEntity : Entity
             return query;
         
         // Check tracking
-        query = specification.IsTracking ? query.AsTracking() : query.AsNoTracking();
+        query = specification.IsNoTracking ? query.AsNoTracking() : query.AsTracking();
 
         // Filtering
         foreach (var filter in specification.Filters)

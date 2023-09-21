@@ -56,7 +56,7 @@ public class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand,
                 _productRepository
             );
         
-        //_productRepository.Update(product);
+        _productRepository.Update(product);
         await _unitOfWork.SaveChangesAsync();
         
         return _mapper.Map<GetProductDto>(product);
