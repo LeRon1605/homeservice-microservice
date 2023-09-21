@@ -9,28 +9,16 @@ using Customers.Domain.CustomerAggregate;
 using Customers.Infrastructure.EfCore;
 using Customers.Infrastructure.EfCore.Repositories;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 
 namespace Customers.API.Extensions;
 
 public static class IServiceCollectionExtension
 {
-	public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
-	{
-		services.AddDbContext<CustomerDbContext>(options =>
-		{
-			options.EnableSensitiveDataLogging(env.IsDevelopment());
-			options.UseSqlServer(configuration.GetConnectionString("CustomerDb"));
-		});
-
-		return services;
-	}
-
 	public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped<ICustomerRepository, CustomerRepository>();
-		services.AddScoped<IReadOnlyRepository<Customer>, ReadOnlyCustomerRepository>();
 		services.AddScoped<IUnitOfWork, EfCoreUnitOfWork<CustomerDbContext>>();
+		services.AddScoped<ICustomerRepository, CustomerRepository>();
+		
 		return services;
     }
     

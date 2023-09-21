@@ -32,4 +32,11 @@
       </Content>
     </ItemGroup>
 
+
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Products.API\obj\Products.API.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="Products.API\obj\project.assets.json" />
+    </ItemGroup>
+
 </Project>

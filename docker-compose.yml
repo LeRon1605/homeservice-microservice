@@ -16,7 +16,7 @@
       - EventBus__RetryCount=5
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__DefaultConnection=Server=db,1433;Database=HomeCare.ProductDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
+      - ConnectionStrings__Default=Server=db,1433;Database=HomeCare.ProductDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
       - GrpcUrls__Identity=http://iac.api:3000
       - Cloudinary__CloudName=dboijruhe
       - Cloudinary__ApiKey=431114562135728
@@ -72,7 +72,7 @@
       - Serilog__SeqServerUrl=http://seq:5341
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__CustomerDb=Server=db,1433;Database=HomeCare.CustomerDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
+      - ConnectionStrings__Default=Server=db,1433;Database=HomeCare.CustomerDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
       - GrpcUrls__Identity=http://iac.api:3000
     restart: always
     depends_on:
@@ -98,7 +98,7 @@
       - Serilog__SeqServerUrl=http://seq:5341
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__OrderDb=Server=db,1433;Database=HomeCare.ShoppingDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
+      - ConnectionStrings__Default=Server=db,1433;Database=HomeCare.ShoppingDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
       - GrpcUrls__Identity=http://iac.api:3000
     restart: always
     depends_on:

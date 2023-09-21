@@ -4,13 +4,16 @@ using BuildingBlocks.Presentation.Authentication;
 using BuildingBlocks.Presentation.Authorization;
 using BuildingBlocks.Presentation.Cloudinary;
 using BuildingBlocks.Presentation.DataSeeder;
+using BuildingBlocks.Presentation.EfCore;
 using BuildingBlocks.Presentation.EventBus;
 using BuildingBlocks.Presentation.ExceptionHandlers;
+using BuildingBlocks.Presentation.Extension;
 using FluentValidation;
 using Products.Application.Dtos;
 using Products.Application.MappingProfiles;
 using BuildingBlocks.Presentation.Swagger;
 using Products.API.Extensions;
+using Products.Infrastructure.EfCore.Data;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,23 +23,19 @@ builder.Host.UseSerilog();
 
 builder.Services.AddControllers();
 builder.Services.AddSwagger("ProductService")
-    .AddCloudinary(builder.Configuration)
-    .AddApplicationExceptionHandler()
-    .AddEventBus(builder.Configuration)
-    .AddDbContext(builder.Configuration)
-    .AddAutoMapper(typeof(Profiles))
-    .AddMediatR()
-    .AddHomeServiceAuthentication(builder.Configuration)
-    .AddDataSeeder()
-    .AddValidatorsFromAssembly(typeof(GetProductDto).Assembly)
-    .AddServices()
-    .AddDomainServices()
-    .AddRepositories();
-                
-                
-
-builder.Services.AddScoped<ICurrentUser, CurrentUser>();
-builder.Services.AddHttpContextAccessor();
+                .AddCloudinary(builder.Configuration)
+                .AddEfCoreDbContext<ProductDbContext>(builder.Configuration)
+                .AddApplicationExceptionHandler()
+                .AddEventBus(builder.Configuration)
+                .AddAutoMapper(typeof(Profiles))
+                .AddMediatR()
+                .AddHomeServiceAuthentication(builder.Configuration)
+                .AddDataSeeder()
+                .AddValidatorsFromAssembly(typeof(GetProductDto).Assembly)
+                .AddServices()
+                .AddDomainServices()
+                .AddRepositories()
+                .AddCurrentUser();
 
 var app = builder.Build();
 
@@ -52,7 +51,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-await app.ApplyMigrationAsync(app.Logger);
+await app.ApplyMigrationAsync<ProductDbContext>(app.Logger);
 await app.SeedDataAsync();
 
 app.Run();

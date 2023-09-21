@@ -1,11 +1,12 @@
-﻿using BuildingBlocks.Infrastructure.EfCore.Repositories;
+using BuildingBlocks.Infrastructure.EfCore;
+using BuildingBlocks.Infrastructure.EfCore.Repositories;
 using Customers.Domain.CustomerAggregate;
 
 namespace Customers.Infrastructure.EfCore.Repositories;
 
-public class CustomerRepository : EfCoreRepository<CustomerDbContext,Customer>, ICustomerRepository
+public class CustomerRepository : EfCoreRepository<Customer>, ICustomerRepository
 {
-    public CustomerRepository(CustomerDbContext dbContext) : base(dbContext)
+    public CustomerRepository(DbContextFactory dbContextFactory) : base(dbContextFactory)
     {
     }
 }

@@ -20,17 +20,6 @@ namespace IAC.API.Extensions;
 
 public static class DependencyInjectionExtension
 {
-    public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
-    {
-        services.AddDbContext<IacDbContext>(options =>
-        {
-            options.EnableSensitiveDataLogging(env.IsDevelopment());
-            options.UseSqlServer(configuration.GetConnectionString("Default"));
-        });
-        
-        return services;
-    }
-    
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IUnitOfWork, EfCoreUnitOfWork<IacDbContext>>();

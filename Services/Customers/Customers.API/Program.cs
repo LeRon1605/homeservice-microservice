@@ -3,11 +3,13 @@ using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Authentication;
 using BuildingBlocks.Presentation.DataSeeder;
+using BuildingBlocks.Presentation.EfCore;
 using BuildingBlocks.Presentation.EventBus;
 using BuildingBlocks.Presentation.ExceptionHandlers;
 using BuildingBlocks.Presentation.Extension;
 using BuildingBlocks.Presentation.Swagger;
 using Customers.API.Extensions;
+using Customers.Infrastructure.EfCore;
 using Customers.Application.IntegrationEvents.Events;
 using Customers.Application.IntegrationEvents.Handlers;
 using Serilog;
@@ -18,14 +20,14 @@ Log.Logger = ApplicationLoggerFactory.CreateSerilogLogger(builder.Configuration,
 
 builder.Services.AddSwagger("CustomerService")
                 .AddEventBus(builder.Configuration)
-                .AddDatabase(builder.Configuration, builder.Environment)
+                .AddEfCoreDbContext<CustomerDbContext>(builder.Configuration)
                 .AddRepositories()
                 .AddHomeServiceAuthentication(builder.Configuration)
                 .AddApplicationExceptionHandler()
                 .AddCqrs()
                 .AddValidators()
                 .AddMapper()
-                .AddService()
+                .AddCurrentUser()
                 .AddSeeder();
 
 builder.Services.AddControllers();
@@ -49,7 +51,7 @@ app.MapControllers();
 
 app.UseAuthentication();
 
-await app.ApplyMigrationAsync(app.Logger);
+await app.ApplyMigrationAsync<CustomerDbContext>(app.Logger);
 await app.SeedDataAsync();
 
 app.Run();

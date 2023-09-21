@@ -5,18 +5,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BuildingBlocks.Infrastructure.EfCore.Repositories;
 
-public class EfCoreRepository<TDbContext, TAggregateRoot> : IRepository<TAggregateRoot>
+public class EfCoreRepository<TAggregateRoot> : IRepository<TAggregateRoot>
     where TAggregateRoot : AggregateRoot
-    where TDbContext : DbContext
 {
     private DbSet<TAggregateRoot>? _dbSet;
     
-    private readonly TDbContext _dbContext;
+    private readonly DbContext _dbContext;
     private DbSet<TAggregateRoot> DbSet => _dbSet ??= _dbContext.Set<TAggregateRoot>();
     
-    public EfCoreRepository(TDbContext dbContext)
+    public EfCoreRepository(DbContextFactory dbContextFactory)
     {
-        _dbContext = dbContext;
+        _dbContext = dbContextFactory.DbContext;
     }
 
     public void Add(TAggregateRoot entity) => DbSet.Add(entity);
