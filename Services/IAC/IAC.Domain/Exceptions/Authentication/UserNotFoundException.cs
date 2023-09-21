@@ -11,4 +11,8 @@ public class UserNotFoundException : ResourceNotFoundException
     public UserNotFoundException(string column, string value) : base("User", "Id", value, ErrorCodes.UserNotFound)
     {
     }
+    
+    public UserNotFoundException(Guid userId) : base($"User with id {userId} was not found", ErrorCodes.UserNotFound)
+    {
+    }
 }
