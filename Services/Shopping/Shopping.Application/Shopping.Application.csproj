@@ -13,4 +13,26 @@
       <ProjectReference Include="..\Shopping.Domain\Shopping.Domain.csproj" />
     </ItemGroup>
 
+
+
+
+
+
+
+    <ItemGroup>
+      <PackageReference Include="Bogus" Version="34.0.2" />
+    </ItemGroup>
+
+
+
+
+
+
+
+    <ItemGroup>
+      <Folder Include="Mapper\" />
+    </ItemGroup>
+
+
+
 </Project>

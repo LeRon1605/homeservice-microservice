@@ -48,8 +48,8 @@ public class Product : AggregateRoot
     {
         ProductCode = Guard.Against.NullOrWhiteSpace(productCode, nameof(ProductCode));
         Name = Guard.Against.NullOrWhiteSpace(name, nameof(Name));
-        ProductTypeId = Guard.Against.Default(productTypeId, nameof(ProductTypeId));
-        ProductGroupId = Guard.Against.Default(productGroupId, nameof(ProductGroupId));
+        ProductTypeId = Guard.Against.Null(productTypeId, nameof(ProductTypeId));
+        ProductGroupId = Guard.Against.Null(productGroupId, nameof(ProductGroupId));
         IsObsolete = isObsolete;
         Description = description;
         BuyUnitId = buyUnitId;
