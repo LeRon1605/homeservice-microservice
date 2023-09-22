@@ -14,7 +14,7 @@ public class GetProductDto
     public ProductUnitDto? BuyUnit { get; set; }
     
     public ProductUnitDto? SellUnit { get; set; }
-    public ProductTypeDto Type { get; set; }
-    public ProductGroupDto Group { get; set; }
-    public ProductImageDto[] Images { get; set; }
-}
+    public ProductTypeDto Type { get; set; } = null!;
+    public ProductGroupDto Group { get; set; } = null!;
+    public ProductImageDto[] Images { get; set; } = null!;
+} 

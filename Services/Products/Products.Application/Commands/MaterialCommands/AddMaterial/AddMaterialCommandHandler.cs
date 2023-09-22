@@ -37,7 +37,7 @@ public class AddMaterialCommandHandler : ICommandHandler<AddMaterialCommand, Get
     {
         var material = await _materialDomainService.CreateAsync(request.MaterialCode,
                                     request.Name,
-                                    request.ProductTypeId,
+                                    request.TypeId,
                                     request.SellUnitId,
                                     request.SellPrice,
                                     request.Cost,

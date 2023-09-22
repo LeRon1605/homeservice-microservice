@@ -1,8 +1,6 @@
-using BuildingBlocks.Application.Identity;
 using BuildingBlocks.Application.IntegrationEvent;
 using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.Infrastructure.Serilog;
-using BuildingBlocks.Presentation.Authorization;
 using BuildingBlocks.Presentation.DataSeeder;
 using BuildingBlocks.Presentation.EfCore;
 using BuildingBlocks.Presentation.EventBus;

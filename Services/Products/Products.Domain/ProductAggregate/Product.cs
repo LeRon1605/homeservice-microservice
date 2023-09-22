@@ -17,20 +17,20 @@ public class Product : AggregateRoot
     public bool IsObsolete { get; private set; }
     
     public Guid? BuyUnitId { get; private set; }
-    public ProductUnit? BuyUnit { get; private set; }
+    public ProductUnit BuyUnit { get; private set; } = null!;
     
     public decimal? BuyPrice { get; private set; }
     
     public Guid? SellUnitId { get; private set; }
-    public ProductUnit? SellUnit { get; private set; }
+    public ProductUnit SellUnit { get; private set; } = null!;
     
-    public decimal? SellPrice { get; private set; }
+    public decimal SellPrice { get; private set; }
     
     public Guid ProductTypeId { get; private set; }
-    public ProductType Type { get; private set; }
+    public ProductType Type { get; private set; } = null!;
     
     public Guid ProductGroupId { get; private set; }
-    public ProductGroup Group { get; private set; }
+    public ProductGroup Group { get; private set; } = null!;
     
     public List<ProductImage> Images { get; private set; }
         
@@ -44,7 +44,7 @@ public class Product : AggregateRoot
         Guid? buyUnitId = null,
         decimal? buyPrice = null,
         Guid? sellUnitId = null,
-        decimal? sellPrice = null)
+        decimal sellPrice = 0)
     {
         ProductCode = Guard.Against.NullOrWhiteSpace(productCode, nameof(ProductCode));
         Name = Guard.Against.NullOrWhiteSpace(name, nameof(Name));
@@ -96,7 +96,7 @@ public class Product : AggregateRoot
             Guid? buyUnitId,
             decimal? buyPrice,
             Guid? sellUnitId,
-            decimal? sellPrice,
+            decimal sellPrice,
             string[] urls,
             IRepository<Product> productRepository)
     {
@@ -123,7 +123,7 @@ public class Product : AggregateRoot
         Guid? buyUnitId,
         decimal? buyPrice,
         Guid? sellUnitId,
-        decimal? sellPrice,
+        decimal sellPrice,
         string[] urls,
         IRepository<Product> productRepository)
     {

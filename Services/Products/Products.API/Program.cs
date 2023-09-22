@@ -1,7 +1,5 @@
-using BuildingBlocks.Application.Identity;
 using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Authentication;
-using BuildingBlocks.Presentation.Authorization;
 using BuildingBlocks.Presentation.Cloudinary;
 using BuildingBlocks.Presentation.DataSeeder;
 using BuildingBlocks.Presentation.EfCore;

@@ -10,7 +10,7 @@ public class MaterialUpdateDto
     [Required] 
     public string Name { get; set; } = null!;
     
-    public Guid ProductTypeId { get; set; }
+    public Guid TypeId { get; set; }
     
     public Guid? SellUnitId { get; set; }
     

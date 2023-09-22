@@ -2,6 +2,6 @@
 
 public class ErrorResponse
 {
-    public string Code { get; set; }
-    public string Message { get; set; }
+    public string Code { get; set; } = null!;
+    public string Message { get; set; } = null!;
 }

@@ -36,8 +36,8 @@ public class AddProductCommandHandler : ICommandHandler<AddProductCommand, GetPr
         var productCreated = await Product.InitAsync(request.ProductCode, request.Name, request.TypeId,
             request.GroupId, request.Description,
             request.IsObsolete, request.BuyUnitId,
-            request.Buy, request.SellUnitId,
-            request.Sell,
+            request.BuyPrice, request.SellUnitId,
+            request.SellPrice!.Value,
             request.Urls,
             _productRepository
             );
