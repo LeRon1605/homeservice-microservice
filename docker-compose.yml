@@ -48,6 +48,7 @@
         - ConnectionStrings__Default=Server=db,1433;Database=HomeCare.IacDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
         - Kestrel__Endpoints__Http__Url=http://+:80
         - Kestrel__Endpoints__gRPC__Url=http://+:3000
+        - JWTSettings__AccessTokenExpiryInMinutes=1
     restart: always
     depends_on: 
       - db

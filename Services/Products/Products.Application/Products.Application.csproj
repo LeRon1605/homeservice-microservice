@@ -18,45 +18,12 @@
     <ItemGroup>
       <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
       <PackageReference Include="Bogus" Version="34.0.2" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      <PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
     </ItemGroup>
 
-
-
-
-
-
-
-
+    <ItemGroup>
+        <Protobuf Include="Grpc\Proto\Product.proto" GrpcServices="Server" />
+    </ItemGroup>
 
 
 </Project>
