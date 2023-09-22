@@ -7,7 +7,7 @@ public class AddMaterialCommand : MaterialCreateDto, ICommand<GetMaterialDto>
 {
     public AddMaterialCommand(string materialCode,
                               string name,
-                              Guid productTypeId,
+                              Guid typeId,
                               Guid? sellUnitId,
                               decimal? sellPrice,
                               decimal? cost,
@@ -15,7 +15,7 @@ public class AddMaterialCommand : MaterialCreateDto, ICommand<GetMaterialDto>
     {
         MaterialCode = materialCode;
         Name = name;
-        ProductTypeId = productTypeId;
+        TypeId = typeId;
         SellUnitId = sellUnitId;
         SellPrice = sellPrice;
         Cost = cost;

@@ -10,8 +10,9 @@ public class ProductCreateDto
     [Required] public Guid GroupId { get; set; }
     public Guid BuyUnitId { get; set; }
     public Guid SellUnitId { get; set; }
-    public decimal? Buy { get; set; }
-    public decimal? Sell { get; set; }
+    public decimal? BuyPrice { get; set; }
+    [Required]
+    public decimal? SellPrice { get; set; }
     public bool IsObsolete { get; set; }
     public string? Description { get; set; }
     

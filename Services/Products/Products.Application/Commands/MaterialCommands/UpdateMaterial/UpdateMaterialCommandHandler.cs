@@ -46,7 +46,7 @@ public class UpdateMaterialCommandHandler : ICommandHandler<UpdateMaterialComman
         await _materialDomainService.UpdateAsync(material,
             request.MaterialCode,
             request.Name,
-            request.ProductTypeId,
+            request.TypeId,
             request.SellUnitId,
             request.SellPrice,
             request.Cost,

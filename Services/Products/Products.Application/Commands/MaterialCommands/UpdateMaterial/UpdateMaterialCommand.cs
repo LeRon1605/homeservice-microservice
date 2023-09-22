@@ -14,7 +14,7 @@ public class UpdateMaterialCommand : MaterialUpdateDto, ICommand<GetMaterialDto>
         Id = id;
         MaterialCode = dto.MaterialCode;
         Name = dto.Name;
-        ProductTypeId = dto.ProductTypeId;
+        TypeId = dto.TypeId;
         SellUnitId = dto.SellUnitId;
         SellPrice = dto.SellPrice;
         Cost = dto.Cost;
