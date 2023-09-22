@@ -20,7 +20,7 @@ public class ProductAddedDomainEventHandler : IDomainEventHandler<ProductAddedDo
     {
         var productAddedIntegrationEvent = new ProductAddedIntegrationEvent(domainEvent.Product.Id, 
                                                                             domainEvent.Product.Name, 
-                                                                            domainEvent.Product.ProductTypeId, 
+                                                                            domainEvent.Product.ProductGroupId, 
                                                                             domainEvent.Product.SellPrice);
         _eventBus.Publish(productAddedIntegrationEvent);
         _logger.LogInformation("Published add product event with ProductId:{productId}", domainEvent.Product.Id);

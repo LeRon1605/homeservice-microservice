@@ -12,7 +12,7 @@ using Shopping.Infrastructure.EfCore;
 namespace Shopping.Infrastructure.EfCore.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    [Migration("20230921035439_Initial")]
+    [Migration("20230922034039_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -36,11 +36,12 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal?>("Price")
+                        .IsRequired()
                         .HasPrecision(20, 2)
                         .HasColumnType("decimal(20,2)");
 
-                    b.Property<Guid>("ProductTypeId")
+                    b.Property<Guid>("ProductGroupId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");

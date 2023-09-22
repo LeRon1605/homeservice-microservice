@@ -21,8 +21,10 @@ public class ProductDeletedIntegrationEventHandler : IIntegrationEventHandler<Pr
         _logger.LogInformation("Handling integration event delete product: " +
                                "{IntegrationEventId} - ({@IntegrationEvent})", 
             @event.Id, @event);
+        
         var command = new DeletedProductCommand(@event.Id);
         _logger.LogInformation("Sending command: {commandName}", command);
+        
         await _mediator.Send(command);
     }
 }

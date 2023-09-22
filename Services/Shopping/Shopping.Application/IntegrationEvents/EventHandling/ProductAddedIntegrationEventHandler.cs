@@ -22,8 +22,10 @@ public class ProductAddedIntegrationEventHandler : IIntegrationEventHandler<Prod
         _logger.LogInformation("Handling integration event add product: " +
                                "{IntegrationEventId} - ({@IntegrationEvent})", 
                         @event.Id, @event);
-        var command = new AddedProductCommand(@event.Id,@event.Name,@event.ProductTypeId,@event.SellPrice);
+        
+        var command = new AddedProductCommand(@event.Id, @event.Name, @event.ProductGroupId, @event.SellPrice);
         _logger.LogInformation("Sending command: {commandName}", command);
+        
         await _mediator.Send(command);
     }
 }
