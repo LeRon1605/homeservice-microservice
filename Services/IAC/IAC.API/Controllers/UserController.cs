@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using IAC.Application.Dtos.Roles;
 using IAC.Application.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IAC.API.Controllers;
@@ -21,5 +23,15 @@ public class UserController : ControllerBase
     {
         var roles = await _roleService.GetByUserAsync(id);
         return Ok(roles);
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult Get()
+    {
+        return Ok(new
+        {
+            UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+        });
     }
 }
