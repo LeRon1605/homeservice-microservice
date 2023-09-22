@@ -10,6 +10,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Application\BuildingBlocks.Application.csproj" />
+      <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.EventBus\BuildingBlocks.EventBus.csproj" />
       <ProjectReference Include="..\Products.Domain\Products.Domain.csproj" />
     </ItemGroup>
 
@@ -24,6 +25,8 @@
     <ItemGroup>
         <Protobuf Include="Grpc\Proto\Product.proto" GrpcServices="Server" />
     </ItemGroup>
-
-
+    
+    <ItemGroup>
+        <Folder Include="IntegrationEvents\EventHandling\" />
+    </ItemGroup>
 </Project>

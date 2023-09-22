@@ -1,3 +1,4 @@
+using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Authentication;
 using BuildingBlocks.Presentation.Cloudinary;
@@ -39,7 +40,7 @@ builder.Services.AddSwagger("ProductService")
 
 var app = builder.Build();
 
-// var eventBus = app.Services.GetRequiredService<IEventBus>();
+var eventBus = app.Services.GetRequiredService<IEventBus>();
 
 app.UseApplicationExceptionHandler();
 
