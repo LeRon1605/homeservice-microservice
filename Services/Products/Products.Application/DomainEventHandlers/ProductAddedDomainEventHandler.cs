@@ -1,6 +1,5 @@
 ﻿using BuildingBlocks.Domain.Event;
 using BuildingBlocks.EventBus.Interfaces;
-using MediatR;
 using Microsoft.Extensions.Logging;
 using Products.Application.IntegrationEvents.Events;
 using Products.Domain.ProductAggregate.Events;

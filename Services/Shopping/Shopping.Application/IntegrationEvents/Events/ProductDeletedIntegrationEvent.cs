@@ -1,6 +1,6 @@
 ﻿using BuildingBlocks.Application.IntegrationEvent;
 
-namespace Products.Application.IntegrationEvents.Events;
+namespace Shopping.Application.IntegrationEvents.Events;
 
 public record ProductDeletedIntegrationEvent : IntegrationEvent
 {
