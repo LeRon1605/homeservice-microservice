@@ -12,11 +12,10 @@
         <PackageReference Include="MMLib.SwaggerForOcelot" Version="7.0.1" />
         <PackageReference Include="Ocelot" Version="19.0.2" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
+        <PackageReference Include="Grpc.AspNetCore.Server.ClientFactory" Version="2.57.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Controllers\" />
-    </ItemGroup>
 
 
     <ItemGroup>
@@ -24,11 +23,23 @@
       <ProjectReference Include="..\BuildingBlocks\BuildingBlocks.Presentation\BuildingBlocks.Presentation.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Protobuf Include="Grpc\Proto\Product.proto" GrpcServices="Client" />
+    </ItemGroup>
+
 
     <ItemGroup>
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+
+
     </ItemGroup>
+
+
+
+
+
+
 
 </Project>

@@ -11,6 +11,7 @@ using Products.Application.Dtos;
 using Products.Application.MappingProfiles;
 using BuildingBlocks.Presentation.Swagger;
 using Products.API.Extensions;
+using Products.Application.Grpc.Services;
 using Products.Infrastructure.EfCore.Data;
 using Serilog;
 
@@ -33,7 +34,8 @@ builder.Services.AddSwagger("ProductService")
                 .AddServices()
                 .AddDomainServices()
                 .AddRepositories()
-                .AddCurrentUser();
+                .AddCurrentUser()
+                .AddGrpc();;
 
 var app = builder.Build();
 
@@ -47,6 +49,7 @@ app.UseSwaggerUI();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapGrpcService<ProductGrpcService>();
 app.MapControllers();
 
 await app.ApplyMigrationAsync<ProductDbContext>(app.Logger);
