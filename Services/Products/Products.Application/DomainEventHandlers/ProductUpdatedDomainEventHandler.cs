@@ -22,7 +22,7 @@ public class ProductUpdatedDomainEventHandler : IDomainEventHandler<ProductUpdat
         var productUpdatedIntegrationEvent = new ProductUpdatedIntegrationEvent(
                                                 domainEvent.Product.Id,
                                                 domainEvent.Product.Name,
-                                                domainEvent.Product.ProductTypeId,
+                                                domainEvent.Product.ProductGroupId,
                                                 domainEvent.Product.SellPrice);
         _eventBus.Publish(productUpdatedIntegrationEvent);
         _logger.LogInformation("Published update product event with ProductId:{productId}", domainEvent.Product.Id);

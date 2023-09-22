@@ -34,8 +34,13 @@ public class Product : AggregateRoot
     public ProductGroup Group { get; private set; } = null!;
     
     public List<ProductImage> Images { get; private set; }
+
+    private Product()
+    {
         
-    public Product(
+    }
+    
+    private Product(
         string productCode,
         string name,
         Guid productTypeId, 
@@ -58,6 +63,7 @@ public class Product : AggregateRoot
         SellUnitId = sellUnitId;
         SellPrice = sellPrice;
         Images = new List<ProductImage>();
+        
         AddDomainEvent(new ProductAddedDomainEvent(this));
     }
 

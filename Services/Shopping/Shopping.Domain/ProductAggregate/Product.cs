@@ -9,15 +9,15 @@ public class Product : AggregateRoot
     
     public decimal? Price { get; private set; }
     
-    public Guid ProductTypeId { get; private set; }
+    public Guid ProductGroupId { get; private set; }
     
     public List<ProductReview> Reviews { get; private set; }
 
-    public Product(Guid id, string name, Guid productTypeId, decimal? price)
+    public Product(Guid id, string name, Guid productGroupId, decimal? price)
     {
         Id = Guard.Against.Null(id, nameof(Id));
         Name = Guard.Against.NullOrWhiteSpace(name, nameof(Name));
-        ProductTypeId = Guard.Against.Null(productTypeId, nameof(ProductTypeId));
+        ProductGroupId = Guard.Against.Null(productGroupId, nameof(ProductGroupId));
         Price = price;
         
         Reviews = new List<ProductReview>();
@@ -28,10 +28,10 @@ public class Product : AggregateRoot
         Reviews.Add(new ProductReview(description, rating, Id));
     }
 
-    public void Update(string name, Guid productTypeId, decimal? sellPrice)
+    public void Update(string name, Guid productGroupId, decimal? sellPrice)
     {
         Name = name;
-        ProductTypeId = productTypeId;
+        ProductGroupId = productGroupId;
         Price = sellPrice;
     }
 }

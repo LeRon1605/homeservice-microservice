@@ -44,7 +44,7 @@ public class ProductDataSeeder : IDataSeeder
         var productUnits = SeedProductUnits();
         var productTypes = SeedProductTypes();
         var productGroups = SeedProductGroups();
-        SeedProducts(productUnits, productTypes, productGroups);
+        await SeedProductAsync(productUnits, productTypes, productGroups);
         
         await _unitOfWork.SaveChangesAsync();
         
@@ -105,7 +105,7 @@ public class ProductDataSeeder : IDataSeeder
         return data;
     }
 
-    private void SeedProducts(
+    private async Task SeedProductAsync(
         IReadOnlyList<ProductUnit> productUnits, 
         IReadOnlyList<ProductType> productTypes, 
         IReadOnlyList<ProductGroup> productGroups)
@@ -114,7 +114,7 @@ public class ProductDataSeeder : IDataSeeder
 
         for (var i = 0; i < 10; i++)
         {
-            var product = new Product(
+            var product = await Product.InitAsync(
                 $"PROD-{i}",
                 $"Product - {i}",
                 productTypes[random.Next(0, productTypes.Count)].Id,
@@ -124,7 +124,9 @@ public class ProductDataSeeder : IDataSeeder
                 productUnits[random.Next(0, productTypes.Count)].Id,
                 300,
                 productUnits[random.Next(0, productTypes.Count)].Id,
-                500
+                500,
+                Array.Empty<string>(),
+                _productRepository
             );
             
             product.AddImage("http://cb.dut.udn.vn/ImageSV/20/102200109.jpg");
