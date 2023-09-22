@@ -33,7 +33,7 @@ public class CustomerController : ControllerBase
     public async Task<IActionResult> GetCustomerById([FromRoute] Guid id)
     {
         var customer = await _mediator.Send(new CustomerByIdQuery(id));
-        return customer == null ? NotFound() : Ok(customer);
+        return Ok(customer);
     }
     
     [HttpPost]

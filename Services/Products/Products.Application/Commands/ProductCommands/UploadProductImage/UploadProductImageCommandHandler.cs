@@ -24,7 +24,7 @@ public class UploadProductImageCommandHandler : ICommandHandler<UploadProductIma
 
         return new ProductImageUploadResultDto()
         {
-            Url = result.Url
+            Url = result.Url!
         };
     }
 }

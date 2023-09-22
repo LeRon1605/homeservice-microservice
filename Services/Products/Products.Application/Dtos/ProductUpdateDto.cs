@@ -4,8 +4,8 @@ namespace Products.Application.Dtos;
 
 public class ProductUpdateDto
 {
-    [Required] public string ProductCode { get; set; }
-    [Required] public string Name { get; set; }
+    [Required] public string ProductCode { get; set; } = null!;
+    [Required] public string Name { get; set; } = null!;
     [Required] public Guid TypeId { get; set; }
     [Required] public Guid GroupId { get; set; }
     public Guid BuyUnitId { get; set; }
@@ -14,5 +14,5 @@ public class ProductUpdateDto
     public decimal? Sell { get; set; }
     public bool IsObsolete { get; set; }
     public string? Description { get; set; }
-    public string[] Urls { get;  set; }
+    public string[] Urls { get;  set; } = null!;
 }

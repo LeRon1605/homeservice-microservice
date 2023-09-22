@@ -1,6 +1,5 @@
 using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
-using BuildingBlocks.Domain.Event;
 using BuildingBlocks.EventBus.Interfaces;
 using Customers.Application.IntegrationEvents.Events;
 using Customers.Domain.CustomerAggregate;

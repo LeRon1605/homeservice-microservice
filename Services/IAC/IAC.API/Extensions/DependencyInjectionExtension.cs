@@ -13,7 +13,6 @@ using IAC.Infrastructure.EfCore;
 using IAC.Infrastructure.EfCore.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace IAC.API.Extensions;
@@ -50,7 +49,8 @@ public static class DependencyInjectionExtension
 
                     ValidIssuer = configuration["JWTSettings:ValidIssuer"],
                     ValidAudience = configuration["JWTSettings:ValidAudience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTSettings:SecurityKey"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.
+                        GetBytes(configuration["JWTSettings:SecurityKey"] ?? throw new Exception("SecurityKey is null.)"))),
                 };
             });
 

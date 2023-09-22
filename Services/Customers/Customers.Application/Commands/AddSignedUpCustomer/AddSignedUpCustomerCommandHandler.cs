@@ -1,4 +1,3 @@
-using AutoMapper;
 using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
 using Customers.Application.Commands.AddCustomer;

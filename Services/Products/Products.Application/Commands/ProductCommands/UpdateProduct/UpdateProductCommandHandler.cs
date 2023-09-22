@@ -6,9 +6,6 @@ using Products.Application.Dtos;
 using Products.Domain.ProductAggregate;
 using Products.Domain.ProductAggregate.Exceptions;
 using Products.Domain.ProductAggregate.Specifications;
-using Products.Domain.ProductGroupAggregate;
-using Products.Domain.ProductTypeAggregate;
-using Products.Domain.ProductUnitAggregate;
 
 namespace Products.Application.Commands.ProductCommands.UpdateProduct;
 
@@ -17,20 +14,17 @@ public class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand,
     private readonly IRepository<Product> _productRepository;
 
     private readonly IProductValidator _productValidator;
-    // private readonly IRepository<ProductType> _productTypeRepository;
-    // private readonly IRepository<ProductGroup> _productGroupRepository;
-    // private readonly IRepository<ProductUnit> _productUnitRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    public UpdateProductCommandHandler(IRepository<Product> productRepository, IUnitOfWork unitOfWork, IMapper mapper, IRepository<ProductType> productTypeRepository, IRepository<ProductGroup> productGroupRepository, IRepository<ProductUnit> productUnitRepository, IProductValidator productValidator)
+    public UpdateProductCommandHandler(IRepository<Product> productRepository, 
+                                       IUnitOfWork unitOfWork, 
+                                       IMapper mapper, 
+                                       IProductValidator productValidator)
     {
         _productRepository = productRepository;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _productValidator = productValidator;
-        // _productTypeRepository = productTypeRepository;
-        // _productGroupRepository = productGroupRepository;
-        // _productUnitRepository = productUnitRepository;
     }
     
     public async Task<GetProductDto> Handle(UpdateProductCommand request, CancellationToken cancellationToken)

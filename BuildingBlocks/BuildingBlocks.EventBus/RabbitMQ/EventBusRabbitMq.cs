@@ -224,7 +224,7 @@ public class EventBusRabbitMq : IEventBus
                                 autoDelete: false,
                                 arguments: null);
 
-        channel.CallbackException += (sender, ea) =>
+        channel.CallbackException += (_, ea) =>
         {
             _logger.LogWarning(ea.Exception, "Recreating RabbitMQ consumer channel");
 

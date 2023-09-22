@@ -21,12 +21,12 @@ public class Profiles : Profile
                     { Id = src.ProductTypeId, Name = src.Type.Name }))
             .ForMember(dest => dest.BuyUnit,
                 options => options.MapFrom(src =>
-                    src.BuyUnit == null
+                    src.BuyUnitId == null
                         ? null
                         : new ProductUnitDto { Id = src.BuyUnitId!.Value, Name = src.BuyUnit.Name }))
             .ForMember(dest => dest.SellUnit,
                 options => options.MapFrom(src =>
-                    src.SellUnit == null
+                    src.SellUnitId == null
                         ? null
                         : new ProductUnitDto { Id = src.SellUnitId!.Value, Name = src.SellUnit.Name }));
 

@@ -40,6 +40,8 @@ public class UpdateMaterialCommandHandler : ICommandHandler<UpdateMaterialComman
         {
             throw new MaterialNotFoundException(request.Id);
         }
+        
+        _logger.LogInformation("Updating material with id: {materialId}", request.Id);
 
         await _materialDomainService.UpdateAsync(material,
             request.MaterialCode,
@@ -52,6 +54,8 @@ public class UpdateMaterialCommandHandler : ICommandHandler<UpdateMaterialComman
 
         _materialRepository.Update(material);
         await _unitOfWork.SaveChangesAsync();
+        
+        _logger.LogInformation("Updated material with id: {materialId}", request.Id);
 
         var updatedMaterial = await _materialRepository.FindAsync(new MaterialByIdSpecification(material.Id));
         return _mapper.Map<GetMaterialDto>(updatedMaterial);
