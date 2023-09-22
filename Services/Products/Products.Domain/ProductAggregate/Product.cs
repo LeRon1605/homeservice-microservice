@@ -59,7 +59,6 @@ public class Product : AggregateRoot
         SellPrice = sellPrice;
         Images = new List<ProductImage>();
         AddDomainEvent(new ProductAddedDomainEvent(this));
-        AddDomainEvent(new ProductUpdatedDomainEvent(this));
     }
 
     public void AddImage(string url)
@@ -146,6 +145,7 @@ public class Product : AggregateRoot
         urls.ToList().ForEach(url => images.Add(new ProductImage(url, Id)));
         Images.Clear();
         Images.AddRange(images);
+        AddDomainEvent(new ProductUpdatedDomainEvent(this));
     }
 
     private async Task SetCodeAsync(string productCode, IRepository<Product> productRepository)
