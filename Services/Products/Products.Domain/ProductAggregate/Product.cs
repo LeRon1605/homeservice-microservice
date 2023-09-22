@@ -1,6 +1,7 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Domain.Data;
 using BuildingBlocks.Domain.Models;
+using Products.Domain.ProductAggregate.Events;
 using Products.Domain.ProductAggregate.Exceptions;
 using Products.Domain.ProductAggregate.Specifications;
 using Products.Domain.ProductGroupAggregate;
@@ -57,6 +58,7 @@ public class Product : AggregateRoot
         SellUnitId = sellUnitId;
         SellPrice = sellPrice;
         Images = new List<ProductImage>();
+        AddDomainEvent(new ProductAddedDomainEvent(this));
     }
 
     public void AddImage(string url)
@@ -143,6 +145,7 @@ public class Product : AggregateRoot
         urls.ToList().ForEach(url => images.Add(new ProductImage(url, Id)));
         Images.Clear();
         Images.AddRange(images);
+        AddDomainEvent(new ProductUpdatedDomainEvent(this));
     }
 
     private async Task SetCodeAsync(string productCode, IRepository<Product> productRepository)
