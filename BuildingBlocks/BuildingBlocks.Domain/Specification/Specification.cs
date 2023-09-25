@@ -31,7 +31,7 @@ public abstract class Specification<T> : ISpecification<T>
 
     protected void AddOrderByField(string? orderBy) => OrderByField = orderBy;
 
-    protected void ApplyDescending() => IsDescending = true;
+    protected void ApplyDescending(bool isDescending = true) => IsDescending = isDescending;
 
     protected void ApplyPaging(int pageIndex, int pageSize)
     {
