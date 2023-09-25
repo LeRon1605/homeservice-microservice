@@ -9,6 +9,7 @@ using BuildingBlocks.Presentation.Extension;
 using BuildingBlocks.Presentation.Swagger;
 using Serilog;
 using Shopping.API.Extensions;
+using Shopping.Application.Grpc.Services;
 using Shopping.Application.IntegrationEvents.EventHandling;
 using Shopping.Application.IntegrationEvents.Events;
 using Shopping.Infrastructure.EfCore;
@@ -24,7 +25,9 @@ builder.Services.AddSwagger("ShoppingService")
                 .AddMapper()
                 .AddCqrs()
                 .AddHomeServiceAuthentication(builder.Configuration)
-                .AddCurrentUser();
+                .AddCurrentUser()
+                .AddDataSeeder()
+                .AddGrpc();
 builder.Services
     .AddScoped<IIntegrationEventHandler<ProductAddedIntegrationEvent>, ProductAddedIntegrationEventHandler>();
 builder.Services
@@ -48,6 +51,7 @@ app.UseSwaggerUI();
 
 app.UseAuthentication();
 
+app.MapGrpcService<ShoppingProductGrpcService>();
 app.MapControllers();
 
 await app.ApplyMigrationAsync<OrderDbContext>(app.Logger);
