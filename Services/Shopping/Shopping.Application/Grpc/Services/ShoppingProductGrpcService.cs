@@ -1,7 +1,6 @@
 ﻿using BuildingBlocks.Domain.Data;
 using BuildingBlocks.Domain.Specification;
 using Grpc.Core;
-using Microsoft.VisualBasic;
 using Shopping.Application.Grpc.Proto;
 using Shopping.Domain.ProductAggregate;
 using Shopping.Domain.ProductAggregate.Specifications;
@@ -10,21 +9,22 @@ namespace Shopping.Application.Grpc.Services;
 
 public class ShoppingProductGrpcService : ShoppingGrpcService.ShoppingGrpcServiceBase
 {
-    private readonly IRepository<Product> _productRepository;
-
-    public ShoppingProductGrpcService(IRepository<Product> productRepository)
+    private readonly IReadOnlyRepository<Product> _productRepository;
+    
+    public ShoppingProductGrpcService(IReadOnlyRepository<Product> productRepository)
     {
         _productRepository = productRepository;
     }
-
-    public override async Task<ProductListResponse> GetProducts(ProductFilterSorting request, ServerCallContext context)
+    
+    public override async Task<ShoppingProductListResponse> GetProducts(ShoppingProductFilterSorting request, ServerCallContext context)
     {
         var specification = GetSpecification(request);
-        var products = await _productRepository.FindListAsync(specification);
-        return MapToProductListResponse(products);
+        
+        var (products, total) = await _productRepository.FindWithTotalCountAsync(specification);
+        return MapToShoppingProductListResponse(products, total);
     }
-
-    private static Specification<Product> GetSpecification(ProductFilterSorting productFilterSorting)
+    
+    private static Specification<Product> GetSpecification(ShoppingProductFilterSorting productFilterSorting)
     {
         try
         {
@@ -45,46 +45,49 @@ public class ShoppingProductGrpcService : ShoppingGrpcService.ShoppingGrpcServic
             throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid guid id!"));
         }
     }
-
-    private static string GetFieldOrderBy(ProductFilterSorting productFilterSorting)
+    
+    private static string GetFieldOrderBy(ShoppingProductFilterSorting productFilterSorting)
     {
-        string orderBy = string.Empty;
-
+        var orderBy = string.Empty;
+    
         switch (productFilterSorting.OrderBy)
         {
-            case 1:
+            case 0:
                 orderBy = nameof(Product.Name);
                 break;
-            case 2:
+            case 1:
                 orderBy = nameof(Product.Price);
                 break;
-            case 3:
-                orderBy = nameof(ProductReview.Rating);
+            case 2:
+                orderBy = $"Reviews.Average(Rating)";
                 break;
         }
-
+    
         return orderBy;
     }
-
-    private static ProductListResponse MapToProductListResponse(IEnumerable<Product> products)
+    
+    private static ShoppingProductListResponse MapToShoppingProductListResponse(IEnumerable<Product> products, int total)
     {
-        var response = new ProductListResponse();
-
+        var response = new ShoppingProductListResponse()
+        {
+            TotalCount = total
+        };
+    
         foreach (var product in products)
         {
-            var productItemResponse = new ProductItemResponse()
+            var productItemResponse = new ShoppingProductItemResponse()
             {
                 Id = product.Id.ToString(),
                 Rating = product.Reviews.Select(x => x.Rating).DefaultIfEmpty(0).Average(),
                 Name = product.Name,
                 OriginPrice = DecimalValueHelper.ToDecimalValue(product.Price),
-                DiscountPrice = DecimalValueHelper.ToDecimalValue(0),
+                DiscountPrice = DecimalValueHelper.ToDecimalValue(null),
                 NumberOfRating = product.Reviews.Count(),
                 NumberOfOrder = 0
             };
             response.Products.Add(productItemResponse);
         }
-
+    
         return response;
     }
 }

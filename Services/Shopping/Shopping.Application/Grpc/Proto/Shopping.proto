@@ -5,10 +5,10 @@ import "google/protobuf/wrappers.proto";
 option csharp_namespace = "Shopping.Application.Grpc.Proto";
 
 service ShoppingGrpcService {
-    rpc GetProducts (ProductFilterSorting) returns (ProductListResponse);
+    rpc GetProducts (ShoppingProductFilterSorting) returns (ShoppingProductListResponse);
 }
 
-message ProductFilterSorting {
+message ShoppingProductFilterSorting {
     NullableStringValue product_group_id = 1;
     NullableDecimalValue min_price = 2;
     NullableDecimalValue max_price = 3;
@@ -18,37 +18,22 @@ message ProductFilterSorting {
     int32 page_index = 7;
     int32 page_size = 8;
     NullableStringValue search = 9;
-
 }
 
-/*
-    
-*/
-
-enum OrderBy {
-    ORDER_BY_NAME = 0;
-    ORDER_BY_PRICE = 1;
-    ORDER_BY_RATING = 2;
+message ShoppingProductListResponse {
+    int32 total_count = 1;
+    repeated ShoppingProductItemResponse products = 2;
 }
 
-
-//response
-
-message ProductListResponse {
-    repeated ProductItemResponse products = 1;
-}
-
-message ProductItemResponse {
+message ShoppingProductItemResponse {
     string id = 1;
     double rating = 2;
     string name = 3;
     DecimalValue origin_price = 4;
-    DecimalValue discount_price = 5;
-    double number_of_rating = 6;
-    double number_of_order = 7;
+    NullableDecimalValue discount_price = 5;
+    int32 number_of_rating = 6;
+    int32 number_of_order = 7;
 }
-
-//type valuable
 
 message DecimalValue {
     int64 units = 1;

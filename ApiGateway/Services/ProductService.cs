@@ -2,35 +2,83 @@ using ApiGateway.Dtos.Products;
 using ApiGateway.Services.Interfaces;
 using BuildingBlocks.Application.Dtos;
 using Products.Application.Grpc.Proto;
+using Shopping.Application.Grpc.Proto;
 
 namespace ApiGateway.Services;
 
 public class ProductService : IProductService
 {
     private readonly ProductGrpcService.ProductGrpcServiceClient _productGrpcService;
+    private readonly ShoppingGrpcService.ShoppingGrpcServiceClient _shoppingGrpcService;
     
-    public ProductService(ProductGrpcService.ProductGrpcServiceClient productGrpcService)
+    public ProductService(
+        ProductGrpcService.ProductGrpcServiceClient productGrpcService,
+        ShoppingGrpcService.ShoppingGrpcServiceClient shoppingGrpcService)
     {
         _productGrpcService = productGrpcService;
+        _shoppingGrpcService = shoppingGrpcService;
     }
     
-    public async Task<PagedResult<ProductData>> GetPagedAsync()
+    public Task<PagedResult<ProductData>> GetPagedAsync(GetProductWithFilterAndPaginationDto dto)
     {
-        var productIds = new ProductIds();
-        productIds.Id.Add("18cef494-534e-42d7-84e9-dde9ac48235b");
+        var responseInShoppingService = _shoppingGrpcService.GetProducts(GetFilterSortingRequestParam(dto));
+        var responseInProductService = GetIncludedProductsInProductService(responseInShoppingService);
         
-        var responseInProductService = _productGrpcService.GetProducts(productIds);
         var result = new List<ProductData>();
-        
-        foreach (var productItemResponse in responseInProductService.Products)
+        foreach (var productInShoppingService in  responseInShoppingService.Products)
         {
-            result.Add(MapToProductData(productItemResponse));
+            var productInProductService = responseInProductService.Products.FirstOrDefault(x => x.Id == productInShoppingService.Id);
+            if (productInProductService == null)
+            {
+                continue;
+            }
+            
+            result.Add(MapToProductData(productInProductService, productInShoppingService));
         }
 
-        return new PagedResult<ProductData>(result, 1,1, 10);
+        return Task.FromResult(new PagedResult<ProductData>(result, responseInShoppingService.TotalCount, dto.PageIndex, dto.PageSize));
     }
 
-    private ProductData MapToProductData(ProductItemResponse productItemResponse)
+    private ShoppingProductFilterSorting GetFilterSortingRequestParam(GetProductWithFilterAndPaginationDto dto)
+    {
+        var request = new ShoppingProductFilterSorting()
+        {
+            PageIndex = dto.PageIndex,
+            PageSize = dto.PageSize,
+            Rating = dto.Rating,
+            ProductGroupId = new NullableStringValue()
+            {
+                Strings = dto.GroupId.HasValue ? dto.GroupId.Value.ToString() : string.Empty
+            },
+            Search = new NullableStringValue()
+            {
+                Strings = string.IsNullOrWhiteSpace(dto.Search) ? string.Empty : dto.Search
+            },
+            MinPrice = DecimalValueHelper.ToDecimalValue(dto.MinPrice),
+            MaxPrice = DecimalValueHelper.ToDecimalValue(dto.MaxPrice),
+        };
+
+        if (dto.OrderBy.HasValue)
+        {
+            request.OrderBy = (int)dto.OrderBy.Value;
+            request.IsDescending = dto.IsDescending;
+        }
+
+        return request;
+    }
+
+    private ProductListResponse GetIncludedProductsInProductService(ShoppingProductListResponse responseInShoppingService)
+    {
+        var productIds = new ProductIds();
+        foreach (var item in responseInShoppingService.Products)
+        {
+            productIds.Id.Add(item.Id);
+        }
+        
+        return _productGrpcService.GetProducts(productIds);
+    }
+
+    private ProductData MapToProductData(ProductItemResponse productItemResponse, ShoppingProductItemResponse item)
     {
         return new ProductData()
         {
@@ -58,7 +106,10 @@ public class ProductService : IProductService
                 Id = new Guid(x.Id),
                 Url = x.Url
             }),
-            AverageRating = 0
+            AverageRating = item.Rating,
+            NumberOfRating = item.NumberOfRating,
+            DiscountPrice = DecimalValueHelper.ToDecimal(item.DiscountPrice),
+            NumberOfOrder = item.NumberOfOrder
         };
     }
 
@@ -77,26 +128,37 @@ public class ProductService : IProductService
 public static class DecimalValueHelper
 {
     private const decimal NanoFactor = 1_000_000_000;
-    
-    public static decimal ToDecimal(DecimalValue grpcDecimal)
+
+    public static decimal ToDecimal(Products.Application.Grpc.Proto.DecimalValue grpcDecimal)
     {
         return grpcDecimal.Units + grpcDecimal.Nanos / NanoFactor;
     }
     
-    public static decimal? ToDecimal(NullableDecimalValue grpcDecimal)
+    public static decimal? ToDecimal(Products.Application.Grpc.Proto.NullableDecimalValue grpcDecimal)
     {
         if (!grpcDecimal.Units.HasValue || !grpcDecimal.Nanos.HasValue)
         {
             return null;
         }
+        
+        return grpcDecimal.Units + grpcDecimal.Nanos / NanoFactor;
+    }
+    
+    public static decimal? ToDecimal(Shopping.Application.Grpc.Proto.NullableDecimalValue grpcDecimal)
+    {
+        if (!grpcDecimal.Units.HasValue || !grpcDecimal.Nanos.HasValue)
+        {
+            return null;
+        }
+        
         return grpcDecimal.Units + grpcDecimal.Nanos / NanoFactor;
     }
 
-    public static NullableDecimalValue ToDecimalValue(decimal? value)
+    public static Shopping.Application.Grpc.Proto.NullableDecimalValue ToDecimalValue(decimal? value)
     {
         if (!value.HasValue)
         {
-            return new NullableDecimalValue()
+            return new Shopping.Application.Grpc.Proto.NullableDecimalValue()
             {
                 Units = null,
                 Nanos = null
@@ -104,18 +166,7 @@ public static class DecimalValueHelper
         }
         var units = decimal.ToInt64(value.Value);
         var nanos = decimal.ToInt32((value.Value - units) * NanoFactor);
-        return new NullableDecimalValue()
-        {
-            Units = units,
-            Nanos = nanos
-        };
-    }
-    
-    public static DecimalValue ToDecimalValue(decimal value)
-    {
-        var units = decimal.ToInt64(value);
-        var nanos = decimal.ToInt32((value - units) * NanoFactor);
-        return new DecimalValue()
+        return new Shopping.Application.Grpc.Proto.NullableDecimalValue()
         {
             Units = units,
             Nanos = nanos
