@@ -1,4 +1,4 @@
-﻿using BuildingBlocks.Domain.Data;
+using BuildingBlocks.Domain.Data;
 using BuildingBlocks.Domain.Specification;
 using Grpc.Core;
 using Shopping.Application.Grpc.Proto;
