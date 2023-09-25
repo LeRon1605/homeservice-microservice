@@ -2,6 +2,7 @@ using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
 using Microsoft.Extensions.Logging;
 using Products.Domain.ProductAggregate;
+using Products.Domain.ProductAggregate.Events;
 using Products.Domain.ProductAggregate.Exceptions;
 
 namespace Products.Application.Commands.ProductCommands.DeleteProduct;
@@ -30,6 +31,7 @@ public class DeleteProductCommandHandler : ICommandHandler<DeleteProductCommand>
             throw new ProductNotFoundException(request.Id);
         }
         
+        product.AddDomainEvent(new ProductDeletedDomainEvent(product));
         _productRepository.Delete(product);
         await _unitOfWork.SaveChangesAsync();
         

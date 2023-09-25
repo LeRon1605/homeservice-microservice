@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+option csharp_namespace = "Products.Application.Grpc.Proto";
+
+service ProductGrpcService {
+    rpc GetProducts(ProductIds) returns (ProductListResponse);
+}
+
+message ProductIds {
+    repeated string id = 1;
+}
+
+message ProductListResponse {
+    repeated ProductItemResponse products = 1;
+}
+
+message ProductItemResponse {
+    string id = 1;
+    string code = 2;
+    string name = 3;
+    google.protobuf.StringValue description = 4;
+    bool isObsolete = 5;
+    ProductUnitResponse buyUnit = 6;
+    ProductUnitResponse sellUnit = 7;
+    ProductTypeResponse productType = 8;
+    ProductGroupResponse productGroup = 9;
+    repeated ProductImageReponse Images = 10;
+    NullableDecimalValue buyPrice = 11;
+    DecimalValue sellPrice = 12;
+}
+
+message ProductUnitResponse {
+    google.protobuf.StringValue id = 1;
+    google.protobuf.StringValue name = 2;
+}
+
+message ProductTypeResponse {
+    string id = 1;
+    string name = 2;
+}
+
+message ProductGroupResponse {
+    string id = 1;
+    string name = 2;
+}
+
+message ProductImageReponse {
+    string id = 1;
+    string url = 2;
+}
+
+message DecimalValue {
+    int64 units = 1;
+    sfixed32 nanos = 2;
+}
+
+message NullableDecimalValue {
+    google.protobuf.Int64Value units = 1;
+    google.protobuf.Int32Value nanos = 2;
+}

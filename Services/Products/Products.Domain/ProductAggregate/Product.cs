@@ -1,6 +1,7 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Domain.Data;
 using BuildingBlocks.Domain.Models;
+using Products.Domain.ProductAggregate.Events;
 using Products.Domain.ProductAggregate.Exceptions;
 using Products.Domain.ProductAggregate.Specifications;
 using Products.Domain.ProductGroupAggregate;
@@ -33,8 +34,13 @@ public class Product : AggregateRoot
     public ProductGroup Group { get; private set; } = null!;
     
     public List<ProductImage> Images { get; private set; }
+
+    private Product()
+    {
         
-    public Product(
+    }
+    
+    private Product(
         string productCode,
         string name,
         Guid productTypeId, 
@@ -48,8 +54,8 @@ public class Product : AggregateRoot
     {
         ProductCode = Guard.Against.NullOrWhiteSpace(productCode, nameof(ProductCode));
         Name = Guard.Against.NullOrWhiteSpace(name, nameof(Name));
-        ProductTypeId = Guard.Against.Default(productTypeId, nameof(ProductTypeId));
-        ProductGroupId = Guard.Against.Default(productGroupId, nameof(ProductGroupId));
+        ProductTypeId = Guard.Against.Null(productTypeId, nameof(ProductTypeId));
+        ProductGroupId = Guard.Against.Null(productGroupId, nameof(ProductGroupId));
         IsObsolete = isObsolete;
         Description = description;
         BuyUnitId = buyUnitId;
@@ -57,6 +63,8 @@ public class Product : AggregateRoot
         SellUnitId = sellUnitId;
         SellPrice = sellPrice;
         Images = new List<ProductImage>();
+        
+        AddDomainEvent(new ProductAddedDomainEvent(this));
     }
 
     public void AddImage(string url)
@@ -143,6 +151,7 @@ public class Product : AggregateRoot
         urls.ToList().ForEach(url => images.Add(new ProductImage(url, Id)));
         Images.Clear();
         Images.AddRange(images);
+        AddDomainEvent(new ProductUpdatedDomainEvent(this));
     }
 
     private async Task SetCodeAsync(string productCode, IRepository<Product> productRepository)

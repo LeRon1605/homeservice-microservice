@@ -10,7 +10,30 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Application\BuildingBlocks.Application.csproj" />
+      <ProjectReference Include="..\..\Products\Products.Application\Products.Application.csproj" />
       <ProjectReference Include="..\Shopping.Domain\Shopping.Domain.csproj" />
     </ItemGroup>
+
+
+
+
+
+
+
+    <ItemGroup>
+      <PackageReference Include="Bogus" Version="34.0.2" />
+    </ItemGroup>
+
+
+
+
+
+
+
+    <ItemGroup>
+      <Folder Include="Mapper\" />
+    </ItemGroup>
+
+
 
 </Project>

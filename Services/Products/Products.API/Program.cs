@@ -1,3 +1,4 @@
+using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Authentication;
 using BuildingBlocks.Presentation.Cloudinary;
@@ -11,6 +12,7 @@ using Products.Application.Dtos;
 using Products.Application.MappingProfiles;
 using BuildingBlocks.Presentation.Swagger;
 using Products.API.Extensions;
+using Products.Application.Grpc.Services;
 using Products.Infrastructure.EfCore.Data;
 using Serilog;
 

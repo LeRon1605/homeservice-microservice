@@ -22,7 +22,7 @@ namespace Shopping.Infrastructure.EfCore.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Shopping.Domain.ShoppingAggregate.Order", b =>
+            modelBuilder.Entity("Shopping.Domain.ProductAggregate.Product", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,63 +30,59 @@ namespace Shopping.Infrastructure.EfCore.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<decimal?>("Price")
+                        .IsRequired()
+                        .HasPrecision(20, 2)
+                        .HasColumnType("decimal(20,2)");
+
+                    b.Property<Guid>("ProductGroupId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Product");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("04b319f7-c834-46ff-9a8a-36b51b754937"),
-                            Name = "Prince Schmitt"
-                        },
-                        new
-                        {
-                            Id = new Guid("ae567ac6-daf1-4acc-b218-b79e18221852"),
-                            Name = "Violet Mayer"
-                        },
-                        new
-                        {
-                            Id = new Guid("a98700ec-802b-46ff-873e-dbf120e949bf"),
-                            Name = "Mose Cormier"
-                        },
-                        new
-                        {
-                            Id = new Guid("401b8f68-cfa4-4368-adba-f7ef4e385a09"),
-                            Name = "Brionna Dooley"
-                        },
-                        new
-                        {
-                            Id = new Guid("64389ad9-328a-48bc-946b-9f25efbdde90"),
-                            Name = "Kaleigh Collier"
-                        },
-                        new
-                        {
-                            Id = new Guid("5841c565-e264-432f-818b-3b92ef7e4c7e"),
-                            Name = "Darlene Gerhold"
-                        },
-                        new
-                        {
-                            Id = new Guid("d5ff163c-626d-4613-8581-aeba0a5f43a2"),
-                            Name = "Deshawn Kub"
-                        },
-                        new
-                        {
-                            Id = new Guid("52e638ef-199b-44ab-a8ca-c77f7f2dccb9"),
-                            Name = "Vergie Considine"
-                        },
-                        new
-                        {
-                            Id = new Guid("ea953a63-c819-42db-bbe2-733bc98a7e6c"),
-                            Name = "Graham Gutkowski"
-                        },
-                        new
-                        {
-                            Id = new Guid("ad73e28a-76a1-4419-824c-4e3328740e0b"),
-                            Name = "Marshall Leffler"
-                        });
+            modelBuilder.Entity("Shopping.Domain.ProductAggregate.ProductReview", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Rating")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductReview");
+                });
+
+            modelBuilder.Entity("Shopping.Domain.ProductAggregate.ProductReview", b =>
+                {
+                    b.HasOne("Shopping.Domain.ProductAggregate.Product", null)
+                        .WithMany("Reviews")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Shopping.Domain.ProductAggregate.Product", b =>
+                {
+                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

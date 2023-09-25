@@ -56,4 +56,9 @@ public class EfCoreReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity>
     {
         return await GetQuery<TEntity>.From(DbSet, specification).AnyAsync();
     }
+
+    public Task<bool> AnyAsync()
+    {
+        return DbSet.AsNoTracking().AnyAsync();
+    }
 }

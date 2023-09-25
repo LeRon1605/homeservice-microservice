@@ -1,29 +1,42 @@
+using ApiGateway.Extensions;
+using ApiGateway.Services;
+using ApiGateway.Services.Interfaces;
 using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Extension;
-using BuildingBlocks.Presentation.Swagger;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-Log.Logger = ApplicationLoggerFactory.CreateSerilogLogger(builder.Configuration, "HomeAppService");
+Log.Logger = ApplicationLoggerFactory.CreateSerilogLogger(builder.Configuration, "HomeService");
 
 builder.Services.AddControllers();
 
-builder.Services.AddSwagger("HomeAppService");
+builder.Services.AddGrpcClientServices(builder.Configuration);
+builder.Services.AddServices();
 builder.Services.AddOcelot();
-builder.Services.AddSwaggerForOcelot(builder.Configuration);
 builder.Services.AddApplicationCors();
+builder.Services.AddApiGatewaySwagger(builder.Configuration);
 
 builder.Host.UseSerilog();
 
 var app = builder.Build();
 
 app.UseCors("HomeService");
+
 app.UseSwagger();
-app.UseSwaggerForOcelotUI().UseOcelot();
+app.UseSwaggerForOcelotUI();
 
 app.UseRouting();
+
+#pragma warning disable ASP0014
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
+#pragma warning restore ASP0014
+
+app.UseOcelot();
 
 app.Run();
