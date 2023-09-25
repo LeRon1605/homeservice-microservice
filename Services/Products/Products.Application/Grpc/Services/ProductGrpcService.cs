@@ -32,7 +32,7 @@ public class ProductGrpcService : Proto.ProductGrpcService.ProductGrpcServiceBas
             var specification = new ProductByIncludedIdsSpecification(ids.Distinct().Select(x => Guid.Parse(x)).ToArray());
             return specification;
         }
-        catch (Exception)
+        catch (FormatException)
         {
             throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid Id!"));
         }

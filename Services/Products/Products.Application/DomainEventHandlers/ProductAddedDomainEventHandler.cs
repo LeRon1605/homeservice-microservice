@@ -10,6 +10,7 @@ public class ProductAddedDomainEventHandler : IDomainEventHandler<ProductAddedDo
 {
     private readonly IEventBus _eventBus;
     private readonly ILogger<ProductAddedDomainEvent> _logger;
+    
     public ProductAddedDomainEventHandler(IEventBus eventBus, ILogger<ProductAddedDomainEvent> logger)
     {
         _eventBus = eventBus;

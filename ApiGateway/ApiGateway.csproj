@@ -24,7 +24,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="Grpc\Proto\Product.proto" GrpcServices="Client" />
+        <Protobuf Include="..\Services\Products\Products.Application\Grpc\Proto\Product.proto" GrpcServices="Client" Link="Grpc/Proto/Product.proto"/>
+        <Protobuf Include="..\Services\Shopping\Shopping.Application\Grpc\Proto\Shopping.proto" GrpcServices="Client" Link="Grpc/Proto/Shopping.proto"/>
     </ItemGroup>
 
 
@@ -32,15 +33,15 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
-
-
-
-
-
-
-
-
     </ItemGroup>
+
+
+
+
+
+
+
+
 
 
 

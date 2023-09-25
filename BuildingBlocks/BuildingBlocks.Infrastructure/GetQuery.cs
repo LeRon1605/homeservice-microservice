@@ -44,11 +44,11 @@ public static class GetQuery<TEntity> where TEntity : Entity
             query = query.Where(searchClause);
         }
 
-        // // Ordering
-        // if (specification.OrderByField != null)
-        //     query = specification.IsDescending
-        //                 ? query.OrderBy(specification.OrderByField + " desc")
-        //                 : query.OrderBy(specification.OrderByField);
+        // Ordering
+        if (specification.OrderByField != null)
+            query = specification.IsDescending
+                        ? query.OrderBy(specification.OrderByField + " desc")
+                        : query.OrderBy(specification.OrderByField);
 
         return query;
     }

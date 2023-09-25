@@ -19,7 +19,7 @@ public class ProductController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<PagedResult<ProductData>>> GetProductAsync([FromQuery] GetProductWithFilterAndPaginationDto dto)
     {
-        var products = await _productService.GetPagedAsync();
+        var products = await _productService.GetPagedAsync(dto);
         return Ok(products);
     }
 }

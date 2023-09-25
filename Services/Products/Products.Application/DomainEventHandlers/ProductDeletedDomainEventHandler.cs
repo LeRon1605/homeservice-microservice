@@ -16,6 +16,7 @@ public class ProductDeletedDomainEventHandler : IDomainEventHandler<ProductDelet
         _eventBus = eventBus;
         _logger = logger;
     }
+    
     public Task Handle(ProductDeletedDomainEvent domainEvent, CancellationToken cancellationToken)
     {
         var productDeletedIntegrationEvent = new ProductDeletedIntegrationEvent(domainEvent.Product.Id);
