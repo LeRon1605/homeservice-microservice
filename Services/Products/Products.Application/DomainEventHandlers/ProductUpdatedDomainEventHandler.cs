@@ -17,6 +17,7 @@ public class ProductUpdatedDomainEventHandler : IDomainEventHandler<ProductUpdat
         _eventBus = eventBus;
         _logger = logger;
     }
+    
     public Task Handle(ProductUpdatedDomainEvent domainEvent, CancellationToken cancellationToken)
     {
         var productUpdatedIntegrationEvent = new ProductUpdatedIntegrationEvent(
