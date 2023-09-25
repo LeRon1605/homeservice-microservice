@@ -35,12 +35,11 @@ builder.Services.AddSwagger("ProductService")
                 .AddServices()
                 .AddDomainServices()
                 .AddRepositories()
-                .AddCurrentUser()
-                .AddGrpc();;
+                .AddCurrentUser();
 
 var app = builder.Build();
 
-var eventBus = app.Services.GetRequiredService<IEventBus>();
+// var eventBus = app.Services.GetRequiredService<IEventBus>();
 
 app.UseApplicationExceptionHandler();
 
@@ -50,7 +49,6 @@ app.UseSwaggerUI();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGrpcService<ProductGrpcService>();
 app.MapControllers();
 
 await app.ApplyMigrationAsync<ProductDbContext>(app.Logger);
