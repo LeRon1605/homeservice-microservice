@@ -5,7 +5,6 @@ using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Extension;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
-using Products.Application.Grpc.Proto;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,8 +14,7 @@ Log.Logger = ApplicationLoggerFactory.CreateSerilogLogger(builder.Configuration,
 builder.Services.AddControllers();
 
 builder.Services.AddGrpcClientServices(builder.Configuration);
-builder.Services.AddScoped<IProductService, ProductService>();
-
+builder.Services.AddServices();
 builder.Services.AddOcelot();
 builder.Services.AddApplicationCors();
 builder.Services.AddApiGatewaySwagger(builder.Configuration);

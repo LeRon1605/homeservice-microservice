@@ -61,7 +61,7 @@ public class ProductGrpcService : Proto.ProductGrpcService.ProductGrpcServiceBas
                     Id = product.BuyUnit?.Id.ToString(),
                     Name = product.BuyUnit?.Name
                 },
-                SellPrice = DecimalValueHelper.ToDecimalValue(product.SellPrice.Value),
+                SellPrice = DecimalValueHelper.ToDecimalValue(product.SellPrice),
                 BuyPrice = DecimalValueHelper.ToDecimalValue(product.BuyPrice),
                 ProductGroup = new ProductGroupResponse()
                 {

@@ -1,9 +1,11 @@
+using ApiGateway.Dtos.Products;
 using ApiGateway.Services.Interfaces;
+using BuildingBlocks.Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiGateway.Controllers.Bff.Customer;
 
-[Route("api/customer-bff/product-management")]
+[Route("api/customer-bff/product-management/products")]
 [ApiController]
 public class ProductController : ControllerBase
 {
@@ -15,9 +17,9 @@ public class ProductController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<ActionResult<PagedResult<ProductData>>> GetProductAsync([FromQuery] GetProductWithFilterAndPaginationDto dto)
     {
-        await _productService.GetPagedAsync();
-        return Ok("Customer BFF Product Management");
+        var products = await _productService.GetPagedAsync();
+        return Ok(products);
     }
 }

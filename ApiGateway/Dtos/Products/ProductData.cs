@@ -9,6 +9,11 @@ public class ProductData
     public bool IsObsolete { get; set; }
     
     public float AverageRating { get; set; }
+    public float OriginPrice { get; set; }
+    public float DiscountPrice { get; set; }
+    public float NumberOfRating { get; set; }
+    public float NumberOfOrder { get; set; }
+    
     public decimal? BuyPrice { get; set; }
     public decimal SellPrice { get; set; }
     
