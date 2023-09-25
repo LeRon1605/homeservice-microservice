@@ -21,14 +21,14 @@ message ProductItemResponse {
     string code = 2;
     string name = 3;
     google.protobuf.StringValue description = 4;
-    bool isObsolete = 5;
-    ProductUnitResponse buyUnit = 6;
-    ProductUnitResponse sellUnit = 7;
-    ProductTypeResponse productType = 8;
-    ProductGroupResponse productGroup = 9;
-    repeated ProductImageReponse Images = 10;
-    NullableDecimalValue buyPrice = 11;
-    DecimalValue sellPrice = 12;
+    bool is_obsolete = 5;
+    ProductUnitResponse buy_unit = 6;
+    ProductUnitResponse sell_unit = 7;
+    ProductTypeResponse product_type = 8;
+    ProductGroupResponse product_group = 9;
+    repeated ProductImageReponse images = 10;
+    NullableDecimalValue buy_price = 11;
+    DecimalValue sell_price = 12;
 }
 
 message ProductUnitResponse {
