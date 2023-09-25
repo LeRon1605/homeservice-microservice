@@ -1,7 +1,6 @@
 ﻿using BuildingBlocks.Domain.Data;
 using BuildingBlocks.Domain.Specification;
 using Grpc.Core;
-using Microsoft.VisualBasic;
 using Shopping.Application.Grpc.Proto;
 using Shopping.Domain.ProductAggregate;
 using Shopping.Domain.ProductAggregate.Specifications;
@@ -48,24 +47,19 @@ public class ShoppingProductGrpcService : ShoppingGrpcService.ShoppingGrpcServic
 
     private static string GetFieldOrderBy(ProductFilterSorting productFilterSorting)
     {
-        string orderBy = string.Empty;
-
-        switch (productFilterSorting.OrderBy)
-        {
-            case 1:
-                orderBy = nameof(Product.Name);
-                break;
-            case 2:
-                orderBy = nameof(Product.Price);
-                break;
-            case 3:
-                orderBy = nameof(ProductReview.Rating);
-                break;
-        }
-
-        return orderBy;
+        if (productFilterSorting.OrderBy is null)
+            return string.Empty;
+        
+        return ((ProductSortField)productFilterSorting.OrderBy).ToString();
     }
 
+    private enum ProductSortField
+    {
+        Name = 1,
+        Price,
+        Rating
+    }
+    
     private static ProductListResponse MapToProductListResponse(IEnumerable<Product> products)
     {
         var response = new ProductListResponse();
