@@ -4,6 +4,8 @@ using Grpc.Core;
 using Shopping.Application.Grpc.Proto;
 using Shopping.Domain.ProductAggregate;
 using Shopping.Domain.ProductAggregate.Specifications;
+using DecimalValue = Shopping.Application.Grpc.Proto.DecimalValue;
+using NullableDecimalValue = Shopping.Application.Grpc.Proto.NullableDecimalValue;
 
 namespace Shopping.Application.Grpc.Services;
 
@@ -24,6 +26,15 @@ public class ShoppingProductGrpcService : ShoppingGrpcService.ShoppingGrpcServic
         return MapToShoppingProductListResponse(products, total);
     }
     
+    public override async Task<ShoppingProductItemResponse> GetProductById(ShoppingProductByIdRequest request, ServerCallContext context)
+    {
+        var specification = new ProductByIdSpecification(Guid.Parse(request.Id));
+        // var product = await _productRepository.FindAsync(specification)
+        //               ?? throw new RpcException(new Status(StatusCode.NotFound, $"Product ({request.Id}) not found!"));
+        var product = new Product(Guid.NewGuid(), "Temp", Guid.NewGuid(), 0);
+        return MapToShoppingProductItemResponse(product);
+    }
+
     private static Specification<Product> GetSpecification(ShoppingProductFilterSorting productFilterSorting)
     {
         try
@@ -75,20 +86,25 @@ public class ShoppingProductGrpcService : ShoppingGrpcService.ShoppingGrpcServic
     
         foreach (var product in products)
         {
-            var productItemResponse = new ShoppingProductItemResponse()
-            {
-                Id = product.Id.ToString(),
-                Rating = product.Reviews.Select(x => x.Rating).DefaultIfEmpty(0).Average(),
-                Name = product.Name,
-                OriginPrice = DecimalValueHelper.ToDecimalValue(product.Price),
-                DiscountPrice = DecimalValueHelper.ToDecimalValue(null),
-                NumberOfRating = product.Reviews.Count(),
-                NumberOfOrder = 0
-            };
+            var productItemResponse = MapToShoppingProductItemResponse(product);
             response.Products.Add(productItemResponse);
         }
     
         return response;
+    }
+
+    private static ShoppingProductItemResponse MapToShoppingProductItemResponse(Product product)
+    {
+        return new ShoppingProductItemResponse
+        {
+            Id = product.Id.ToString(),
+            Rating = product.Reviews.Select(x => x.Rating).DefaultIfEmpty(0).Average(),
+            Name = product.Name,
+            OriginPrice = DecimalValueHelper.ToDecimalValue(product.Price),
+            DiscountPrice = DecimalValueHelper.ToDecimalValue(null),
+            NumberOfRating = product.Reviews.Count,
+            NumberOfOrder = 0
+        };
     }
 }
 

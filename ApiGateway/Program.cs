@@ -1,6 +1,4 @@
 using ApiGateway.Extensions;
-using ApiGateway.Services;
-using ApiGateway.Services.Interfaces;
 using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Extension;
 using Ocelot.DependencyInjection;
@@ -18,6 +16,8 @@ builder.Services.AddServices();
 builder.Services.AddOcelot();
 builder.Services.AddApplicationCors();
 builder.Services.AddApiGatewaySwagger(builder.Configuration);
+builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddHttpClients(builder.Configuration);
 
 builder.Host.UseSerilog();
 
