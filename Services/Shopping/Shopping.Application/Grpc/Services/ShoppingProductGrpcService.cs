@@ -29,9 +29,9 @@ public class ShoppingProductGrpcService : ShoppingGrpcService.ShoppingGrpcServic
     public override async Task<ShoppingProductItemResponse> GetProductById(ShoppingProductByIdRequest request, ServerCallContext context)
     {
         var specification = new ProductByIdSpecification(Guid.Parse(request.Id));
-        // var product = await _productRepository.FindAsync(specification)
-        //               ?? throw new RpcException(new Status(StatusCode.NotFound, $"Product ({request.Id}) not found!"));
-        var product = new Product(Guid.NewGuid(), "Temp", Guid.NewGuid(), 0);
+        var product = await _productRepository.FindAsync(specification)
+                      ?? throw new RpcException(new Status(StatusCode.NotFound, $"Product ({request.Id}) not found!"));
+        // var product = new Product(Guid.NewGuid(), "Temp", Guid.NewGuid(), 0);
         return MapToShoppingProductItemResponse(product);
     }
 

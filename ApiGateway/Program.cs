@@ -1,4 +1,5 @@
 using ApiGateway.Extensions;
+using ApiGateway.Middlewares;
 using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Extension;
 using Ocelot.DependencyInjection;
@@ -27,6 +28,8 @@ app.UseCors("HomeService");
 
 app.UseSwagger();
 app.UseSwaggerForOcelotUI();
+
+app.UseCustomExceptionHandler(app.Environment);
 
 app.UseRouting();
 
