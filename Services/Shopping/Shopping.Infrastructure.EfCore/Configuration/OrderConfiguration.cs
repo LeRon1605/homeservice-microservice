@@ -12,13 +12,16 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
 
         builder.Property(x => x.ContactName)
             .IsRequired();
-
+        
+        builder.Property(x => x.BuyerId)
+            .IsRequired();
+        
         builder.Property(x => x.PhoneNumber)
             .IsRequired();
 
         builder.Property(x => x.EmailAddress);
-        
-        builder.Property(x=>x.OrderValue)
+
+        builder.Property(x => x.OrderValue)
             .HasPrecision(20, 2)
             .IsRequired();
 

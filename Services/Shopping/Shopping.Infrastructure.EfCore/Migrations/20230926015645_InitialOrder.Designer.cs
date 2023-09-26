@@ -12,7 +12,7 @@ using Shopping.Infrastructure.EfCore;
 namespace Shopping.Infrastructure.EfCore.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    [Migration("20230925135648_InitialOrder")]
+    [Migration("20230926015645_InitialOrder")]
     partial class InitialOrder
     {
         /// <inheritdoc />
@@ -29,6 +29,9 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BuyerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ContactName")
