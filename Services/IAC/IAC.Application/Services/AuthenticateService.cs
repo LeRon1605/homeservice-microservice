@@ -54,7 +54,6 @@ public class AuthenticateService : IAuthenticateService
             UserName = signUpDto.PhoneNumber,
             PhoneNumber = signUpDto.PhoneNumber,
             Email = signUpDto.Email,
-            PasswordHash = signUpDto.Password
         };
 
         await _unitOfWork.BeginTransactionAsync();

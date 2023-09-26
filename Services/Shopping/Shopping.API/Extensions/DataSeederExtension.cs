@@ -8,6 +8,7 @@ public static class DataSeederExtension
     public static IServiceCollection AddDataSeeder(this IServiceCollection services)
     {
         services.AddScoped<IDataSeeder, ProductReviewDataSeeder>();
+        services.AddScoped<IDataSeeder, OrderDataSeeder>();
         
         return services;
     }
