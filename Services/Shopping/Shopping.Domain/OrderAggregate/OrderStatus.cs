@@ -1,6 +1,6 @@
 ﻿namespace Shopping.Domain.OrderAggregate;
 
-public enum ProductStatus
+public enum OrderStatus
 {
     Rejected,
     Finished,

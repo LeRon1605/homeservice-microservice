@@ -1,7 +1,9 @@
-﻿namespace Shopping.Application.Dtos;
+﻿using BuildingBlocks.Application.Dtos;
+using Shopping.Domain.OrderAggregate;
 
-public class OrderFilterAndPagingDto
+namespace Shopping.Application.Dtos;
+
+public class OrderFilterAndPagingDto : PagingParameters
 {
-	public Guid Id { get; set; }
-	public string? Name { get; set; }
+    public OrderStatus? Status { get; set; }
 }
