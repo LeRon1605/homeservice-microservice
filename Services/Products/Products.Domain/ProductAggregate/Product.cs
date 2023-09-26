@@ -15,6 +15,7 @@ public class Product : AggregateRoot
     public string ProductCode { get; private set; }
     public string Name { get; private set; }
     public string? Description { get; private set; }
+    public string? Colors { get; private set; }
     public bool IsObsolete { get; private set; }
     
     public Guid? BuyUnitId { get; private set; }
@@ -50,7 +51,8 @@ public class Product : AggregateRoot
         Guid? buyUnitId = null,
         decimal? buyPrice = null,
         Guid? sellUnitId = null,
-        decimal sellPrice = 0)
+        decimal sellPrice = 0,
+        IEnumerable<string>? colors = null)
     {
         ProductCode = Guard.Against.NullOrWhiteSpace(productCode, nameof(ProductCode));
         Name = Guard.Against.NullOrWhiteSpace(name, nameof(Name));
@@ -64,6 +66,7 @@ public class Product : AggregateRoot
         SellPrice = sellPrice;
         Images = new List<ProductImage>();
         
+        SetColors(colors);
         AddDomainEvent(new ProductAddedDomainEvent(this));
     }
 
@@ -106,12 +109,13 @@ public class Product : AggregateRoot
             Guid? sellUnitId,
             decimal sellPrice,
             string[] urls,
+            IEnumerable<string>? colors,
             IRepository<Product> productRepository)
     {
         if (await productRepository.AnyAsync(new IsProductCodeExistsSpecification(productCode)))
             throw new DuplicateProductCodeException("Code is existing");
         var product = new Product(productCode, name, productTypeId, productGroupId, description, isObsolete, buyUnitId,
-            buyPrice, sellUnitId, sellPrice);
+            buyPrice, sellUnitId, sellPrice, colors);
         
         foreach (var url in urls)
         {
@@ -133,6 +137,7 @@ public class Product : AggregateRoot
         Guid? sellUnitId,
         decimal sellPrice,
         string[] urls,
+        IEnumerable<string>? colors,
         IRepository<Product> productRepository)
     {
 
@@ -146,8 +151,9 @@ public class Product : AggregateRoot
         BuyPrice = buyPrice;
         SellUnitId = sellUnitId;
         SellPrice = sellPrice;
-        var images = new List<ProductImage>();
+        SetColors(colors);
         
+        var images = new List<ProductImage>();
         urls.ToList().ForEach(url => images.Add(new ProductImage(url, Id)));
         Images.Clear();
         Images.AddRange(images);
@@ -162,5 +168,10 @@ public class Product : AggregateRoot
                 throw new DuplicateProductCodeException("Code is existing");
             ProductCode = productCode;
         }
+    }
+
+    private void SetColors(IEnumerable<string>? colors)
+    {
+        Colors = colors == null ? null : string.Join(",", colors);
     }
 }

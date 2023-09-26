@@ -6,6 +6,7 @@ public class GetProductDto
     public string ProductCode { get; set; } = null!;
     public string Name { get; set; } = null!;
     public string? Description { get; set; }
+    public IEnumerable<string> Colors { get; set; } = null!;
     public bool IsObsolete { get; set; }
     
     public decimal? BuyPrice { get; set; }

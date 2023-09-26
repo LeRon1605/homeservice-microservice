@@ -30,7 +30,6 @@ public class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand,
     public async Task<GetProductDto> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
         var product = await _productRepository.FindAsync(new ProductByIdSpecification(request.Id));
-        //var product = await _productRepository.GetByIdAsync(request.Id);
         if (product == null)
         {
             throw new ProductNotFoundException(request.Id);
@@ -41,14 +40,20 @@ public class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand,
         await _productValidator.CheckProductUnitExistAsync(request.BuyUnitId, request.SellUnitId);
         
         await product.UpdateAsync(
-            request.ProductCode, request.Name, request.TypeId,
-                request.GroupId, request.Description,
-                request.IsObsolete, request.BuyUnitId,
-                request.BuyPrice, request.SellUnitId,
-                request.SellPrice!.Value,
-                request.Urls,
-                _productRepository
-            );
+            request.ProductCode, 
+            request.Name, 
+            request.TypeId,
+            request.GroupId, 
+            request.Description,
+            request.IsObsolete, 
+            request.BuyUnitId,
+            request.BuyPrice, 
+            request.SellUnitId,
+            request.SellPrice!.Value,
+            request.Urls, 
+            request.Colors,
+            _productRepository
+        );
         
         _productRepository.Update(product);
         await _unitOfWork.SaveChangesAsync();

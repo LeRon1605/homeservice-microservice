@@ -15,10 +15,11 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.HasKey(x => x.Id);
         
         builder.Property(x => x.ProductCode)
-              .HasMaxLength(StringLength.ProductCode)
-              .IsRequired();
+               .HasMaxLength(StringLength.ProductCode)
+               .IsRequired();
 
-        builder.HasIndex(x => x.ProductCode).IsUnique();
+        builder.HasIndex(x => x.ProductCode)
+               .IsUnique();
         
         builder.Property(x => x.Name)
                .HasMaxLength(StringLength.Name)
@@ -45,6 +46,9 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder.Property(x => x.BuyPrice)
                .HasPrecision(20, 2)
+               .IsRequired(false);
+
+        builder.Property(x => x.Colors)
                .IsRequired(false);
 
         builder.HasOne<ProductType>(x => x.Type)

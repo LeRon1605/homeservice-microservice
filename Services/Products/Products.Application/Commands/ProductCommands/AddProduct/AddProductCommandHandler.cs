@@ -39,6 +39,7 @@ public class AddProductCommandHandler : ICommandHandler<AddProductCommand, GetPr
             request.BuyPrice, request.SellUnitId,
             request.SellPrice!.Value,
             request.Urls,
+            request.Colors,
             _productRepository
             );
 

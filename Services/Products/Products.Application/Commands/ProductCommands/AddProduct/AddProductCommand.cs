@@ -18,5 +18,6 @@ public class AddProductCommand : ProductCreateDto, ICommand<GetProductDto>
         BuyUnitId = productCreateDto.BuyUnitId;
         SellUnitId = productCreateDto.SellUnitId;
         Urls = productCreateDto.Urls;
+        Colors = productCreateDto.Colors;
     }
 }
