@@ -1,4 +1,5 @@
 using AutoMapper;
+using BuildingBlocks.Domain.Exceptions.Resource;
 using IAC.Application.Dtos.Roles;
 using IAC.Application.Services.Interfaces;
 using IAC.Domain.Entities;
@@ -28,17 +29,59 @@ public class RoleService : IRoleService
         _userManager = userManager;
     }
 
+    public async Task<IEnumerable<RoleDto>> GetAllRolesAsync()
+    {
+        var roles = await _roleRepository.GetAllAsync();
+        return _mapper.Map<IEnumerable<RoleDto>>(roles);
+    }
+
     public async Task<RoleDto> GetByIdAsync(string id)
     {
-        var role = await _roleManager.FindByIdAsync(id);
-        if (role == null)
-        {
-            throw new RoleNotFoundException(id);
-        }
+        var role = await _roleManager.FindByIdAsync(id) ?? throw new RoleNotFoundException(id);
         
         return _mapper.Map<RoleDto>(role);
     }
-    
+
+    public async Task<RoleDto> CreateAsync(RoleCreateDto dto)
+    {
+        var role = new ApplicationRole(dto.Name);
+        var result = await _roleManager.CreateAsync(role);
+        if (!result.Succeeded)
+        {
+            var error = result.Errors.First();
+            throw new ResourceInvalidOperationException(error.Description, error.Code);
+        }
+
+        return _mapper.Map<RoleDto>(role);
+    }
+
+    public async Task<RoleDto> UpdateAsync(string id, RoleUpdateDto dto)
+    {
+        var role = await _roleManager.FindByIdAsync(id) ?? throw new RoleNotFoundException(id);
+
+        role.Name = dto.Name;
+        var result = await _roleManager.UpdateAsync(role);
+        if (!result.Succeeded)
+        {
+            var error = result.Errors.First();
+            throw new ResourceInvalidOperationException(error.Description, error.Code);
+        }
+
+        return _mapper.Map<RoleDto>(role);
+    }
+
+    public async Task DeleteAsync(string id)
+    {
+        var role = await _roleManager.FindByIdAsync(id) ?? throw new RoleNotFoundException(id);
+
+        var result = await _roleManager.DeleteAsync(role);
+        if (!result.Succeeded)
+        {
+            var error = result.Errors.First();
+            throw new ResourceInvalidOperationException(error.Description, error.Code);
+        }
+    }
+
     public async Task<IEnumerable<RoleDto>> GetByUserAsync(string userId)
     {
         var user = await _userManager.FindByIdAsync(userId);
