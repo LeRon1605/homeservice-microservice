@@ -1,7 +1,10 @@
+using System.Net;
 using ApiGateway.Dtos.Products;
+using ApiGateway.Exceptions;
 using ApiGateway.Services.Interfaces;
 using AutoMapper;
 using BuildingBlocks.Application.Dtos;
+using BuildingBlocks.Domain.Exceptions.Resource;
 using Products.Application.Grpc.Proto;
 using Shopping.Application.Grpc.Proto;
 
@@ -87,7 +90,13 @@ public class ProductService : IProductService
 
     public async Task<ProductData> GetByIdAsync(Guid id)
     {
-        var productDto = await _httpClient.GetFromJsonAsync<GetProductDto>(id.ToString());
+        var response = await _httpClient.GetAsync(id.ToString());
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new HttpClientException(response.StatusCode, response.ReasonPhrase);
+        } 
+
+        var productDto = await response.Content.ReadFromJsonAsync<GetProductDto>();
 
         return _mapper.Map<ProductData>(productDto);
     }
