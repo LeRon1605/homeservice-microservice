@@ -13,7 +13,6 @@ public class ProductData
     public int NumberOfOrder { get; set; }
     
     public decimal SellPrice { get; set; }
-    
-    public ProductTypeDto Type { get; set; } = null!;
+    public ProductGroupDto Group { get; set; } = null!;
     public IEnumerable<ProductImageDto> Images { get; set; } = null!;
 }
