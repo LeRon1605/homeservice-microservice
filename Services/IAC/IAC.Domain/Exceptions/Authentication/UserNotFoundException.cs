@@ -4,7 +4,7 @@ namespace IAC.Domain.Exceptions.Authentication;
 
 public class UserNotFoundException : ResourceNotFoundException
 {
-    public UserNotFoundException(string id) : base("User", "phone/email", id, ErrorCodes.UserNotFound)
+    public UserNotFoundException(string phoneOrEmail) : base("User", "phone/email", phoneOrEmail, ErrorCodes.UserNotFound)
     {
     }
     

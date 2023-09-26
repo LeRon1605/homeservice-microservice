@@ -12,7 +12,12 @@ public class RoleRepository : IRoleRepository
     {
         _dbContext = dbContext;
     }
-    
+
+    public async Task<IList<ApplicationRole>> GetAllAsync()
+    {
+        return await _dbContext.Roles.ToListAsync();
+    }
+
     public async Task<IList<ApplicationRole>> GetByUserIdAsync(string userId)
     {
         var userInRoleQueryable = _dbContext.UserRoles.Where(x => x.UserId == userId);
