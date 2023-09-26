@@ -37,6 +37,7 @@ public class OrderDataSeeder : IDataSeeder
                 var order = new Order(
                     $"ORDER-{i}",
                     faker.Name.FindName(),
+                    faker.Random.Guid(),
                     faker.Phone.PhoneNumber(),
                     faker.Internet.Email(),
                     faker.Finance.Amount(),

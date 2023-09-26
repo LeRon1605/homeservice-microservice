@@ -28,6 +28,9 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("BuyerId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("ContactName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

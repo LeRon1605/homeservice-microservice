@@ -18,6 +18,7 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OrderNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ContactName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BuyerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EmailAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OrderValue = table.Column<decimal>(type: "decimal(20,2)", precision: 20, scale: 2, nullable: false),
