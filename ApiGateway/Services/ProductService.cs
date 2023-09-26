@@ -101,10 +101,10 @@ public class ProductService : IProductService
             Description = productItemResponse.Description,
             ProductCode = productItemResponse.Code,
             SellPrice = Helpers.DecimalValueHelper.ToDecimal(productItemResponse.SellPrice),
-            Type = new ProductTypeDto()
+            Group = new ProductGroupDto()
             {
-                Id = new Guid(productItemResponse.ProductType.Id),
-                Name = productItemResponse.ProductType.Name
+                Id = new Guid(productItemResponse.ProductGroup.Id),
+                Name = productItemResponse.ProductGroup.Name
             },
             Images = productItemResponse.Images.Select(x => new ProductImageDto()
             {
