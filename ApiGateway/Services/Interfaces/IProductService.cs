@@ -6,4 +6,5 @@ namespace ApiGateway.Services.Interfaces;
 public interface IProductService
 {
     Task<PagedResult<ProductData>> GetPagedAsync(GetProductWithFilterAndPaginationDto dto);
+    Task<ProductData> GetByIdAsync(Guid id);
 }

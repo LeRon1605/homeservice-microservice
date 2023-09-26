@@ -6,6 +6,7 @@ option csharp_namespace = "Shopping.Application.Grpc.Proto";
 
 service ShoppingGrpcService {
     rpc GetProducts (ShoppingProductFilterSorting) returns (ShoppingProductListResponse);
+    rpc GetProductById (ShoppingProductByIdRequest) returns (ShoppingProductItemResponse);
 }
 
 message ShoppingProductFilterSorting {
@@ -25,6 +26,9 @@ message ShoppingProductListResponse {
     repeated ShoppingProductItemResponse products = 2;
 }
 
+message ShoppingProductByIdRequest {
+    string id = 1;
+}
 message ShoppingProductItemResponse {
     string id = 1;
     double rating = 2;

@@ -21,6 +21,8 @@
       - Cloudinary__CloudName=dboijruhe
       - Cloudinary__ApiKey=431114562135728
       - Cloudinary__ApiSecret=tmDw4SrmffqZp2hA2tiDDZgemTU
+      - Kestrel__Endpoints__Http__Url=http://+:80
+      - Kestrel__Endpoints__gRPC__Url=http://+:3000
     restart: always
     depends_on:
       - db
@@ -101,6 +103,8 @@
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__Default=Server=db,1433;Database=HomeCare.ShoppingDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
       - GrpcUrls__Identity=http://iac.api:3000
+      - Kestrel__Endpoints__Http__Url=http://+:80
+      - Kestrel__Endpoints__gRPC__Url=http://+:3000
     restart: always
     depends_on:
       - db
@@ -132,7 +136,10 @@
       - Routes__3__DownstreamHostAndPorts__0__Host=shopping.api
       - Routes__3__DownstreamHostAndPorts__0__Port=80
       - SwaggerEndPoints__3__Config__0__Url=http://shopping.api/swagger/v1/swagger.json
-  
+      - GrpcUrls__Identity=http://iac.api:3000
+      - GrpcUrls__Product=http://products.api:3000
+      - GrpcUrls__Shopping=http://shopping.api:3000
+      - HttpUrls__Product=http://products.api:80/api/products/
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     ports:
