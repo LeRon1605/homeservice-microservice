@@ -29,7 +29,7 @@ public class OrderDataSeeder : IDataSeeder
 
         try
         {
-            _logger.LogTrace("Begin seeding product reviews...");
+            _logger.LogTrace("Begin seeding orders...");
 
             var faker = new Faker();
             for (var i = 0; i < 10; i++)
@@ -40,19 +40,18 @@ public class OrderDataSeeder : IDataSeeder
                     faker.Random.Guid(),
                     faker.Phone.PhoneNumber(),
                     faker.Internet.Email(),
-                    faker.Finance.Amount(),
-                    faker.Date.Past(),
-                    faker.PickRandom<OrderStatus>()
+                    faker.Finance.Amount()
                 );
+                
                 _orderRepository.Add(order);
                 await _unitOfWork.SaveChangesAsync();
             }
 
-            _logger.LogTrace("Seed product reviews successfully!");
+            _logger.LogTrace("Seed orders successfully!");
         }
         catch
         {
-            _logger.LogTrace("Seed product reviews failed!");
+            _logger.LogTrace("Seed orders failed!");
         }
     }
 }

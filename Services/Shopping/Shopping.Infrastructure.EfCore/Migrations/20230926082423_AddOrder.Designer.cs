@@ -12,8 +12,8 @@ using Shopping.Infrastructure.EfCore;
 namespace Shopping.Infrastructure.EfCore.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    [Migration("20230926045654_InitialOrder")]
-    partial class InitialOrder
+    [Migration("20230926082423_AddOrder")]
+    partial class AddOrder
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,7 +36,8 @@ namespace Shopping.Infrastructure.EfCore.Migrations
 
                     b.Property<string>("ContactName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("EmailAddress")
                         .HasColumnType("nvarchar(max)");

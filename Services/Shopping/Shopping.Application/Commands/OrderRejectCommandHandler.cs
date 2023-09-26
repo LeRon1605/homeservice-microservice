@@ -25,7 +25,7 @@ public class OrderRejectCommandHandler : ICommandHandler<OrderRejectCommand, Ord
         var order = await _oderRepository.GetByIdAsync(request.Id);
         if (order == null)
             throw new OrderNotFoundException(request.Id);
-        order.OrderReject();
+        order.Reject();
         _oderRepository.Update(order);
         await _unitOfWork.SaveChangesAsync();
         return _mapper.Map<OrderDto>(order);

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Shopping.Domain.Constants;
 using Shopping.Domain.OrderAggregate;
 
 namespace Shopping.Infrastructure.EfCore.Configuration;
@@ -11,24 +12,25 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.ContactName)
-            .IsRequired();
+               .HasMaxLength(StringLength.Name)
+               .IsRequired();
         
         builder.Property(x => x.BuyerId)
-            .IsRequired();
+               .IsRequired();
         
         builder.Property(x => x.PhoneNumber)
-            .IsRequired();
+               .IsRequired();
 
         builder.Property(x => x.EmailAddress);
 
         builder.Property(x => x.OrderValue)
-            .HasPrecision(20, 2)
-            .IsRequired();
+               .HasPrecision(20, 2)
+               .IsRequired();
 
         builder.Property(x => x.PlacedDate)
-            .IsRequired();
+               .IsRequired();
 
         builder.Property(x => x.Status)
-            .IsRequired();
+               .IsRequired();
     }
 }
