@@ -42,7 +42,7 @@ public class OrderDataSeeder : IDataSeeder
                     faker.Internet.Email(),
                     faker.Finance.Amount(),
                     faker.Date.Past(),
-                    faker.PickRandom<ProductStatus>()
+                    faker.PickRandom<OrderStatus>()
                 );
                 _orderRepository.Add(order);
                 await _unitOfWork.SaveChangesAsync();

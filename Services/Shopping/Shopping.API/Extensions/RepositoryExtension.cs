@@ -1,5 +1,6 @@
 using BuildingBlocks.Domain.Data;
 using BuildingBlocks.Infrastructure.EfCore.UnitOfWorks;
+using Shopping.Domain.OrderAggregate;
 using Shopping.Domain.ProductAggregate;
 using Shopping.Infrastructure.EfCore;
 using Shopping.Infrastructure.EfCore.Repositories;

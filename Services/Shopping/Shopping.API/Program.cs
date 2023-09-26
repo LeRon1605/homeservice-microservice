@@ -5,6 +5,7 @@ using BuildingBlocks.Presentation.Authentication;
 using BuildingBlocks.Presentation.DataSeeder;
 using BuildingBlocks.Presentation.EfCore;
 using BuildingBlocks.Presentation.EventBus;
+using BuildingBlocks.Presentation.ExceptionHandlers;
 using BuildingBlocks.Presentation.Extension;
 using BuildingBlocks.Presentation.Swagger;
 using Serilog;
@@ -22,6 +23,7 @@ builder.Services.AddSwagger("ShoppingService")
                 .AddEfCoreDbContext<OrderDbContext>(builder.Configuration)
                 .AddEventBus(builder.Configuration)
                 .AddRepositories()
+                .AddApplicationExceptionHandler()
                 .AddMapper()
                 .AddCqrs()
                 .AddHomeServiceAuthentication(builder.Configuration)
@@ -40,6 +42,7 @@ builder.Host.UseSerilog();
 
 var app = builder.Build();
 
+app.UseApplicationExceptionHandler();
 var eventBus = app.Services.GetRequiredService<IEventBus>();
 
 eventBus.Subscribe<ProductAddedIntegrationEvent, IIntegrationEventHandler<ProductAddedIntegrationEvent>>();

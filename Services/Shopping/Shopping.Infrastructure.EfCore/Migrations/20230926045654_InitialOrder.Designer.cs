@@ -12,7 +12,7 @@ using Shopping.Infrastructure.EfCore;
 namespace Shopping.Infrastructure.EfCore.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    [Migration("20230926015645_InitialOrder")]
+    [Migration("20230926045654_InitialOrder")]
     partial class InitialOrder
     {
         /// <inheritdoc />

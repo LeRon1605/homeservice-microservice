@@ -2,5 +2,6 @@
 
 public class ErrorCodes
 {
-    public const string OrderNotFound = "Order:404";
+    public const string OrderNotFound = "Order:001";
+    public const string OrderStatusInvalid = "Order:002";
 }
