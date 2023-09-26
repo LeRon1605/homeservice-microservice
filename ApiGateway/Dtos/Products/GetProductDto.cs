@@ -10,6 +10,8 @@ public class GetProductDto
     
     public decimal? BuyPrice { get; set; }
     public decimal? SellPrice { get; set; }
+
+    public IEnumerable<string> Colors { get; set; } = null!;
     
     public ProductUnitDto? BuyUnit { get; set; }
     

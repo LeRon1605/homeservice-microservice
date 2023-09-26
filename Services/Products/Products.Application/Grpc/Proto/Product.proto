@@ -29,6 +29,7 @@ message ProductItemResponse {
     repeated ProductImageReponse images = 10;
     NullableDecimalValue buy_price = 11;
     DecimalValue sell_price = 12;
+    google.protobuf.StringValue colors = 13;
 }
 
 message ProductUnitResponse {

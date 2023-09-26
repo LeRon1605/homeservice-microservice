@@ -21,5 +21,6 @@ public class UpdateProductCommand : ProductUpdateDto, ICommand<GetProductDto>
         BuyUnitId = productUpdateDto.BuyUnitId;
         SellUnitId = productUpdateDto.SellUnitId;
         Urls = productUpdateDto.Urls;
+        Colors = productUpdateDto.Colors;
     }
 }

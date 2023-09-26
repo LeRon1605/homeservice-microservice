@@ -13,6 +13,8 @@ public class Profiles : Profile
     public Profiles()
     {
         CreateMap<Product, GetProductDto>()
+            .ForMember(dest => dest.Colors, options => 
+                options.MapFrom(src => string.IsNullOrEmpty(src.Colors) ? Array.Empty<string>() : src.Colors.Split(',', StringSplitOptions.None)))
             .ForMember(dest => dest.Group,
                 options => options.MapFrom(src => new ProductGroupDto()
                     { Id = src.ProductGroupId, Name = src.Group.Name }))

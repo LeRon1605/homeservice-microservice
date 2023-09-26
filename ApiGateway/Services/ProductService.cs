@@ -115,6 +115,7 @@ public class ProductService : IProductService
                 Id = new Guid(productItemResponse.ProductGroup.Id),
                 Name = productItemResponse.ProductGroup.Name
             },
+            Colors = string.IsNullOrEmpty(productItemResponse.Colors) ? Array.Empty<string>() : productItemResponse.Colors.Split(','),
             Images = productItemResponse.Images.Select(x => new ProductImageDto()
             {
                 Id = new Guid(x.Id),

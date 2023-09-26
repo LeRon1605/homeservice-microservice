@@ -91,10 +91,10 @@ public class ProductDataSeeder : IDataSeeder
     {
         var data = new List<ProductGroup>()
         {
-            new("Roll"),
-            new("Metre"),
-            new("Item"),
-            new("Box")
+            new("Kitchen and Appliances"),
+            new("Living room"),
+            new("Lighting"),
+            new("Accessories")
         };
 
         foreach (var productGroup in data)
@@ -126,6 +126,7 @@ public class ProductDataSeeder : IDataSeeder
                 productUnits[random.Next(0, productTypes.Count)].Id,
                 500,
                 Array.Empty<string>(),
+                new [] { "Red", "Green" }, 
                 _productRepository
             );
             

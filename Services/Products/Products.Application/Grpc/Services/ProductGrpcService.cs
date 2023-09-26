@@ -1,6 +1,7 @@
 using BuildingBlocks.Domain.Data;
 using BuildingBlocks.Domain.Specification;
 using Google.Protobuf.Collections;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Products.Application.Grpc.Proto;
 using Products.Domain.ProductAggregate;
@@ -72,7 +73,8 @@ public class ProductGrpcService : Proto.ProductGrpcService.ProductGrpcServiceBas
                 {
                     Id = product.Type.Id.ToString(),
                     Name = product.Type.Name
-                }
+                },
+                Colors = product.Colors
             };
     
             foreach (var image in product.Images)
