@@ -4,6 +4,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,6 +21,12 @@
       <ProjectReference Include="..\Contracts.Application\Contracts.Application.csproj" />
       <ProjectReference Include="..\Contracts.Domain\Contracts.Domain.csproj" />
       <ProjectReference Include="..\Contracts.Infrastructure.EfCore\Contracts.Infrastructure.EfCore.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>
