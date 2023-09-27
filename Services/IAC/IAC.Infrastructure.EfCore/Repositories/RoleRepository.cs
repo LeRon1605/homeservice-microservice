@@ -31,4 +31,9 @@ public class RoleRepository : IRoleRepository
     {
         return _dbContext.UserRoles.AnyAsync(x => x.RoleId == id);
     }
+    
+    public async Task<ApplicationRole?> GetByIdAsync(string id)
+    {
+        return await _dbContext.Roles.Include(r => r.RoleClaims).FirstOrDefaultAsync(r => r.Id == id);
+    }
 }

@@ -15,6 +15,30 @@ public class RoleController : ControllerBase
         _roleService = roleService;
     }
     
+    [HttpGet("permissions")]
+    [ProducesResponseType(typeof(IEnumerable<PermissionGroupDto>), StatusCodes.Status200OK)]
+    public IActionResult GetAllPermissions()
+    {
+        var permissions = _roleService.GetAllPermissions();
+        return Ok(permissions);
+    }
+
+    [HttpGet("{id:guid}/permissions")]
+    [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetPermissionsInRole(Guid id)
+    {
+        var permissions = await _roleService.GetPermissionsInRoleAsync(id.ToString());
+        return Ok(permissions);
+    }
+    
+    [HttpPut("{id:guid}/permissions")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> EditPermissionsInRole(Guid id, IEnumerable<string> permissions)
+    {
+        await _roleService.EditPermissionsInRoleAsync(id.ToString(), permissions.ToList());
+        return NoContent();
+    }
+
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<RoleDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetRolesAsync()

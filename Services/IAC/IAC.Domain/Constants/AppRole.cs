@@ -2,6 +2,7 @@ namespace IAC.Domain.Constants;
 
 public static class AppRole
 {
-    public const string Admin = "admin";
-    public const string Customer = "customer";
+    public const string Admin = "Admin";
+    public const string SalePerson = "Sales person";
+    public const string Customer = "Customer";
 }
