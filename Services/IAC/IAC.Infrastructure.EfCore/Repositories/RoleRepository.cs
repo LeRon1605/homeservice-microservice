@@ -1,5 +1,6 @@
 using IAC.Domain.Entities;
 using IAC.Domain.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace IAC.Infrastructure.EfCore.Repositories;
@@ -24,5 +25,10 @@ public class RoleRepository : IRoleRepository
         return await _dbContext.Roles
                                .Where(role => userInRoleQueryable.Any(x => x.RoleId == role.Id))
                                .ToListAsync();
+    }
+
+    public Task<bool> HasGrantedToUserAsync(string id)
+    {
+        return _dbContext.UserRoles.AnyAsync(x => x.RoleId == id);
     }
 }
