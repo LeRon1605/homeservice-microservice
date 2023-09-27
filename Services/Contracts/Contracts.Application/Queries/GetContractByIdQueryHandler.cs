@@ -1,3 +1,4 @@
+using BuildingBlocks.Application.Cache;
 using BuildingBlocks.Application.CQRS;
 using Contracts.Application.Dtos.Contracts;
 
@@ -5,11 +6,26 @@ namespace Contracts.Application.Queries;
 
 public class GetContractByIdQueryHandler : IQueryHandler<GetContractByIdQuery, ContractDto>
 {
-    public Task<ContractDto> Handle(GetContractByIdQuery request, CancellationToken cancellationToken)
+    private readonly ICacheService _cache;
+
+    public GetContractByIdQueryHandler(ICacheService cache)
     {
-        return Task.FromResult(new ContractDto()
+        _cache = cache;
+    }
+    
+    public async Task<ContractDto> Handle(GetContractByIdQuery request, CancellationToken cancellationToken)
+    {
+        var data = await _cache.GetCachedDataAsync<ContractDto>("test");
+        
+        if (data == null)
         {
-            Id = Guid.NewGuid()
-        });
+            data = new ContractDto()
+            {
+                Id = Guid.NewGuid()
+            };
+            await _cache.SetCachedDataAsync("test", data, TimeSpan.FromMinutes(1));
+        }
+
+        return data;
     }
 }

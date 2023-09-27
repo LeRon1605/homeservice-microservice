@@ -23,11 +23,12 @@ public class CacheService : ICacheService
         await _cache.SetStringAsync(key, jsonData, options);
     }
 
-    public T? GetCachedDataAsync<T>(string key)
+    public async Task<T?> GetCachedDataAsync<T>(string key)
     {
-        var jsonData = _cache.GetString(key);
+        var jsonData = await _cache.GetStringAsync(key);
         if (jsonData == null)
             return default;
+        
         return JsonSerializer.Deserialize<T>(jsonData);
     }
 

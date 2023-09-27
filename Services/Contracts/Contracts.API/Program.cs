@@ -6,6 +6,7 @@ using BuildingBlocks.Presentation.EfCore;
 using BuildingBlocks.Presentation.EventBus;
 using BuildingBlocks.Presentation.ExceptionHandlers;
 using BuildingBlocks.Presentation.Extension;
+using BuildingBlocks.Presentation.Redis;
 using BuildingBlocks.Presentation.Swagger;
 using Contracts.API.Extensions;
 using Contracts.Infrastructure.EfCore;
@@ -15,7 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = ApplicationLoggerFactory.CreateSerilogLogger(builder.Configuration, "ContractService");
 
-builder.Services.AddSwagger("ContractService")
+builder.Services
+    .AddSwagger("ContractService")
     .AddEventBus(builder.Configuration)
     .AddEfCoreDbContext<ContractDbContext>(builder.Configuration)
     .AddRepositories()
@@ -23,7 +25,8 @@ builder.Services.AddSwagger("ContractService")
     .AddApplicationExceptionHandler()
     .AddCurrentUser()
     .AddCqrs()
-    .AddMapper();
+    .AddMapper()
+    .AddRedisDistributedCache(builder.Configuration);
 
 builder.Services.AddControllers();
 
