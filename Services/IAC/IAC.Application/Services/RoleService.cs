@@ -2,6 +2,7 @@ using AutoMapper;
 using BuildingBlocks.Domain.Exceptions.Resource;
 using IAC.Application.Dtos.Roles;
 using IAC.Application.Services.Interfaces;
+using IAC.Domain.Constants;
 using IAC.Domain.Entities;
 using IAC.Domain.Exceptions.Authentication;
 using IAC.Domain.Exceptions.Roles;
@@ -74,6 +75,16 @@ public class RoleService : IRoleService
     {
         var role = await _roleManager.FindByIdAsync(id) ?? throw new RoleNotFoundException(id);
 
+        if (IsDefaultRole(role))
+        {
+            throw new DefaultRoleDeleteFailedException(role.Name!);
+        }
+        
+        if (await _roleRepository.HasGrantedToUserAsync(id))
+        {
+            throw new RoleHasGrantedToUserException(id);
+        }
+        
         var result = await _roleManager.DeleteAsync(role);
         if (!result.Succeeded)
         {
@@ -92,5 +103,10 @@ public class RoleService : IRoleService
         
         var roles = await _roleRepository.GetByUserIdAsync(userId);
         return _mapper.Map<IEnumerable<RoleDto>>(roles);
+    }
+
+    private bool IsDefaultRole(ApplicationRole role)
+    {
+        return role.Name == AppRole.Admin || role.Name == AppRole.Customer;
     }
 }

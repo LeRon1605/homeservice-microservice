@@ -7,4 +7,6 @@ public interface IRoleRepository
     Task<IList<ApplicationRole>> GetAllAsync();
     
     Task<IList<ApplicationRole>> GetByUserIdAsync(string userId);
+
+    Task<bool> HasGrantedToUserAsync(string id);
 }
