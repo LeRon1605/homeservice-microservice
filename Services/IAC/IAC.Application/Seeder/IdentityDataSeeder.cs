@@ -1,4 +1,6 @@
+using System.Security.Claims;
 using BuildingBlocks.Application.Seeder;
+using IAC.Application.Auth;
 using IAC.Domain.Constants;
 using IAC.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -27,10 +29,17 @@ public class IdentityDataSeeder : IDataSeeder
         try
         {
             _logger.LogInformation("Begin seeding identity data...");
-            
-            await SeedAdminRoleAsync();
 
-            await SeedCustomerRoleAsync();
+            if (!_roleManager.Roles.Any())
+            {
+                await SeedAdminRoleAsync();
+
+                await SeedCustomerRoleAsync();
+
+                await SeedSalePersonRoleAsync();
+                
+                await SeedRoleClaimAsync();
+            }
 
             if (!_userManager.Users.Any())
             {
@@ -64,6 +73,17 @@ public class IdentityDataSeeder : IDataSeeder
             _logger.LogWarning("Seeding customer role failed!");
         }
     }
+
+    private async Task SeedSalePersonRoleAsync()
+    {
+        var salePersonRole = new ApplicationRole(AppRole.SalePerson);
+        var result = await _roleManager.CreateAsync(salePersonRole);
+        if (!result.Succeeded)
+        {
+            _logger.LogWarning("Seeding sale person role failed!");       
+        }
+    }
+    
     
     private async Task SeedDefaultAdminAccountAsync()
     {
@@ -79,5 +99,17 @@ public class IdentityDataSeeder : IDataSeeder
 
         await _userManager.CreateAsync(user, "Admin@123");
         await _userManager.AddToRoleAsync(user, AppRole.Admin);
+    }
+
+    private async Task SeedRoleClaimAsync()
+    {
+        var permissions = PermissionPolicy.AllPermissions;
+        var adminRole = await _roleManager.FindByNameAsync(AppRole.Admin);
+        var salePersonRole = await _roleManager.FindByNameAsync(AppRole.SalePerson);
+        foreach (var permission in permissions)
+        {
+            await _roleManager.AddClaimAsync(adminRole!, new Claim("Permission", permission.Code));
+            await _roleManager.AddClaimAsync(salePersonRole!, new Claim("Permission", permission.Code));
+        }
     }
 }

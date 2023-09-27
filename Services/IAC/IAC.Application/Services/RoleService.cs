@@ -1,5 +1,7 @@
 using AutoMapper;
+using BuildingBlocks.Domain.Exceptions.Common;
 using BuildingBlocks.Domain.Exceptions.Resource;
+using IAC.Application.Auth;
 using IAC.Application.Dtos.Roles;
 using IAC.Application.Services.Interfaces;
 using IAC.Domain.Constants;
@@ -29,6 +31,52 @@ public class RoleService : IRoleService
         _roleManager = roleManager;
         _userManager = userManager;
     }
+
+    public IEnumerable<PermissionInfo> GetAllPermissions()
+    {
+        return PermissionPolicy.AllPermissions;
+    }
+
+    public async Task<IEnumerable<string>> GetPermissionsInRoleAsync(string roleId)
+    {
+        var role = await _roleManager.FindByIdAsync(roleId)
+                   ?? throw new RoleNotFoundException(roleId);
+        var claims = await _roleManager.GetClaimsAsync(role);
+        
+        return claims.Select(c => c.Value);
+    }
+
+    public async Task EditPermissionsInRoleAsync(string roleId, IList<string> permissions)
+    {
+        CheckPermissionConstraints(permissions);
+        
+        // Get role
+        var role = await _roleRepository.GetByIdAsync(roleId) ?? throw new RoleNotFoundException(roleId);
+        
+        // Replace permission list for a role
+        var allPermission = PermissionPolicy.AllPermissions.Select(p => p.Code).ToList();
+        
+        role.RoleClaims.Clear();
+
+        foreach (var permission in permissions)
+        {
+            if (!allPermission.Contains(permission))
+                throw new PermissionNotFoundException(permission);
+
+            role.RoleClaims.Add(new IdentityRoleClaim<string>
+            {
+                RoleId = roleId,
+                ClaimType = "Permission",
+                ClaimValue = permission 
+            });
+        }
+
+        // Update to db
+        var result = await _roleManager.UpdateAsync(role);
+        if (!result.Succeeded)
+            throw new InvalidInputException(result.Errors.First().Description);
+    }
+
 
     public async Task<IEnumerable<RoleDto>> GetAllRolesAsync()
     {
@@ -109,4 +157,19 @@ public class RoleService : IRoleService
     {
         return role.Name == AppRole.Admin || role.Name == AppRole.Customer;
     }
+
+    private void CheckPermissionConstraints(IList<string> permissions)
+    {
+        var allModules = typeof(PermissionPolicy).GetNestedTypes().Where(x => x.IsClass).Select(x => x.Name).ToList();
+
+        foreach (var moduleName in allModules)
+        {
+            if (moduleName == nameof(PermissionPolicy.Common)) continue; 
+            
+            // If user has access to a module, there must be a View permission
+            if (permissions.Any(p => p.Contains(moduleName)) && !permissions.Any(p => p.Contains($"{moduleName}.View")))
+                throw new PermissionConstraintsNotSatisfiedException(moduleName);
+        }
+    }
+    
 }
