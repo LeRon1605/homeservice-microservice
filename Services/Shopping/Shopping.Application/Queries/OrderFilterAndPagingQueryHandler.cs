@@ -21,11 +21,12 @@ public class OrderFilterAndPagingQueryHandler : IQueryHandler<OrderFilterAndPagi
     
     public async Task<PagedResult<OrderDto>> Handle(OrderFilterAndPagingQuery request, CancellationToken cancellationToken)
     {
-        var orderSpecification = new OrderFilterAndPagingSpecification(request.Search, request.PageIndex, request.PageSize, request.Status);
-        
-        var (orders, totalCount) = await _oderRepository.FindWithTotalCountAsync(orderSpecification);
-        var ordersDto = _mapper.Map<IEnumerable<OrderDto>>(orders);
-        
-        return new PagedResult<OrderDto>(ordersDto, totalCount, request.PageIndex, request.PageSize);
+        // var orderSpecification = new OrderFilterAndPagingSpecification(request.Search, request.PageIndex, request.PageSize, request.Status);
+        //
+        // var (orders, totalCount) = await _oderRepository.FindWithTotalCountAsync(orderSpecification);
+        // var ordersDto = _mapper.Map<IEnumerable<OrderDto>>(orders);
+        //
+        // return new PagedResult<OrderDto>(ordersDto, totalCount, request.PageIndex, request.PageSize);
+        return null;
     }
 }

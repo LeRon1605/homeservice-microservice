@@ -1,5 +1,6 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Domain.Models;
+using Shopping.Domain.ProductUnitAggregate;
 
 namespace Shopping.Domain.ProductAggregate;
 
@@ -9,6 +10,7 @@ public class Product : AggregateRoot
     public decimal Price { get; private set; }
     public Guid ProductGroupId { get; private set; }
     public Guid? ProductUnitId { get; private set; }
+    public ProductUnit? ProductUnit { get; private set; }
     public List<ProductReview> Reviews { get; private set; }
 
     public Product(Guid id, string name, Guid productGroupId, decimal price, Guid? productUnitId)

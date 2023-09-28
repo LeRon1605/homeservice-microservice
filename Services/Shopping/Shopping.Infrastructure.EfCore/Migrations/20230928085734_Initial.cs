@@ -6,27 +6,26 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Shopping.Infrastructure.EfCore.Migrations
 {
     /// <inheritdoc />
-    public partial class AddOrderAndProductUnit : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<Guid>(
-                name: "ProductUnitId",
-                table: "Product",
-                type: "uniqueidentifier",
-                nullable: true);
-
             migrationBuilder.CreateTable(
                 name: "Order",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OrderNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ContactName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     BuyerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmailAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CustomerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContactName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OrderValue = table.Column<decimal>(type: "decimal(20,2)", precision: 20, scale: 2, nullable: false),
                     PlacedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false)
@@ -46,6 +45,26 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProductUnit", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Product",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(20,2)", precision: 20, scale: 2, nullable: false),
+                    ProductGroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductUnitId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Product", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Product_ProductUnit_ProductUnitId",
+                        column: x => x.ProductUnitId,
+                        principalTable: "ProductUnit",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -78,10 +97,40 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ProductReview",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductReview", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductReview_Product_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Product",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_OrderLine_OrderId",
                 table: "OrderLine",
                 column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Product_ProductUnitId",
+                table: "Product",
+                column: "ProductUnitId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductReview_ProductId",
+                table: "ProductReview",
+                column: "ProductId");
         }
 
         /// <inheritdoc />
@@ -91,14 +140,16 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                 name: "OrderLine");
 
             migrationBuilder.DropTable(
-                name: "ProductUnit");
+                name: "ProductReview");
 
             migrationBuilder.DropTable(
                 name: "Order");
 
-            migrationBuilder.DropColumn(
-                name: "ProductUnitId",
-                table: "Product");
+            migrationBuilder.DropTable(
+                name: "Product");
+
+            migrationBuilder.DropTable(
+                name: "ProductUnit");
         }
     }
 }

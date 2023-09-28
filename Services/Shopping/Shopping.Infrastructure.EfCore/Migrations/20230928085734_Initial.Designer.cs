@@ -12,8 +12,8 @@ using Shopping.Infrastructure.EfCore;
 namespace Shopping.Infrastructure.EfCore.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    [Migration("20230928042632_AddOrderAndProductUnit")]
-    partial class AddOrderAndProductUnit
+    [Migration("20230928085734_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,17 +31,6 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("BuyerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ContactName")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("EmailAddress")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("OrderNo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -49,10 +38,6 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                     b.Property<decimal>("OrderValue")
                         .HasPrecision(20, 2)
                         .HasColumnType("decimal(20,2)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("PlacedDate")
                         .HasColumnType("datetime2");
@@ -124,6 +109,8 @@ namespace Shopping.Infrastructure.EfCore.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ProductUnitId");
+
                     b.ToTable("Product");
                 });
 
@@ -168,6 +155,69 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                     b.ToTable("ProductUnit");
                 });
 
+            modelBuilder.Entity("Shopping.Domain.OrderAggregate.Order", b =>
+                {
+                    b.OwnsOne("Shopping.Domain.OrderAggregate.OrderContactInfo", "ContactInfo", b1 =>
+                        {
+                            b1.Property<Guid>("OrderId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Address")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Address");
+
+                            b1.Property<Guid>("BuyerId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("BuyerId");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("City");
+
+                            b1.Property<string>("ContactName")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("ContactName");
+
+                            b1.Property<string>("CustomerName")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("CustomerName");
+
+                            b1.Property<string>("Email")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Email");
+
+                            b1.Property<string>("Phone")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Phone");
+
+                            b1.Property<string>("PostalCode")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("PostalCode");
+
+                            b1.Property<string>("State")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("State");
+
+                            b1.HasKey("OrderId");
+
+                            b1.ToTable("Order");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderId");
+                        });
+
+                    b.Navigation("ContactInfo")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Shopping.Domain.OrderAggregate.OrderLine", b =>
                 {
                     b.HasOne("Shopping.Domain.OrderAggregate.Order", null)
@@ -181,6 +231,15 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Shopping.Domain.ProductAggregate.Product", b =>
+                {
+                    b.HasOne("Shopping.Domain.ProductUnitAggregate.ProductUnit", "ProductUnit")
+                        .WithMany()
+                        .HasForeignKey("ProductUnitId");
+
+                    b.Navigation("ProductUnit");
                 });
 
             modelBuilder.Entity("Shopping.Domain.ProductAggregate.ProductReview", b =>
