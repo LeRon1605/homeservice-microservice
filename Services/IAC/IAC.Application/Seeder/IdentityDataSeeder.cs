@@ -1,6 +1,8 @@
 using System.Security.Claims;
 using BuildingBlocks.Application.Seeder;
+using BuildingBlocks.EventBus.Interfaces;
 using IAC.Application.Auth;
+using IAC.Application.IntegrationEvents.Events;
 using IAC.Domain.Constants;
 using IAC.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -13,15 +15,18 @@ public class IdentityDataSeeder : IDataSeeder
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly ILogger<IdentityDataSeeder> _logger;
+    private readonly IEventBus _eventBus;
 
     public IdentityDataSeeder(
         UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager,
-        ILogger<IdentityDataSeeder> logger)
+        ILogger<IdentityDataSeeder> logger,
+        IEventBus eventBus)
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _logger = logger;
+        _eventBus = eventBus;
     }
     
     public async Task SeedAsync()
@@ -44,6 +49,7 @@ public class IdentityDataSeeder : IDataSeeder
             if (!_userManager.Users.Any())
             {
                 await SeedDefaultAdminAccountAsync();
+                await SeedCustomerUserAccountAsync();
             }
             
             _logger.LogInformation("Seed identity data successfully!");
@@ -52,6 +58,24 @@ public class IdentityDataSeeder : IDataSeeder
         {
             _logger.LogWarning("Seeding identity data failed!", ex);
         }
+    }
+
+    private async Task SeedCustomerUserAccountAsync()
+    {
+        var user = new ApplicationUser()
+        {
+            UserName = "user",
+            Email = "user@gmail.com",
+            FullName = "User",
+            PhoneNumber = "0123456788",
+            SecurityStamp = Guid.NewGuid().ToString(),
+            EmailConfirmed = true
+        };
+
+        await _userManager.CreateAsync(user, "User@123");
+        await _userManager.AddToRoleAsync(user, AppRole.Customer);
+        
+        _eventBus.Publish(new UserSignedUpIntegrationEvent(Guid.Parse(user.Id), user.FullName, user.Email, user.PhoneNumber));
     }
 
     private async Task SeedAdminRoleAsync()

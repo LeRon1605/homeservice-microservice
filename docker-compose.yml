@@ -60,33 +60,6 @@
       - seq
       - redis
   
-  customers.api:
-    image: customers.api
-    build:
-      context: .
-      dockerfile: Services/Customers/Customers.API/Dockerfile
-    ports:
-      - "5002:80"
-    environment:
-      - EventBus__HostName=rabbitmq
-      - EventBus__Port=5672
-      - EventBus__UserName=admin
-      - EventBus__Password=admin
-      - EventBus__SubscriptionClientName=CustomerService
-      - EventBus__RetryCount=5
-      - Serilog__SeqServerUrl=http://seq:5341
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__Default=Server=db,1433;Database=HomeCare.CustomerDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
-      - ConnectionStrings__Redis=redis
-      - GrpcUrls__Identity=http://iac.api:3000
-    restart: always
-    depends_on:
-      - db
-      - rabbitmq
-      - seq
-      - redis
-  
   shopping.api:
     image: shopping.api
     build:

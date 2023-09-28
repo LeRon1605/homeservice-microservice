@@ -24,4 +24,9 @@
     </ItemGroup>
 
 
+    <ItemGroup>
+      <Folder Include="Configuration\" />
+      <Folder Include="Repositories\" />
+    </ItemGroup>
+
 </Project>

@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Shopping.Application.Commands;
+using Shopping.Application.Commands.AddProduct;
 using Shopping.Application.IntegrationEvents.Events;
 
 namespace Shopping.Application.IntegrationEvents.EventHandling;

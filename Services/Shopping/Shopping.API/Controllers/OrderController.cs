@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shopping.Application.Commands;
+using Shopping.Application.Commands.RejectOrder;
 using Shopping.Application.Dtos;
 using Shopping.Application.Queries;
 
