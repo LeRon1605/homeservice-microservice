@@ -7,5 +7,5 @@ namespace Shopping.Application.Dtos;
 public class OrderFilterAndPagingDto : PagingParameters
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public List<OrderStatus?> Status { get; set; }
+    public List<OrderStatus>? Status { get; set; }
 }
