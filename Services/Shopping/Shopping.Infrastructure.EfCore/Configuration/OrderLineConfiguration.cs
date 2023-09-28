@@ -16,11 +16,8 @@ public class OrderLineConfiguration: IEntityTypeConfiguration<OrderLine>
 
         builder.Property(x => x.Quantity)
             .IsRequired();
-
-        builder.Property(x => x.Tax)
-            .IsRequired();
         
-        builder.Property(x=>x.Cost)
+        builder.Property(x=> x.Cost)
             .HasPrecision(20, 2)
             .IsRequired();
 

@@ -1,7 +1,6 @@
 ﻿using BuildingBlocks.Domain.Exceptions.Resource;
-using Shopping.Domain.OrderAggregate;
 
-namespace Shopping.Domain.Exceptions;
+namespace Shopping.Domain.OrderAggregate.Exceptions;
 
 public class OrderNotFoundException : ResourceNotFoundException
 {

@@ -2,8 +2,8 @@
 using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
 using Shopping.Application.Dtos;
-using Shopping.Domain.Exceptions;
 using Shopping.Domain.OrderAggregate;
+using Shopping.Domain.OrderAggregate.Exceptions;
 
 namespace Shopping.Application.Commands.RejectOrder;
 

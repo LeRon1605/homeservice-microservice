@@ -93,9 +93,6 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<double>("Tax")
-                        .HasColumnType("float");
-
                     b.Property<string>("UnitName")
                         .HasColumnType("nvarchar(max)");
 

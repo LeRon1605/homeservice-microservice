@@ -68,17 +68,17 @@ public class OrderDataSeeder : IDataSeeder
         var faker = new Faker();
         for (var i = 0; i < 3; i++)
         {
-            var product = products.ToList()[faker.Random.Int(0, products.Count - 1)];
-            order.AddOrderLine(
-                product.Id,
-                product.Name,
-                order.Id,
-                faker.Random.String(6),
-                faker.Random.Int(10),
-                faker.Random.Double(0,1000),
-                faker.Random.Decimal(0,100000),
-                product.Name
-            );
+            // var product = products.ToList()[faker.Random.Int(0, products.Count - 1)];
+            // order.AddOrderLine(
+            //     product.Id,
+            //     product.Name,
+            //     order.Id,
+            //     faker.Random.String(6),
+            //     faker.Random.Int(10),
+            //     faker.Random.Double(0,1000),
+            //     faker.Random.Decimal(0,100000),
+            //     product.Name
+            // );
         }
     }
 }

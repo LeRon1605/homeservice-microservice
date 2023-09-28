@@ -22,10 +22,6 @@
       <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Infrastructure\BuildingBlocks.Infrastructure.csproj" />
       <ProjectReference Include="..\Shopping.Domain\Shopping.Domain.csproj" />
     </ItemGroup>
-	
-    <ItemGroup>
-      <Folder Include="Migrations\" />
-    </ItemGroup>
 
 
 </Project>

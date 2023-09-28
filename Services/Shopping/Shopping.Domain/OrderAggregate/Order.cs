@@ -1,7 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using BuildingBlocks.Domain.Data;
 using BuildingBlocks.Domain.Models;
-using Shopping.Domain.Exceptions;
+using Shopping.Domain.OrderAggregate.Exceptions;
 using Shopping.Domain.ProductAggregate;
 
 namespace Shopping.Domain.OrderAggregate;
@@ -57,15 +57,19 @@ public class Order : AggregateRoot
     public void AddOrderLine(
         Guid productId, 
         string productName,
-        Guid orderId,
         string color, 
-        int quantity, 
-        double tax, 
+        int quantity,
         decimal cost,
         string? unitName)
     {
-        // Todo: validate
-        var orderLine = new OrderLine(productId, productName, orderId, unitName, color, quantity, tax, cost);
+        var isExisting = _orderLines.Any(x => x.ProductId == productId && x.Color == color);
+
+        if (isExisting)
+        {
+            throw new ProductAlreadyAddedToOrderException(productId, color);
+        }
+
+        var orderLine = new OrderLine(productId, productName, Id, unitName, color, quantity, cost);
         _orderLines.Add(orderLine);
     }
 

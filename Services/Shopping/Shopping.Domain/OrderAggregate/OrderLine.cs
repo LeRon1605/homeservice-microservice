@@ -12,7 +12,6 @@ public record OrderLine : ValueObject
     public string? UnitName { get; private set; }
     public string Color { get; private set; }
     public int Quantity { get; private set; }
-    public double Tax { get; private set; }
     public decimal Cost { get; private set; }
 
     public OrderLine(
@@ -21,8 +20,7 @@ public record OrderLine : ValueObject
         Guid orderId,
         string? unitName,
         string color, 
-        int quantity, 
-        double tax, 
+        int quantity,
         decimal cost)
     {
         ProductId = productId;
@@ -31,7 +29,6 @@ public record OrderLine : ValueObject
         UnitName = unitName;
         Color = color;
         Quantity = quantity;
-        Tax = tax;
         Cost = cost;
     }
 }

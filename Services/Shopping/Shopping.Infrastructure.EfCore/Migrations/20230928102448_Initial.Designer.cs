@@ -12,7 +12,7 @@ using Shopping.Infrastructure.EfCore;
 namespace Shopping.Infrastructure.EfCore.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    [Migration("20230928100716_Initial")]
+    [Migration("20230928102448_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -95,9 +95,6 @@ namespace Shopping.Infrastructure.EfCore.Migrations
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
-
-                    b.Property<double>("Tax")
-                        .HasColumnType("float");
 
                     b.Property<string>("UnitName")
                         .HasColumnType("nvarchar(max)");

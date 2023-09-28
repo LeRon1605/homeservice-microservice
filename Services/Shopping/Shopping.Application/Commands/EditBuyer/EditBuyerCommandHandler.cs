@@ -6,7 +6,8 @@ using Microsoft.Extensions.Logging;
 using Shopping.Application.Dtos;
 using Shopping.Application.IntegrationEvents.Events;
 using Shopping.Domain.BuyerAggregate;
-using Shopping.Domain.Exceptions;
+using Shopping.Domain.BuyerAggregate.Exceptions;
+using Shopping.Domain.OrderAggregate.Exceptions;
 
 namespace Shopping.Application.Commands.EditBuyer;
 

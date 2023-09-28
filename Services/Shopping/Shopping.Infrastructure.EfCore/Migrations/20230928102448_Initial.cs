@@ -96,7 +96,6 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                     UnitName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Color = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    Tax = table.Column<double>(type: "float", nullable: false),
                     Cost = table.Column<decimal>(type: "decimal(20,2)", precision: 20, scale: 2, nullable: false)
                 },
                 constraints: table =>

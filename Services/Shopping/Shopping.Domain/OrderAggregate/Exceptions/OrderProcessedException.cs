@@ -1,6 +1,6 @@
 ﻿using BuildingBlocks.Domain.Exceptions.Resource;
 
-namespace Shopping.Domain.Exceptions;
+namespace Shopping.Domain.OrderAggregate.Exceptions;
 
 public class OrderProcessedException : ResourceInvalidOperationException
 {
