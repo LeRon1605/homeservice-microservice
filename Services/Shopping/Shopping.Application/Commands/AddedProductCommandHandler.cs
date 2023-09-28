@@ -18,7 +18,9 @@ public class AddedProductCommandHandler : ICommandHandler<AddedProductCommand>
 
     public async Task Handle(AddedProductCommand request, CancellationToken cancellationToken)
     {
-        var productCreated = new Product(request.Id, request.Name, request.ProductGroupId, request.SellPrice);
+        var productCreated = new Product(request.Id, request.Name, 
+            request.ProductGroupId, request.ProductUnitId, request.SellPrice);
+        
         _productRepository.Add(productCreated);
         await _unitOfWork.SaveChangesAsync();
     }

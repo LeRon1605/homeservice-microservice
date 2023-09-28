@@ -13,7 +13,7 @@ public abstract class Entity : IEntity
 
     public Entity()
     {
-        Id = Guid.NewGuid();
+        // Id = Guid.NewGuid();
     }
     
     public void AddDomainEvent(IDomainEvent eventItem)

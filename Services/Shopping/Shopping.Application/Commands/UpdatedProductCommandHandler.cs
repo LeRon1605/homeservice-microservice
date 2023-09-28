@@ -22,7 +22,7 @@ public class UpdatedProductCommandHandler : ICommandHandler<UpdatedProductComman
         {
             throw new ProductNotFoundException(request.Id);
         }
-        product.Update(request.Name,request.ProductTypeId,request.SellPrice);
+        product.Update(request.Name,request.ProductGroupId,request.ProductUnitId, request.SellPrice);
         _productRepository.Update(product);
         await _unitOfWork.SaveChangesAsync();
     }

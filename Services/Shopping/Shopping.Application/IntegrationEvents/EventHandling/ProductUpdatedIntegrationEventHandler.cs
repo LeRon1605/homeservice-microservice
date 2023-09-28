@@ -10,19 +10,23 @@ public class ProductUpdatedIntegrationEventHandler : IIntegrationEventHandler<Pr
 {
     private readonly IMediator _mediator;
     private readonly ILogger<ProductUpdatedIntegrationEventHandler> _logger;
-    
-    public ProductUpdatedIntegrationEventHandler(IMediator mediator, ILogger<ProductUpdatedIntegrationEventHandler> logger)
+
+    public ProductUpdatedIntegrationEventHandler(IMediator mediator,
+        ILogger<ProductUpdatedIntegrationEventHandler> logger)
     {
         _mediator = mediator;
         _logger = logger;
     }
-    
+
     public async Task Handle(ProductUpdatedIntegrationEvent @event)
     {
         _logger.LogInformation("Handling integration event update product: " +
-                               "{IntegrationEventId} - ({@IntegrationEvent})", 
-                        @event.Id, @event);
-        var command = new UpdatedProductCommand(@event.Id,@event.Name,@event.ProductGroupId,@event.SellPrice);
+                               "{IntegrationEventId} - ({@IntegrationEvent})",
+            @event.Id, @event);
+        
+        var command = new UpdatedProductCommand(@event.Id, @event.Name, @event.ProductGroupId, 
+                                                @event.ProductUnitId, @event.SellPrice);
+        
         _logger.LogInformation("Sending command: {commandName}", command);
         await _mediator.Send(command);
     }
