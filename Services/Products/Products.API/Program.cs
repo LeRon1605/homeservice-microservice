@@ -40,7 +40,7 @@ builder.Services.AddSwagger("ProductService")
 
 var app = builder.Build();
 
-// var eventBus = app.Services.GetRequiredService<IEventBus>();
+var eventBus = app.Services.GetRequiredService<IEventBus>();
 
 app.UseApplicationExceptionHandler();
 

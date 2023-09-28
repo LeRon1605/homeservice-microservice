@@ -4,7 +4,6 @@ using ApiGateway.Exceptions;
 using ApiGateway.Services.Interfaces;
 using AutoMapper;
 using BuildingBlocks.Application.Dtos;
-using BuildingBlocks.Domain.Exceptions.Resource;
 using Products.Application.Grpc.Proto;
 using Shopping.Application.Grpc.Proto;
 
@@ -29,7 +28,7 @@ public class ProductService : IProductService
         _mapper = mapper;
     }
     
-    public Task<PagedResult<ProductData>> GetPagedAsync(GetProductWithFilterAndPaginationDto dto)
+    public PagedResult<ProductData> GetPaged(GetProductWithFilterAndPaginationDto dto)
     {
         var responseInShoppingService = _shoppingGrpcService.GetProducts(GetFilterSortingRequestParam(dto));
         var responseInProductService = GetIncludedProductsInProductService(responseInShoppingService);
@@ -46,7 +45,57 @@ public class ProductService : IProductService
             result.Add(MapToProductData(productInProductService, productInShoppingService));
         }
 
-        return Task.FromResult(new PagedResult<ProductData>(result, responseInShoppingService.TotalCount, dto.PageIndex, dto.PageSize));
+        return new PagedResult<ProductData>(result, responseInShoppingService.TotalCount, dto.PageIndex, dto.PageSize);
+    }
+    
+    public async Task<ProductData> GetByIdAsync(Guid id)
+    {
+        var response = await _httpClient.GetAsync(id.ToString());
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new HttpClientException(response.StatusCode, response.ReasonPhrase);
+        } 
+
+        var productDto = await response.Content.ReadFromJsonAsync<GetProductDto>();
+
+        return _mapper.Map<ProductData>(productDto);
+    }
+
+    public async Task<IEnumerable<ProductData>> GetProductByIncludedIdsAsync(IEnumerable<Guid> ids)
+    {
+        ids = ids.Distinct();
+        var idsShoppingRequest = new ShoppingProductByIdsRequest();
+        var idsProductRequest = new ProductIds(); 
+        
+        foreach (var id in ids)
+        {
+            idsShoppingRequest.Id.Add(id.ToString());
+            idsProductRequest.Id.Add(id.ToString());
+        }
+
+        var productsShoppingService = await _shoppingGrpcService.GetProductsByIncludedIdsAsync(idsShoppingRequest);
+        var productsProductService = await _productGrpcService.GetProductsAsync(idsProductRequest);
+        
+        if (productsShoppingService.Products.Count == productsProductService.Products.Count &&
+            ids.Count() != productsProductService.Products.Count)
+        {
+            var notFoundProductId = ids.FirstOrDefault(x => productsProductService.Products.Select(p => p.Id).Contains(x.ToString()));
+            throw new HttpClientException(HttpStatusCode.NotFound, $"Product with id '{notFoundProductId}' does not exist");
+        }
+
+        var result = new List<ProductData>();
+        foreach (var productInShoppingService in  productsShoppingService.Products)
+        {
+            var productInProductService = productsProductService.Products.FirstOrDefault(x => x.Id == productInShoppingService.Id);
+            if (productInProductService == null)
+            {
+                continue;
+            }
+            
+            result.Add(MapToProductData(productInProductService, productInShoppingService));
+        }
+
+        return result;
     }
 
     private ShoppingProductFilterSorting GetFilterSortingRequestParam(GetProductWithFilterAndPaginationDto dto)
@@ -77,7 +126,7 @@ public class ProductService : IProductService
         return request;
     }
 
-    private ProductListResponse GetIncludedProductsInProductService(ShoppingProductListResponse responseInShoppingService)
+    private ProductListResponse GetIncludedProductsInProductService(ShoppingProductPagedResponse responseInShoppingService)
     {
         var productIds = new ProductIds();
         foreach (var item in responseInShoppingService.Products)
@@ -86,19 +135,6 @@ public class ProductService : IProductService
         }
         
         return _productGrpcService.GetProducts(productIds);
-    }
-
-    public async Task<ProductData> GetByIdAsync(Guid id)
-    {
-        var response = await _httpClient.GetAsync(id.ToString());
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new HttpClientException(response.StatusCode, response.ReasonPhrase);
-        } 
-
-        var productDto = await response.Content.ReadFromJsonAsync<GetProductDto>();
-
-        return _mapper.Map<ProductData>(productDto);
     }
 
     private ProductData MapToProductData(ProductItemResponse productItemResponse, ShoppingProductItemResponse item)

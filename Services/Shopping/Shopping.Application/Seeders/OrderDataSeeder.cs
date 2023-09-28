@@ -25,41 +25,41 @@ public class OrderDataSeeder : IDataSeeder
 
     public async Task SeedAsync()
     {
-        if (await _orderRepository.AnyAsync())
-        {
-            _logger.LogInformation("No need to seed data!");
-            return;
-        }
-
-        try
-        {
-            _logger.LogTrace("Begin seeding orders...");
-
-            var faker = new Faker();
-            for (var i = 0; i < 10; i++)
-            {
-                var order = new Order(
-                    $"ORDER-{i}",
-                    faker.Name.FindName(),
-                    faker.Random.Guid(),
-                    faker.Phone.PhoneNumber(),
-                    faker.Internet.Email(),
-                    faker.Finance.Amount()
-                );
-                var products = (await _productRepository.GetAllAsync()).ToList();
-                
-                await SeedOrderLinesAsync(order);
-
-                _orderRepository.Add(order);
-                await _unitOfWork.SaveChangesAsync();
-            }
-
-            _logger.LogTrace("Seed orders successfully!");
-        }
-        catch
-        {
-            _logger.LogTrace("Seed orders failed!");
-        }
+        // if (await _orderRepository.AnyAsync())
+        // {
+        //     _logger.LogInformation("No need to seed data!");
+        //     return;
+        // }
+        //
+        // try
+        // {
+        //     _logger.LogTrace("Begin seeding orders...");
+        //
+        //     var faker = new Faker();
+        //     for (var i = 0; i < 10; i++)
+        //     {
+        //         var order = new Order(
+        //             $"ORDER-{i}",
+        //             faker.Name.FindName(),
+        //             faker.Random.Guid(),
+        //             faker.Phone.PhoneNumber(),
+        //             faker.Internet.Email(),
+        //             faker.Finance.Amount()
+        //         );
+        //         var products = (await _productRepository.GetAllAsync()).ToList();
+        //         
+        //         await SeedOrderLinesAsync(order);
+        //
+        //         _orderRepository.Add(order);
+        //         await _unitOfWork.SaveChangesAsync();
+        //     }
+        //
+        //     _logger.LogTrace("Seed orders successfully!");
+        // }
+        // catch
+        // {
+        //     _logger.LogTrace("Seed orders failed!");
+        // }
     }
     
     private async Task SeedOrderLinesAsync(Order order)

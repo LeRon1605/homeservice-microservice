@@ -18,12 +18,12 @@ public class ShoppingProductGrpcService : ShoppingGrpcService.ShoppingGrpcServic
         _productRepository = productRepository;
     }
     
-    public override async Task<ShoppingProductListResponse> GetProducts(ShoppingProductFilterSorting request, ServerCallContext context)
+    public override async Task<ShoppingProductPagedResponse> GetProducts(ShoppingProductFilterSorting request, ServerCallContext context)
     {
         var specification = GetSpecification(request);
         
         var (products, total) = await _productRepository.FindWithTotalCountAsync(specification);
-        return MapToShoppingProductListResponse(products, total);
+        return MapToShoppingProductPagedResponse(products, total);
     }
     
     public override async Task<ShoppingProductItemResponse> GetProductById(ShoppingProductByIdRequest request, ServerCallContext context)
@@ -31,8 +31,15 @@ public class ShoppingProductGrpcService : ShoppingGrpcService.ShoppingGrpcServic
         var specification = new ProductByIdSpecification(Guid.Parse(request.Id));
         var product = await _productRepository.FindAsync(specification)
                       ?? throw new RpcException(new Status(StatusCode.NotFound, $"Product ({request.Id}) not found!"));
-        // var product = new Product(Guid.NewGuid(), "Temp", Guid.NewGuid(), 0);
         return MapToShoppingProductItemResponse(product);
+    }
+
+    public override async Task<ShoppingProductListResponse> GetProductsByIncludedIds(ShoppingProductByIdsRequest request, ServerCallContext context)
+    {
+        var specification = new ProductByIncludedIdsSpecification(request.Id.Select(x => Guid.Parse(x)));
+        var products = await _productRepository.FindListAsync(specification);
+        
+        return MapToShoppingProductListResponse(products);
     }
 
     private static Specification<Product> GetSpecification(ShoppingProductFilterSorting productFilterSorting)
@@ -77,12 +84,25 @@ public class ShoppingProductGrpcService : ShoppingGrpcService.ShoppingGrpcServic
         return orderBy;
     }
     
-    private static ShoppingProductListResponse MapToShoppingProductListResponse(IEnumerable<Product> products, int total)
+    private static ShoppingProductPagedResponse MapToShoppingProductPagedResponse(IEnumerable<Product> products, int total)
     {
-        var response = new ShoppingProductListResponse()
+        var response = new ShoppingProductPagedResponse()
         {
             TotalCount = total
         };
+    
+        foreach (var product in products)
+        {
+            var productItemResponse = MapToShoppingProductItemResponse(product);
+            response.Products.Add(productItemResponse);
+        }
+    
+        return response;
+    }
+    
+    private static ShoppingProductListResponse MapToShoppingProductListResponse(IEnumerable<Product> products)
+    {
+        var response = new ShoppingProductListResponse();
     
         foreach (var product in products)
         {

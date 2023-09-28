@@ -40,6 +40,8 @@ public class ProductDataSeeder : IDataSeeder
             _logger.LogInformation("No need to seed data!");
             return;
         }
+
+        await Task.Delay(TimeSpan.FromSeconds(60));
         
         var productUnits = SeedProductUnits();
         var productTypes = SeedProductTypes();

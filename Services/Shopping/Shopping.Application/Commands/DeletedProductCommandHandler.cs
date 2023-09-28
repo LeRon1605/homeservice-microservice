@@ -22,7 +22,7 @@ public class DeletedProductCommandHandler : ICommandHandler<DeletedProductComman
         var product = await _productRepository.GetByIdAsync(request.Id);
         if (product == null)
         {
-            throw new ProductNotFoundException(request.Id);
+            throw new ProductUnitNotFoundException(request.Id);
         }
         _productRepository.Delete(product);
         await _unitOfWork.SaveChangesAsync();

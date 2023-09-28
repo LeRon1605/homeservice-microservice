@@ -17,6 +17,7 @@
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__Default=Server=db,1433;Database=HomeCare.ProductDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
+      - ConnectionStrings__Redis=redis
       - GrpcUrls__Identity=http://iac.api:3000
       - Cloudinary__CloudName=dboijruhe
       - Cloudinary__ApiKey=431114562135728
@@ -48,6 +49,7 @@
         - ASPNETCORE_ENVIRONMENT=Development
         - ASPNETCORE_URLS=http://+:80
         - ConnectionStrings__Default=Server=db,1433;Database=HomeCare.IacDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
+        - ConnectionStrings__Redis=redis
         - Kestrel__Endpoints__Http__Url=http://+:80
         - Kestrel__Endpoints__gRPC__Url=http://+:3000
         - JWTSettings__AccessTokenExpiryInMinutes=1
@@ -76,6 +78,7 @@
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__Default=Server=db,1433;Database=HomeCare.CustomerDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
+      - ConnectionStrings__Redis=redis
       - GrpcUrls__Identity=http://iac.api:3000
     restart: always
     depends_on:
@@ -102,9 +105,37 @@
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__Default=Server=db,1433;Database=HomeCare.ShoppingDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
+      - ConnectionStrings__Redis=redis
       - GrpcUrls__Identity=http://iac.api:3000
       - Kestrel__Endpoints__Http__Url=http://+:80
       - Kestrel__Endpoints__gRPC__Url=http://+:3000
+    restart: always
+    depends_on:
+      - db
+      - rabbitmq
+      - seq
+      - redis
+        
+  contracts.api:
+    image: contracts.api
+    build:
+      context: .
+      dockerfile: Services/Contracts/Contracts.API/Dockerfile
+    ports:
+      - "5007:80"
+    environment:
+      - EventBus__HostName=rabbitmq
+      - EventBus__Port=5672
+      - EventBus__UserName=admin
+      - EventBus__Password=admin
+      - EventBus__SubscriptionClientName=ContractService
+      - EventBus__RetryCount=5
+      - Serilog__SeqServerUrl=http://seq:5341
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__Default=Server=db,1433;Database=HomeCare.ContractDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
+      - ConnectionStrings__Redis=redis
+      - GrpcUrls__Identity=http://iac.api:3000
     restart: always
     depends_on:
       - db
@@ -136,6 +167,9 @@
       - Routes__3__DownstreamHostAndPorts__0__Host=shopping.api
       - Routes__3__DownstreamHostAndPorts__0__Port=80
       - SwaggerEndPoints__3__Config__0__Url=http://shopping.api/swagger/v1/swagger.json
+      - Routes__4__DownstreamHostAndPorts__0__Host=contracts.api
+      - Routes__4__DownstreamHostAndPorts__0__Port=80
+      - SwaggerEndPoints__4__Config__0__Url=http://contracts.api/swagger/v1/swagger.json
       - GrpcUrls__Identity=http://iac.api:3000
       - GrpcUrls__Product=http://products.api:3000
       - GrpcUrls__Shopping=http://shopping.api:3000

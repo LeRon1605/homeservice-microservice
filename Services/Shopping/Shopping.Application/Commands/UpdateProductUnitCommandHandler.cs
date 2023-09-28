@@ -21,7 +21,7 @@ public class UpdateProductUnitCommandHandler : ICommandHandler<UpdateProductUnit
         var productUnit = await _productUnitRepository.GetByIdAsync(request.Id);
         if (productUnit == null)
         {
-            throw new ProductNotFoundException(request.Id);
+            throw new ProductUnitNotFoundException(request.Id);
         }
         
         productUnit.Update(request.Name);

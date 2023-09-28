@@ -20,9 +20,9 @@ public class ProductController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<ActionResult<PagedResult<ProductData>>> GetProductAsync([FromQuery] GetProductWithFilterAndPaginationDto dto)
+    public ActionResult<PagedResult<ProductData>> GetProductAsync([FromQuery] GetProductWithFilterAndPaginationDto dto)
     {
-        var products = await _productService.GetPagedAsync(dto);
+        var products = _productService.GetPaged(dto);
         return Ok(products);
     }
     
@@ -38,5 +38,12 @@ public class ProductController : ControllerBase
         product.NumberOfOrder = shoppingProduct.NumberOfOrder;
         
         return Ok(product);
+    }
+    
+    [HttpGet("included-ids")]
+    public async Task<ActionResult<IEnumerable<ProductData>>> GetProductByIncludedIdsAsync([FromQuery] IEnumerable<Guid> ids)
+    {
+        var products = await _productService.GetProductByIncludedIdsAsync(ids);
+        return Ok(products);
     }
 }
