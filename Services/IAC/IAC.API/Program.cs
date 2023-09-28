@@ -6,6 +6,7 @@ using BuildingBlocks.Presentation.EfCore;
 using BuildingBlocks.Presentation.EventBus;
 using BuildingBlocks.Presentation.ExceptionHandlers;
 using BuildingBlocks.Presentation.Extension;
+using BuildingBlocks.Presentation.Redis;
 using BuildingBlocks.Presentation.Swagger;
 using IAC.API.Extensions;
 using IAC.Application.Grpc.Services;
@@ -19,17 +20,18 @@ var builder = WebApplication.CreateBuilder(args);
 Log.Logger = ApplicationLoggerFactory.CreateSerilogLogger(builder.Configuration, "IdentityService");
 
 builder.Services.AddSwagger("IdentityService")
-                .AddRepositories()
-                .AddMapper()
-                .AddServices()
-                .AddApplicationExceptionHandler()
-                .AddEventBus(builder.Configuration)
-                .AddEfCoreDbContext<IacDbContext>(builder.Configuration)
-                .AddIdentity(builder.Configuration, builder.Environment)
-                .AddApplicationAuthentication(builder.Configuration)
-                .AddConfiguration(builder.Configuration)
-                .AddCurrentUser()
-                .AddGrpc();
+    .AddRepositories()
+    .AddMapper()
+    .AddServices()
+    .AddApplicationExceptionHandler()
+    .AddEventBus(builder.Configuration)
+    .AddEfCoreDbContext<IacDbContext>(builder.Configuration)
+    .AddIdentity(builder.Configuration, builder.Environment)
+    .AddApplicationAuthentication(builder.Configuration)
+    .AddConfiguration(builder.Configuration)
+    .AddCurrentUser()
+    .AddRedisDistributedCache(builder.Configuration)
+    .AddGrpc();
 
 builder.Services.AddControllers();
 

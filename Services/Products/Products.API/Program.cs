@@ -1,12 +1,14 @@
 using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Authentication;
+using BuildingBlocks.Presentation.Authorization;
 using BuildingBlocks.Presentation.Cloudinary;
 using BuildingBlocks.Presentation.DataSeeder;
 using BuildingBlocks.Presentation.EfCore;
 using BuildingBlocks.Presentation.EventBus;
 using BuildingBlocks.Presentation.ExceptionHandlers;
 using BuildingBlocks.Presentation.Extension;
+using BuildingBlocks.Presentation.Redis;
 using FluentValidation;
 using Products.Application.Dtos;
 using Products.Application.MappingProfiles;
@@ -30,6 +32,8 @@ builder.Services.AddSwagger("ProductService")
                 .AddAutoMapper(typeof(Profiles))
                 .AddMediatR()
                 .AddHomeServiceAuthentication(builder.Configuration)
+                .AddHomeServiceAuthorization()
+                .AddRedisDistributedCache(builder.Configuration)
                 .AddDataSeeder()
                 .AddValidatorsFromAssembly(typeof(GetProductDto).Assembly)
                 .AddServices()

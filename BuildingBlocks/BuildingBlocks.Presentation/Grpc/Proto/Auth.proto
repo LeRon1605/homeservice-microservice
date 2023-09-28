@@ -4,10 +4,19 @@ option csharp_namespace = "BuildingBlocks.Presentation.Grpc.Proto";
 
 service AuthProvider {
     rpc GetClaim(Empty) returns (stream ClaimResponse);
+    rpc GetPermissions(RoleName) returns (PermissionResponse);
 }
 
 message Empty {
 
+}
+
+message RoleName {
+    string value = 1;
+}
+
+message PermissionResponse {
+    repeated string permissions = 1;
 }
 
 message ClaimResponse {

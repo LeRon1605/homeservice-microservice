@@ -1,4 +1,5 @@
 using AutoMapper;
+using BuildingBlocks.Application.Cache;
 using BuildingBlocks.Domain.Exceptions.Common;
 using BuildingBlocks.Domain.Exceptions.Resource;
 using IAC.Application.Auth;
@@ -19,17 +20,22 @@ public class RoleService : IRoleService
     private readonly IMapper _mapper;
     private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly ICacheService _cacheService;
+
+    private const int PermissionCacheInMinutes = 5;
     
     public RoleService(
         IRoleRepository roleRepository,
         IMapper mapper,
         RoleManager<ApplicationRole> roleManager,
-        UserManager<ApplicationUser> userManager)
+        UserManager<ApplicationUser> userManager,
+        ICacheService cacheService)
     {
         _roleRepository = roleRepository;
         _mapper = mapper;
         _roleManager = roleManager;
         _userManager = userManager;
+        _cacheService = cacheService;
     }
 
     public IEnumerable<PermissionInfo> GetAllPermissions()
@@ -41,23 +47,28 @@ public class RoleService : IRoleService
     {
         var role = await _roleManager.FindByIdAsync(roleId)
                    ?? throw new RoleNotFoundException(roleId);
-        var claims = await _roleManager.GetClaimsAsync(role);
         
-        return claims.Select(c => c.Value);
+        var permissions = (await _roleManager.GetClaimsAsync(role)).Select(c => c.Value).ToList();
+        
+        var key = KeyGenerator.Generate(CacheType.Permission, role.Name!);
+        var cachedPermissions = await _cacheService.GetCachedDataAsync<IEnumerable<string>>(key);
+        if (cachedPermissions is null)
+        {
+            await _cacheService.SetCachedDataAsync(key, permissions, TimeSpan.FromMinutes(PermissionCacheInMinutes));
+        } 
+        
+        return permissions;
     }
 
     public async Task EditPermissionsInRoleAsync(string roleId, IList<string> permissions)
     {
         CheckPermissionConstraints(permissions);
         
-        // Get role
         var role = await _roleRepository.GetByIdAsync(roleId) ?? throw new RoleNotFoundException(roleId);
         
         // Replace permission list for a role
         var allPermission = PermissionPolicy.AllPermissions.Select(p => p.Code).ToList();
-        
         role.RoleClaims.Clear();
-
         foreach (var permission in permissions)
         {
             if (!allPermission.Contains(permission))
@@ -75,6 +86,10 @@ public class RoleService : IRoleService
         var result = await _roleManager.UpdateAsync(role);
         if (!result.Succeeded)
             throw new InvalidInputException(result.Errors.First().Description);
+        
+        // Override cache
+        var key = KeyGenerator.Generate(CacheType.Permission, role.Name!);
+        await _cacheService.SetCachedDataAsync(key, permissions, TimeSpan.FromMinutes(PermissionCacheInMinutes));
     }
 
 

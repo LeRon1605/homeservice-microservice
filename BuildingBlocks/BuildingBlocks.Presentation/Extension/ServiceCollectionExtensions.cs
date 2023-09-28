@@ -2,17 +2,14 @@
 using BuildingBlocks.Application.Identity;
 using BuildingBlocks.Infrastructure.Cache;
 using BuildingBlocks.Presentation.Authorization;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
 
 namespace BuildingBlocks.Presentation.Extension;
 
-public static class IServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddServiceCache(this IServiceCollection services)
-    {
-        return services.AddScoped<ICacheService, CacheService>();
-    }
-
 	public static IServiceCollection AddCurrentUser(this IServiceCollection services)
 	{
 		services.AddHttpContextAccessor();

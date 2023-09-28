@@ -1,7 +1,9 @@
 ﻿using System.Security.Claims;
 using BuildingBlocks.Application.Identity;
+using Google.Protobuf.Collections;
 using Grpc.Core;
 using IAC.Application.Grpc.Proto;
+using IAC.Application.Services.Interfaces;
 using IAC.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
@@ -10,14 +12,20 @@ namespace IAC.Application.Grpc.Services;
 public class AuthGrpcService : AuthProvider.AuthProviderBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly ICurrentUser _currentUser;
+    private readonly IRoleService _roleService;
 
     public AuthGrpcService(
         UserManager<ApplicationUser> userManager,
-        ICurrentUser currentUser)
+        ICurrentUser currentUser,
+        IRoleService roleService,
+        RoleManager<ApplicationRole> roleManager)
     {
         _userManager = userManager;
         _currentUser = currentUser;
+        _roleService = roleService;
+        _roleManager = roleManager;
     }
     
     public override async Task GetClaim(Empty empty, IServerStreamWriter<ClaimResponse> responseStream, ServerCallContext context)
@@ -45,6 +53,22 @@ public class AuthGrpcService : AuthProvider.AuthProviderBase
                 Value = claim.Value
             });
         }
+    }
+    
+    public override async Task<PermissionResponse> GetPermissions(RoleName roleName, ServerCallContext context)
+    {
+        var permissions = new RepeatedField<string>();
+        
+        var role = await _roleManager.FindByNameAsync(roleName.Value)
+            ?? throw new RpcException(new Status(StatusCode.NotFound, "Role not found!"));
+        
+        permissions.AddRange(await _roleService.GetPermissionsInRoleAsync(role.Id));
+
+        var response = new PermissionResponse();
+        
+        response.Permissions.AddRange(permissions);
+
+        return response;
     }
 
     private async Task<IEnumerable<Claim>> GetUserClaims(ApplicationUser user)
