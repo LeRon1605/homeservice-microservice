@@ -18,9 +18,9 @@ public class OrderFilterAndPagingSpecification : Specification<Order>
 
         if (status.HasValue)
         {
-            AddFilter(x=>x.Status==status);
+            AddFilter(x=> x.Status == status);
         }
         
-        ApplyPaging(pageIndex,pageSize);
+        ApplyPaging(pageIndex, pageSize);
     }
 }

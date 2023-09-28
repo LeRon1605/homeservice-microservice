@@ -12,8 +12,8 @@ using Shopping.Infrastructure.EfCore;
 namespace Shopping.Infrastructure.EfCore.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    [Migration("20230926045654_InitialOrder")]
-    partial class InitialOrder
+    [Migration("20230927043512_AddOrder")]
+    partial class AddOrder
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,7 +36,8 @@ namespace Shopping.Infrastructure.EfCore.Migrations
 
                     b.Property<string>("ContactName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("EmailAddress")
                         .HasColumnType("nvarchar(max)");
@@ -64,6 +65,35 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                     b.ToTable("Order");
                 });
 
+            modelBuilder.Entity("Shopping.Domain.OrderAggregate.OrderLine", b =>
+                {
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Cost")
+                        .HasPrecision(20, 2)
+                        .HasColumnType("decimal(20,2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Tax")
+                        .HasColumnType("float");
+
+                    b.HasKey("ProductId", "OrderId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderLine");
+                });
+
             modelBuilder.Entity("Shopping.Domain.ProductAggregate.Product", b =>
                 {
                     b.Property<Guid>("Id")
@@ -80,6 +110,9 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                         .HasColumnType("decimal(20,2)");
 
                     b.Property<Guid>("ProductGroupId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ProductUnitId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -112,6 +145,25 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                     b.ToTable("ProductReview");
                 });
 
+            modelBuilder.Entity("Shopping.Domain.OrderAggregate.OrderLine", b =>
+                {
+                    b.HasOne("Shopping.Domain.OrderAggregate.Order", "Order")
+                        .WithMany("OrderLines")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Shopping.Domain.ProductAggregate.Product", "Product")
+                        .WithMany("OrderLines")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Shopping.Domain.ProductAggregate.ProductReview", b =>
                 {
                     b.HasOne("Shopping.Domain.ProductAggregate.Product", null)
@@ -121,8 +173,15 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Shopping.Domain.OrderAggregate.Order", b =>
+                {
+                    b.Navigation("OrderLines");
+                });
+
             modelBuilder.Entity("Shopping.Domain.ProductAggregate.Product", b =>
                 {
+                    b.Navigation("OrderLines");
+
                     b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618

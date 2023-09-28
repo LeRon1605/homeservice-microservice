@@ -12,14 +12,14 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Name)
-            .HasMaxLength(StringLength.Name)
-            .IsRequired();
+               .HasMaxLength(StringLength.Name)
+               .IsRequired();
 
         builder.Property(x => x.ProductGroupId)
-            .IsRequired();
+               .IsRequired();
 
         builder.Property(x => x.Price)
-            .HasPrecision(20, 2)
-            .IsRequired();
+               .HasPrecision(20, 2)
+               .IsRequired();
     }
 }

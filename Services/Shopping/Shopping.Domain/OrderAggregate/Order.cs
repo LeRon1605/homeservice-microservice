@@ -1,6 +1,8 @@
 ﻿using Ardalis.GuardClauses;
+using BuildingBlocks.Domain.Data;
 using BuildingBlocks.Domain.Models;
 using Shopping.Domain.Exceptions;
+using Shopping.Domain.ProductAggregate;
 
 namespace Shopping.Domain.OrderAggregate;
 
@@ -15,23 +17,51 @@ public class Order : AggregateRoot
     public DateTime PlacedDate { get; private set; }
     public OrderStatus Status { get; private set; }
 
-    public Order(string orderNo, string contactName, Guid buyerId,string phoneNumber, string? emailAddress, decimal orderValue, DateTime placedDate, OrderStatus status)
+    private readonly List<OrderLine> _orderLines;
+    public IReadOnlyCollection<OrderLine> OrderLines => _orderLines;
+
+    //public ICollection<OrderLine> OrderLines { get; set; }
+
+    public Order(
+        string orderNo,
+        string contactName,
+        Guid buyerId,
+        string phoneNumber,
+        string? emailAddress,
+        decimal orderValue)
     {
         OrderNo = Guard.Against.NullOrWhiteSpace(orderNo, nameof(OrderNo));
-        ContactName = Guard.Against.NullOrWhiteSpace(contactName,nameof(ContactName));
-        BuyerId = buyerId;
+        ContactName = Guard.Against.NullOrWhiteSpace(contactName, nameof(ContactName));
         PhoneNumber = Guard.Against.NullOrWhiteSpace(phoneNumber, nameof(PhoneNumber));
+        BuyerId = buyerId;
         EmailAddress = emailAddress;
         OrderValue = orderValue;
-        PlacedDate = placedDate;
-        Status = status;
+        PlacedDate = DateTime.UtcNow;
+        Status = OrderStatus.Pending;
+
+        _orderLines = new List<OrderLine>();
     }
 
-    public Order OrderReject()
+    public void Reject()
     {
-        if (this.Status is OrderStatus.Finished or OrderStatus.Rejected)
-            throw new OrderStatusInValidException("Status order is invalid");
-        this.Status = OrderStatus.Rejected;
-        return this;
+        if (IsProcessedOrder())
+        {
+            throw new OrderProcessedException(Id);
+        }
+
+        Status = OrderStatus.Rejected;
+    }
+
+    private bool IsProcessedOrder()
+    {
+        return Status is OrderStatus.Finished or OrderStatus.Rejected;
+    }
+
+    public void AddOrderLine(Guid productId, Guid orderId,
+        string color, int quantity, double tax, decimal cost)
+    {
+        
+        var orderLine = new OrderLine(productId, orderId, color, quantity, tax, cost);
+        _orderLines.Add(orderLine);
     }
 }

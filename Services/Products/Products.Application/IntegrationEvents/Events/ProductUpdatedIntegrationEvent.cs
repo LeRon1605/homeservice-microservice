@@ -2,18 +2,21 @@
 
 namespace Products.Application.IntegrationEvents.Events;
 
-public record ProductUpdatedIntegrationEvent: IntegrationEvent
+public record ProductUpdatedIntegrationEvent : IntegrationEvent
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; private set; }
     public string Name { get; private set; }
     public Guid ProductGroupId { get; private set; }
+    public Guid? ProductUnitId { get; private set; }
     public decimal SellPrice { get; private set; }
-    
-    public ProductUpdatedIntegrationEvent(Guid id ,string name, Guid productGroupId, decimal sellPrice)
+
+    public ProductUpdatedIntegrationEvent(Guid id, string name, Guid productGroupId,
+        Guid? productUnitId, decimal sellPrice)
     {
         Id = id;
         Name = name;
         ProductGroupId = productGroupId;
+        ProductUnitId = productUnitId;
         SellPrice = sellPrice;
     }
 }
