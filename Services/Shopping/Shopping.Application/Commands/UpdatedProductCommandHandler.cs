@@ -1,7 +1,7 @@
 ﻿using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
-using Products.Domain.ProductAggregate.Exceptions;
 using Shopping.Domain.ProductAggregate;
+using Shopping.Domain.ProductAggregate.Exceptions;
 
 namespace Shopping.Application.Commands;
 
@@ -22,7 +22,8 @@ public class UpdatedProductCommandHandler : ICommandHandler<UpdatedProductComman
         {
             throw new ProductNotFoundException(request.Id);
         }
-        product.Update(request.Name,request.ProductGroupId,request.ProductUnitId, request.SellPrice);
+        
+        product.Update(request.Name,request.ProductGroupId, request.SellPrice, request.ProductUnitId);
         _productRepository.Update(product);
         await _unitOfWork.SaveChangesAsync();
     }

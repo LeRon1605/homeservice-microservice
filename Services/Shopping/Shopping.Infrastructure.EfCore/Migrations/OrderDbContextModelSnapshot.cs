@@ -78,11 +78,18 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                         .HasPrecision(20, 2)
                         .HasColumnType("decimal(20,2)");
 
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<double>("Tax")
                         .HasColumnType("float");
+
+                    b.Property<string>("UnitName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ProductId", "OrderId");
 
@@ -142,23 +149,35 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                     b.ToTable("ProductReview");
                 });
 
+            modelBuilder.Entity("Shopping.Domain.ProductUnitAggregate.ProductUnit", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductUnit");
+                });
+
             modelBuilder.Entity("Shopping.Domain.OrderAggregate.OrderLine", b =>
                 {
-                    b.HasOne("Shopping.Domain.OrderAggregate.Order", "Order")
+                    b.HasOne("Shopping.Domain.OrderAggregate.Order", null)
                         .WithMany("OrderLines")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Shopping.Domain.ProductAggregate.Product", "Product")
-                        .WithMany("OrderLines")
+                    b.HasOne("Shopping.Domain.ProductAggregate.Product", null)
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Shopping.Domain.ProductAggregate.ProductReview", b =>
@@ -177,8 +196,6 @@ namespace Shopping.Infrastructure.EfCore.Migrations
 
             modelBuilder.Entity("Shopping.Domain.ProductAggregate.Product", b =>
                 {
-                    b.Navigation("OrderLines");
-
                     b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618

@@ -24,12 +24,15 @@ public class OrderLineConfiguration: IEntityTypeConfiguration<OrderLine>
             .HasPrecision(20, 2)
             .IsRequired();
 
-        builder.HasOne(x => x.Product)
-            .WithMany(x => x.OrderLines)
+        builder.Property(x => x.UnitName)
+            .IsRequired(false);
+
+        builder.HasOne<Product>()
+            .WithMany()
             .HasForeignKey(x => x.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(x => x.Order)
+        builder.HasOne<Order>()
             .WithMany(x => x.OrderLines)
             .HasForeignKey(x => x.OrderId)
             .OnDelete(DeleteBehavior.Cascade);

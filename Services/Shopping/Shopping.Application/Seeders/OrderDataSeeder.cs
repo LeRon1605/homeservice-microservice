@@ -66,15 +66,19 @@ public class OrderDataSeeder : IDataSeeder
     {
         var products = (await _productRepository.GetAllAsync()).ToList();
         var faker = new Faker();
-        for (int i = 0; i < 3; i++)
+        for (var i = 0; i < 3; i++)
         {
-            order.AddOrderLine(products.ToList()[faker.Random.Int(0, products.Count - 1)].Id,
+            var product = products.ToList()[faker.Random.Int(0, products.Count - 1)];
+            order.AddOrderLine(
+                product.Id,
+                product.Name,
                 order.Id,
                 faker.Random.String(6),
                 faker.Random.Int(10),
                 faker.Random.Double(0,1000),
-                faker.Random.Decimal(0,100000)
-                );
+                faker.Random.Decimal(0,100000),
+                product.Name
+            );
         }
     }
 }
