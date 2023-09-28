@@ -18,7 +18,6 @@
     
     <ItemGroup>
       <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Application\BuildingBlocks.Application.csproj" />
-      <ProjectReference Include="..\..\Products\Products.Application\Products.Application.csproj" />
       <ProjectReference Include="..\Shopping.Domain\Shopping.Domain.csproj" />
     </ItemGroup>
 

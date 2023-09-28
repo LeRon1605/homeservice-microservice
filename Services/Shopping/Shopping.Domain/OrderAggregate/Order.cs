@@ -20,8 +20,6 @@ public class Order : AggregateRoot
     private readonly List<OrderLine> _orderLines;
     public IReadOnlyCollection<OrderLine> OrderLines => _orderLines;
 
-    //public ICollection<OrderLine> OrderLines { get; set; }
-
     public Order(
         string orderNo,
         string contactName,
@@ -57,11 +55,18 @@ public class Order : AggregateRoot
         return Status is OrderStatus.Finished or OrderStatus.Rejected;
     }
 
-    public void AddOrderLine(Guid productId, Guid orderId,
-        string color, int quantity, double tax, decimal cost)
+    public void AddOrderLine(
+        Guid productId, 
+        string productName,
+        Guid orderId,
+        string color, 
+        int quantity, 
+        double tax, 
+        decimal cost,
+        string? unitName)
     {
-        
-        var orderLine = new OrderLine(productId, orderId, color, quantity, tax, cost);
+        // Todo: validate
+        var orderLine = new OrderLine(productId, productName, orderId, unitName, color, quantity, tax, cost);
         _orderLines.Add(orderLine);
     }
 }
