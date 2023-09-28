@@ -30,13 +30,8 @@ builder.Services.AddSwagger("ShoppingService")
                 .AddHomeServiceAuthentication(builder.Configuration)
                 .AddCurrentUser()
                 .AddDataSeeder()
+                .AddIntegrationEventHandlers()
                 .AddGrpc();
-builder.Services
-    .AddScoped<IIntegrationEventHandler<ProductAddedIntegrationEvent>, ProductAddedIntegrationEventHandler>();
-builder.Services
-    .AddScoped<IIntegrationEventHandler<ProductUpdatedIntegrationEvent>, ProductUpdatedIntegrationEventHandler>();
-builder.Services
-    .AddScoped<IIntegrationEventHandler<ProductDeletedIntegrationEvent>, ProductDeletedIntegrationEventHandler>();
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new StringEnumConverter()));
@@ -48,11 +43,8 @@ builder.Host.UseSerilog();
 var app = builder.Build();
 
 app.UseApplicationExceptionHandler();
-var eventBus = app.Services.GetRequiredService<IEventBus>();
 
-eventBus.Subscribe<ProductAddedIntegrationEvent, IIntegrationEventHandler<ProductAddedIntegrationEvent>>();
-eventBus.Subscribe<ProductUpdatedIntegrationEvent, IIntegrationEventHandler<ProductUpdatedIntegrationEvent>>();
-eventBus.Subscribe<ProductDeletedIntegrationEvent, IIntegrationEventHandler<ProductDeletedIntegrationEvent>>();
+app.UseEventBus();
 
 app.UseSwagger();
 app.UseSwaggerUI();

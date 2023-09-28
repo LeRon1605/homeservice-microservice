@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Shopping.Infrastructure.EfCore.Migrations
 {
     /// <inheritdoc />
-    public partial class AddOrder : Migration
+    public partial class AddOrderAndProductUnit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -37,11 +37,25 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProductUnit",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductUnit", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OrderLine",
                 columns: table => new
                 {
-                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UnitName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Color = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     Tax = table.Column<double>(type: "float", nullable: false),
@@ -75,6 +89,9 @@ namespace Shopping.Infrastructure.EfCore.Migrations
         {
             migrationBuilder.DropTable(
                 name: "OrderLine");
+
+            migrationBuilder.DropTable(
+                name: "ProductUnit");
 
             migrationBuilder.DropTable(
                 name: "Order");

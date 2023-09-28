@@ -10,7 +10,7 @@ public class AddedProductCommand : ICommand
     public Guid? ProductUnitId { get; private set; }
     public decimal SellPrice { get; private set; }
 
-    public AddedProductCommand(Guid id, string name, Guid productGroupId, Guid? productUnitId, decimal sellPrice)
+    public AddedProductCommand(Guid id, string name, Guid productGroupId, decimal sellPrice,  Guid? productUnitId)
     {
         Id = id;
         Name = name;
