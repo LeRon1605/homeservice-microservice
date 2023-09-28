@@ -19,6 +19,7 @@
     <ItemGroup>
       <ProjectReference Include="..\BuildingBlocks\BuildingBlocks.Infrastructure\BuildingBlocks.Infrastructure.csproj" />
       <ProjectReference Include="..\BuildingBlocks\BuildingBlocks.Presentation\BuildingBlocks.Presentation.csproj" />
+      <ProjectReference Include="..\Services\Shopping\Shopping.Application\Shopping.Application.csproj" />
     </ItemGroup>
     <ItemGroup>
         <Protobuf Include="..\Services\Products\Products.Application\Grpc\Proto\Product.proto" GrpcServices="Client" Link="Grpc/Proto/Product.proto"/>
