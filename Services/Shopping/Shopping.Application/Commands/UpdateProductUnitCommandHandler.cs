@@ -1,5 +1,6 @@
 using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
+using Shopping.Domain.ProductAggregate.Exceptions;
 using Shopping.Domain.ProductUnitAggregate;
 using Shopping.Domain.ProductUnitAggregate.Exceptions;
 
