@@ -6,7 +6,6 @@ using Products.Application.Commands.ProductCommands.DeleteProduct;
 using Products.Application.Commands.ProductCommands.UpdateProduct;
 using Products.Application.Commands.ProductCommands.UploadProductImage;
 using Products.Application.Dtos;
-using Products.Application.Queries.ProductQuery.GetAllProductByIncludedIds;
 using Products.Application.Queries.ProductQuery.GetProductById;
 using Products.Application.Queries.ProductQuery.GetProductsWithPagination;
 
@@ -36,13 +35,6 @@ public class ProductController : ControllerBase
     {
         var product = await _mediator.Send(new GetProductByIdQuery(id));
         return Ok(product);
-    }
-    
-    [HttpGet("included-ids")]
-    public async Task<IActionResult> GetProductByIncludedIdsAsync([FromQuery] GetProductByIncludedIdsDto dto)
-    {
-        var products = await _mediator.Send(new GetAllProductByIncludedIdsQuery(dto.Ids));
-        return Ok(products);
     }
     
     [HttpPost]

@@ -5,8 +5,9 @@ import "google/protobuf/wrappers.proto";
 option csharp_namespace = "Shopping.Application.Grpc.Proto";
 
 service ShoppingGrpcService {
-    rpc GetProducts (ShoppingProductFilterSorting) returns (ShoppingProductListResponse);
+    rpc GetProducts (ShoppingProductFilterSorting) returns (ShoppingProductPagedResponse);
     rpc GetProductById (ShoppingProductByIdRequest) returns (ShoppingProductItemResponse);
+    rpc GetProductsByIncludedIds(ShoppingProductByIdsRequest) returns (ShoppingProductListResponse);
 }
 
 message ShoppingProductFilterSorting {
@@ -21,14 +22,23 @@ message ShoppingProductFilterSorting {
     NullableStringValue search = 9;
 }
 
-message ShoppingProductListResponse {
+message ShoppingProductPagedResponse {
     int32 total_count = 1;
     repeated ShoppingProductItemResponse products = 2;
+}
+
+message ShoppingProductListResponse {
+    repeated ShoppingProductItemResponse products = 1;
 }
 
 message ShoppingProductByIdRequest {
     string id = 1;
 }
+
+message ShoppingProductByIdsRequest {
+    repeated string id = 1;
+}
+
 message ShoppingProductItemResponse {
     string id = 1;
     double rating = 2;
