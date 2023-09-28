@@ -4,11 +4,11 @@ namespace Shopping.Domain.OrderAggregate.Specifications;
 
 public class OrderFilterAndPagingSpecification : Specification<Order>
 {
-    public OrderFilterAndPagingSpecification(   
+    public OrderFilterAndPagingSpecification(
         string? search,
-        int pageIndex, 
-        int pageSize, 
-        OrderStatus? status)
+        int pageIndex,
+        int pageSize,
+        List<OrderStatus?> status)
     {
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -16,11 +16,11 @@ public class OrderFilterAndPagingSpecification : Specification<Order>
             AddSearchField(nameof(Order.ContactName));
         }
 
-        if (status.HasValue)
+        if (status.Count != 0)
         {
-            AddFilter(x=> x.Status == status);
+            AddFilter(x => status.Contains(x.Status));
         }
-        
+
         ApplyPaging(pageIndex, pageSize);
     }
 }

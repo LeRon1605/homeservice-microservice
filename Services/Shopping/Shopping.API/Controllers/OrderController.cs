@@ -26,7 +26,7 @@ public class OrderController : ControllerBase
         return Ok(orders);
     }
 
-   [HttpPost]
+   [HttpPost("reject-order")]
     public async Task<IActionResult> RejectOrder(OrderRejectDto orderRejectDto)
     {
         var order = await _mediator.Send(new OrderRejectCommand(orderRejectDto));
