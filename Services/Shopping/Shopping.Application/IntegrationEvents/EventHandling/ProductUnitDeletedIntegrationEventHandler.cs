@@ -23,7 +23,7 @@ public class ProductUnitDeletedIntegrationEventHandler : IIntegrationEventHandle
                                "{IntegrationEventId} - ({@IntegrationEvent})", 
             @event.Id, @event);
         
-        var command = new DeleteProductUnitCommand(@event.Id);
+        var command = new DeleteProductUnitCommand(@event.ProductUnitId);
         _logger.LogInformation("Sending command: {commandName}", command);
         
         await _mediator.Send(command);

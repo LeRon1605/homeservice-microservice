@@ -10,12 +10,8 @@ public record ProductUpdatedIntegrationEvent : IntegrationEvent
     public Guid? ProductUnitId { get; private set; }
     public decimal SellPrice { get; private set; }
 
-    public ProductUpdatedIntegrationEvent(
-        Guid productId,
-        string name, 
-        Guid productGroupId,
-        decimal sellPrice,
-        Guid? productUnitId)
+    public ProductUpdatedIntegrationEvent(Guid productId, string name, Guid productGroupId,
+        Guid? productUnitId, decimal sellPrice)
     {
         ProductId = productId;
         Name = name;

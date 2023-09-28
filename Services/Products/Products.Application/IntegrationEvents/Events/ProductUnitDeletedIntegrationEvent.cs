@@ -2,11 +2,11 @@
 
 namespace Products.Application.IntegrationEvents.Events;
 
-public record ProductUnitDeleteIntegrationEvent : IntegrationEvent
+public record ProductUnitDeletedIntegrationEvent : IntegrationEvent
 {
     public Guid ProductUnitId { get; set; }
 
-    public ProductUnitDeleteIntegrationEvent(Guid productUnitId)
+    public ProductUnitDeletedIntegrationEvent(Guid productUnitId)
     {
         ProductUnitId = productUnitId;
     }

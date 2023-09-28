@@ -16,7 +16,7 @@ public class ProductUnitUpdatedIntegrationEventHandler : IIntegrationEventHandle
     
     public async Task Handle(ProductUnitUpdatedIntegrationEvent @event)
     {
-        var command = new UpdateProductUnitCommand(@event.Id, @event.Name);
+        var command = new UpdateProductUnitCommand(@event.ProductUnitId, @event.Name);
         
         await _mediator.Send(command);
     }

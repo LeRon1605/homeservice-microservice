@@ -21,7 +21,7 @@ public class ProductUnitAddedIntegrationEventHandler : IIntegrationEventHandler<
     {
         _logger.LogInformation("Handling integration event add product: {IntegrationEventId} -  ({@IntegrationEvent})", @event.Id, @event);
 
-        var command = new AddProductUnitCommand(@event.Id, @event.Name);
+        var command = new AddProductUnitCommand(@event.ProductUnitId, @event.Name);
         
         _logger.LogInformation("Sending command: {commandName}", command);
 

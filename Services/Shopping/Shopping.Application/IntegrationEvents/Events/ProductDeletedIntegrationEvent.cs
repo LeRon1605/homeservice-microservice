@@ -4,5 +4,10 @@ namespace Shopping.Application.IntegrationEvents.Events;
 
 public record ProductDeletedIntegrationEvent : IntegrationEvent
 {
-    public Guid ProductId { get; private set; }
+    public Guid ProductId { get; set; }
+
+    public ProductDeletedIntegrationEvent(Guid productId)
+    {
+        ProductId = productId;
+    }
 }

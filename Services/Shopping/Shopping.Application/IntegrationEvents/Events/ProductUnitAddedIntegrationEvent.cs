@@ -4,6 +4,12 @@ namespace Shopping.Application.IntegrationEvents.Events;
 
 public record ProductUnitAddedIntegrationEvent : IntegrationEvent
 {
-    public Guid UnitId { get; private set; }
-    public string Name { get; private set; }
+    public Guid ProductUnitId { get; set; }
+    public string Name { get; set; }
+
+    public ProductUnitAddedIntegrationEvent(Guid productUnitId, string name)
+    {
+        Name = name;
+        ProductUnitId = productUnitId;
+    }
 }
