@@ -2,9 +2,10 @@
 
 namespace Products.Domain.ProductAggregate.Events;
 
-public class ProductUpdatedDomainEvent: IDomainEvent
+public class ProductUpdatedDomainEvent : IDomainEvent
 {
-    public Product Product { get; }
+    public Product Product { get; init; }
+
     public ProductUpdatedDomainEvent(Product product)
     {
         Product = product;

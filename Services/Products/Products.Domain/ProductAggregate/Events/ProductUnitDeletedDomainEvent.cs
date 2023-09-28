@@ -1,0 +1,14 @@
+﻿using BuildingBlocks.Domain.Event;
+using Products.Domain.ProductUnitAggregate;
+
+namespace Products.Domain.ProductAggregate.Events;
+
+public class ProductUnitDeletedDomainEvent : IDomainEvent
+{
+    public ProductUnit ProductUnit { get; init; }
+
+    public ProductUnitDeletedDomainEvent(ProductUnit productUnit)
+    {
+        ProductUnit = productUnit;
+    }
+}

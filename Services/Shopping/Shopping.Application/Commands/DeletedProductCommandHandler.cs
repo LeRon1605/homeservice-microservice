@@ -1,6 +1,7 @@
 ﻿using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
 using Shopping.Domain.ProductAggregate;
+using Shopping.Domain.ProductAggregate.Exceptions;
 using Shopping.Domain.ProductUnitAggregate.Exceptions;
 
 namespace Shopping.Application.Commands;
@@ -21,7 +22,7 @@ public class DeletedProductCommandHandler : ICommandHandler<DeletedProductComman
         var product = await _productRepository.GetByIdAsync(request.Id);
         if (product == null)
         {
-            throw new ProductUnitNotFoundException(request.Id);
+            throw new ProductNotFoundException(request.Id);
         }
         _productRepository.Delete(product);
         await _unitOfWork.SaveChangesAsync();

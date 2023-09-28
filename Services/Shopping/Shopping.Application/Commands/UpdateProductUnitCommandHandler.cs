@@ -1,5 +1,6 @@
 using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
+using Shopping.Domain.ProductAggregate.Exceptions;
 using Shopping.Domain.ProductUnitAggregate;
 using Shopping.Domain.ProductUnitAggregate.Exceptions;
 
@@ -20,7 +21,7 @@ public class UpdateProductUnitCommandHandler : ICommandHandler<UpdateProductUnit
         var productUnit = await _productUnitRepository.GetByIdAsync(request.Id);
         if (productUnit == null)
         {
-            throw new ProductUnitNotFoundException(request.Id);
+            throw new ProductNotFoundException(request.Id);
         }
         
         productUnit.Update(request.Name);

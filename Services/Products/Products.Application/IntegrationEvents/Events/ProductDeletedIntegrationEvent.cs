@@ -4,10 +4,10 @@ namespace Products.Application.IntegrationEvents.Events;
 
 public record ProductDeletedIntegrationEvent : IntegrationEvent
 {
-    public Guid Id { get; set; }
+    public Guid ProductId { get; set; }
 
-    public ProductDeletedIntegrationEvent(Guid id)
+    public ProductDeletedIntegrationEvent(Guid productId)
     {
-        Id = id;
+        ProductId = productId;
     }
 }
