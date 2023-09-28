@@ -8,6 +8,7 @@ namespace Shopping.Application.Queries;
 public class OrderFilterAndPagingQuery : PagingParameters, IQuery<PagedResult<OrderDto>>
 {
     public OrderStatus? Status { get; set; }
+    
     public OrderFilterAndPagingQuery(OrderFilterAndPagingDto orderFilterAndPagingDto)
     {
         Search = orderFilterAndPagingDto.Search;

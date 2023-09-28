@@ -16,7 +16,6 @@ public class GetProductWithFilterAndPaginationDto : PagingParameters
     
     public bool IsDescending { get; set; } 
     
-    [EnumDataType(typeof(ProductOrderBy))]
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ProductOrderBy? OrderBy { get; init; }
 }

@@ -8,6 +8,7 @@ using BuildingBlocks.Presentation.EventBus;
 using BuildingBlocks.Presentation.ExceptionHandlers;
 using BuildingBlocks.Presentation.Extension;
 using BuildingBlocks.Presentation.Swagger;
+using Newtonsoft.Json.Converters;
 using Serilog;
 using Shopping.API.Extensions;
 using Shopping.Application.Grpc.Services;
@@ -36,7 +37,11 @@ builder.Services
     .AddScoped<IIntegrationEventHandler<ProductUpdatedIntegrationEvent>, ProductUpdatedIntegrationEventHandler>();
 builder.Services
     .AddScoped<IIntegrationEventHandler<ProductDeletedIntegrationEvent>, ProductDeletedIntegrationEventHandler>();
-builder.Services.AddControllers();
+
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new StringEnumConverter()));
+
+builder.Services.AddSwaggerGenNewtonsoftSupport();
 
 builder.Host.UseSerilog();
 

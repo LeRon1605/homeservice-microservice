@@ -2,6 +2,7 @@ using ApiGateway.Extensions;
 using ApiGateway.Middlewares;
 using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Extension;
+using Newtonsoft.Json.Converters;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Serilog;
@@ -10,7 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = ApplicationLoggerFactory.CreateSerilogLogger(builder.Configuration, "HomeService");
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+                .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new StringEnumConverter()));
+
+builder.Services.AddSwaggerGenNewtonsoftSupport();
 
 builder.Services.AddGrpcClientServices(builder.Configuration);
 builder.Services.AddServices();
