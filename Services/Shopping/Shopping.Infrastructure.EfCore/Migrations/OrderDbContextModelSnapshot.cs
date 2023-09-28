@@ -28,17 +28,6 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("BuyerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ContactName")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("EmailAddress")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("OrderNo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -46,10 +35,6 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                     b.Property<decimal>("OrderValue")
                         .HasPrecision(20, 2)
                         .HasColumnType("decimal(20,2)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("PlacedDate")
                         .HasColumnType("datetime2");
@@ -78,11 +63,18 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                         .HasPrecision(20, 2)
                         .HasColumnType("decimal(20,2)");
 
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<double>("Tax")
                         .HasColumnType("float");
+
+                    b.Property<string>("UnitName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ProductId", "OrderId");
 
@@ -114,6 +106,8 @@ namespace Shopping.Infrastructure.EfCore.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ProductUnitId");
+
                     b.ToTable("Product");
                 });
 
@@ -142,23 +136,107 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                     b.ToTable("ProductReview");
                 });
 
+            modelBuilder.Entity("Shopping.Domain.ProductUnitAggregate.ProductUnit", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductUnit");
+                });
+
+            modelBuilder.Entity("Shopping.Domain.OrderAggregate.Order", b =>
+                {
+                    b.OwnsOne("Shopping.Domain.OrderAggregate.OrderContactInfo", "ContactInfo", b1 =>
+                        {
+                            b1.Property<Guid>("OrderId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Address")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Address");
+
+                            b1.Property<Guid>("BuyerId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("BuyerId");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("City");
+
+                            b1.Property<string>("ContactName")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("ContactName");
+
+                            b1.Property<string>("CustomerName")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("CustomerName");
+
+                            b1.Property<string>("Email")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Email");
+
+                            b1.Property<string>("Phone")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Phone");
+
+                            b1.Property<string>("PostalCode")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("PostalCode");
+
+                            b1.Property<string>("State")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("State");
+
+                            b1.HasKey("OrderId");
+
+                            b1.ToTable("Order");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderId");
+                        });
+
+                    b.Navigation("ContactInfo")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Shopping.Domain.OrderAggregate.OrderLine", b =>
                 {
-                    b.HasOne("Shopping.Domain.OrderAggregate.Order", "Order")
+                    b.HasOne("Shopping.Domain.OrderAggregate.Order", null)
                         .WithMany("OrderLines")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Shopping.Domain.ProductAggregate.Product", "Product")
-                        .WithMany("OrderLines")
+                    b.HasOne("Shopping.Domain.ProductAggregate.Product", null)
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
 
-                    b.Navigation("Order");
+            modelBuilder.Entity("Shopping.Domain.ProductAggregate.Product", b =>
+                {
+                    b.HasOne("Shopping.Domain.ProductUnitAggregate.ProductUnit", "ProductUnit")
+                        .WithMany()
+                        .HasForeignKey("ProductUnitId");
 
-                    b.Navigation("Product");
+                    b.Navigation("ProductUnit");
                 });
 
             modelBuilder.Entity("Shopping.Domain.ProductAggregate.ProductReview", b =>
@@ -177,8 +255,6 @@ namespace Shopping.Infrastructure.EfCore.Migrations
 
             modelBuilder.Entity("Shopping.Domain.ProductAggregate.Product", b =>
                 {
-                    b.Navigation("OrderLines");
-
                     b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618

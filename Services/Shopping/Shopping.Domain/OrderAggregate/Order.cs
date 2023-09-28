@@ -9,10 +9,7 @@ namespace Shopping.Domain.OrderAggregate;
 public class Order : AggregateRoot
 {
     public string OrderNo { get; private set; }
-    public string ContactName { get; private set; }
-    public Guid BuyerId { get; private set; }
-    public string PhoneNumber { get; private set; }
-    public string? EmailAddress { get; private set; }
+    public OrderContactInfo ContactInfo { get; private set; }
     public decimal OrderValue { get; private set; }
     public DateTime PlacedDate { get; private set; }
     public OrderStatus Status { get; private set; }
@@ -20,21 +17,21 @@ public class Order : AggregateRoot
     private readonly List<OrderLine> _orderLines;
     public IReadOnlyCollection<OrderLine> OrderLines => _orderLines;
 
-    //public ICollection<OrderLine> OrderLines { get; set; }
-
     public Order(
         string orderNo,
-        string contactName,
         Guid buyerId,
-        string phoneNumber,
-        string? emailAddress,
+        string customerName, 
+        string contactName, 
+        string email, 
+        string phone, 
+        string address, 
+        string city, 
+        string state, 
+        string postalCode,
         decimal orderValue)
     {
         OrderNo = Guard.Against.NullOrWhiteSpace(orderNo, nameof(OrderNo));
-        ContactName = Guard.Against.NullOrWhiteSpace(contactName, nameof(ContactName));
-        PhoneNumber = Guard.Against.NullOrWhiteSpace(phoneNumber, nameof(PhoneNumber));
-        BuyerId = buyerId;
-        EmailAddress = emailAddress;
+        ContactInfo = new OrderContactInfo(buyerId, customerName, contactName, email, phone, address, city, state, postalCode);
         OrderValue = orderValue;
         PlacedDate = DateTime.UtcNow;
         Status = OrderStatus.Pending;
@@ -57,11 +54,23 @@ public class Order : AggregateRoot
         return Status is OrderStatus.Finished or OrderStatus.Rejected;
     }
 
-    public void AddOrderLine(Guid productId, Guid orderId,
-        string color, int quantity, double tax, decimal cost)
+    public void AddOrderLine(
+        Guid productId, 
+        string productName,
+        Guid orderId,
+        string color, 
+        int quantity, 
+        double tax, 
+        decimal cost,
+        string? unitName)
+    {
+        // Todo: validate
+        var orderLine = new OrderLine(productId, productName, orderId, unitName, color, quantity, tax, cost);
+        _orderLines.Add(orderLine);
+    }
+
+    private Order()
     {
         
-        var orderLine = new OrderLine(productId, orderId, color, quantity, tax, cost);
-        _orderLines.Add(orderLine);
     }
 }

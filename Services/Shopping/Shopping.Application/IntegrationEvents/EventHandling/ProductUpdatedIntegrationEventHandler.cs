@@ -22,10 +22,9 @@ public class ProductUpdatedIntegrationEventHandler : IIntegrationEventHandler<Pr
     {
         _logger.LogInformation("Handling integration event update product: " +
                                "{IntegrationEventId} - ({@IntegrationEvent})",
-            @event.Id, @event);
+            @event.ProductId, @event);
         
-        var command = new UpdatedProductCommand(@event.Id, @event.Name, @event.ProductGroupId, 
-                                                @event.ProductUnitId, @event.SellPrice);
+        var command = new UpdatedProductCommand(@event.ProductId, @event.Name, @event.ProductGroupId, @event.ProductUnitId, @event.SellPrice);
         
         _logger.LogInformation("Sending command: {commandName}", command);
         await _mediator.Send(command);

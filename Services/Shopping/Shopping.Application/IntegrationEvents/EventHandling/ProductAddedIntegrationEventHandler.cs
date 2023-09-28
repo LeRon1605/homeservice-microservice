@@ -19,12 +19,14 @@ public class ProductAddedIntegrationEventHandler : IIntegrationEventHandler<Prod
 
     public async Task Handle(ProductAddedIntegrationEvent @event)
     {
-        _logger.LogInformation("Handling integration event add product: " +
-                               "{IntegrationEventId} - ({@IntegrationEvent})",
-            @event.Id, @event);
+        _logger.LogInformation("Handling integration event add product: {IntegrationEventId} -  ({@IntegrationEvent})", @event.ProductId, @event);
 
-        var command = new AddedProductCommand(@event.Id, @event.Name, @event.ProductGroupId,
-            @event.ProductUnitId, @event.SellPrice);
+        var command = new AddedProductCommand(
+            @event.ProductId, 
+            @event.Name, 
+            @event.ProductGroupId,
+            @event.SellPrice,
+            @event.ProductUnitId);
         
         _logger.LogInformation("Sending command: {commandName}", command);
 

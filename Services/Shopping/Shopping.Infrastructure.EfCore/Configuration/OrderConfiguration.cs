@@ -11,17 +11,41 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
     {
         builder.HasKey(x => x.Id);
 
-        builder.Property(x => x.ContactName)
-               .HasMaxLength(StringLength.Name)
-               .IsRequired();
-        
-        builder.Property(x => x.BuyerId)
-               .IsRequired();
-        
-        builder.Property(x => x.PhoneNumber)
-               .IsRequired();
+        builder.OwnsOne(x => x.ContactInfo)
+               .Property(x => x.BuyerId)
+               .HasColumnName(nameof(Order.ContactInfo.BuyerId));
 
-        builder.Property(x => x.EmailAddress);
+        builder.OwnsOne(x => x.ContactInfo)
+               .Property(x => x.ContactName)
+               .HasColumnName(nameof(Order.ContactInfo.ContactName));
+
+        builder.OwnsOne(x => x.ContactInfo)
+               .Property(x => x.Email)
+               .HasColumnName(nameof(Order.ContactInfo.Email));
+
+        builder.OwnsOne(x => x.ContactInfo)
+               .Property(x => x.Phone)
+               .HasColumnName(nameof(Order.ContactInfo.Phone));
+
+        builder.OwnsOne(x => x.ContactInfo)
+               .Property(x => x.City)
+               .HasColumnName(nameof(Order.ContactInfo.City));
+
+        builder.OwnsOne(x => x.ContactInfo)
+               .Property(x => x.PostalCode)
+               .HasColumnName(nameof(Order.ContactInfo.PostalCode));
+
+        builder.OwnsOne(x => x.ContactInfo)
+               .Property(x => x.CustomerName)
+               .HasColumnName(nameof(Order.ContactInfo.CustomerName));
+
+        builder.OwnsOne(x => x.ContactInfo)
+               .Property(x => x.State)
+               .HasColumnName(nameof(Order.ContactInfo.State));
+
+        builder.OwnsOne(x => x.ContactInfo)
+               .Property(x => x.Address)
+               .HasColumnName(nameof(Order.ContactInfo.Address));
 
         builder.Property(x => x.OrderValue)
                .HasPrecision(20, 2)
