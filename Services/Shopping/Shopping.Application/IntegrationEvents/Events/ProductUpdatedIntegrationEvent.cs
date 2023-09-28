@@ -4,26 +4,23 @@ namespace Shopping.Application.IntegrationEvents.Events;
 
 public record ProductUpdatedIntegrationEvent : IntegrationEvent
 {
-    public Guid Id { get; set; }
+    public Guid ProductId { get; private set; }
     public string Name { get; private set; }
     public Guid ProductGroupId { get; private set; }
     public Guid? ProductUnitId { get; private set; }
-    public string? ProductUnitName { get; private set; }
     public decimal SellPrice { get; private set; }
 
     public ProductUpdatedIntegrationEvent(
-        Guid id,
+        Guid productId,
         string name, 
         Guid productGroupId,
         decimal sellPrice,
-        Guid? productUnitId, 
-        string? productUnitName)
+        Guid? productUnitId)
     {
-        Id = id;
+        ProductId = productId;
         Name = name;
         ProductGroupId = productGroupId;
         ProductUnitId = productUnitId;
         SellPrice = sellPrice;
-        ProductUnitName = productUnitName;
     }
 }
