@@ -31,6 +31,18 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProductUnit",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductUnit", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Order",
                 columns: table => new
                 {
@@ -52,18 +64,12 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Order", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductUnit",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductUnit", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Order_Buyer_BuyerId",
+                        column: x => x.BuyerId,
+                        principalTable: "Buyer",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -136,6 +142,11 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Order_BuyerId",
+                table: "Order",
+                column: "BuyerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderLine_OrderId",
                 table: "OrderLine",
                 column: "OrderId");
@@ -155,9 +166,6 @@ namespace Shopping.Infrastructure.EfCore.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Buyer");
-
-            migrationBuilder.DropTable(
                 name: "OrderLine");
 
             migrationBuilder.DropTable(
@@ -168,6 +176,9 @@ namespace Shopping.Infrastructure.EfCore.Migrations
 
             migrationBuilder.DropTable(
                 name: "Product");
+
+            migrationBuilder.DropTable(
+                name: "Buyer");
 
             migrationBuilder.DropTable(
                 name: "ProductUnit");

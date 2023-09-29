@@ -9,6 +9,7 @@ namespace Shopping.Domain.OrderAggregate;
 public class Order : AggregateRoot
 {
     public string OrderNo { get; private set; }
+    public Guid BuyerId { get; private set; }
     public OrderContactInfo ContactInfo { get; private set; }
     public decimal OrderValue { get; private set; }
     public DateTime PlacedDate { get; private set; }
@@ -30,8 +31,9 @@ public class Order : AggregateRoot
         string postalCode,
         decimal orderValue)
     {
+        BuyerId = buyerId;
         OrderNo = Guard.Against.NullOrWhiteSpace(orderNo, nameof(OrderNo));
-        ContactInfo = new OrderContactInfo(buyerId, customerName, contactName, email, phone, address, city, state, postalCode);
+        ContactInfo = new OrderContactInfo(customerName, contactName, email, phone, address, city, state, postalCode);
         OrderValue = orderValue;
         PlacedDate = DateTime.UtcNow;
         Status = OrderStatus.Pending;

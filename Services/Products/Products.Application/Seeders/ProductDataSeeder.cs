@@ -132,7 +132,8 @@ public class ProductDataSeeder : IDataSeeder
                 _productRepository
             );
             
-            product.AddImage("http://cb.dut.udn.vn/ImageSV/20/102200109.jpg");
+            product.AddImage("https://res.cloudinary.com/dboijruhe/image/upload/v1695951716/HomeService/tbt25tc5hu19mtkk2jlv.png");
+            product.AddImage("https://res.cloudinary.com/dboijruhe/image/upload/v1695951696/HomeService/n88xfzo3rufft2ljknbt.jpg");
             
             _productRepository.Add(product);
         }

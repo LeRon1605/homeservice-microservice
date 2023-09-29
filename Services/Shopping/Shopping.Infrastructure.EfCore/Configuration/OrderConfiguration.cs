@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Shopping.Domain.BuyerAggregate;
 using Shopping.Domain.Constants;
 using Shopping.Domain.OrderAggregate;
 
@@ -10,10 +11,6 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
     public void Configure(EntityTypeBuilder<Order> builder)
     {
         builder.HasKey(x => x.Id);
-
-        builder.OwnsOne(x => x.ContactInfo)
-               .Property(x => x.BuyerId)
-               .HasColumnName(nameof(Order.ContactInfo.BuyerId));
 
         builder.OwnsOne(x => x.ContactInfo)
                .Property(x => x.ContactName)
@@ -46,6 +43,10 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.OwnsOne(x => x.ContactInfo)
                .Property(x => x.Address)
                .HasColumnName(nameof(Order.ContactInfo.Address));
+
+        builder.HasOne<Buyer>()
+               .WithMany()
+               .HasForeignKey(x => x.BuyerId);
 
         builder.Property(x => x.OrderValue)
                .HasPrecision(20, 2)

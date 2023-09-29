@@ -51,6 +51,9 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("BuyerId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("OrderNo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -66,6 +69,8 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BuyerId");
 
                     b.ToTable("Order");
                 });
@@ -209,6 +214,12 @@ namespace Shopping.Infrastructure.EfCore.Migrations
 
             modelBuilder.Entity("Shopping.Domain.OrderAggregate.Order", b =>
                 {
+                    b.HasOne("Shopping.Domain.BuyerAggregate.Buyer", null)
+                        .WithMany()
+                        .HasForeignKey("BuyerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.OwnsOne("Shopping.Domain.OrderAggregate.OrderContactInfo", "ContactInfo", b1 =>
                         {
                             b1.Property<Guid>("OrderId")
@@ -218,10 +229,6 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Address");
-
-                            b1.Property<Guid>("BuyerId")
-                                .HasColumnType("uniqueidentifier")
-                                .HasColumnName("BuyerId");
 
                             b1.Property<string>("City")
                                 .IsRequired()

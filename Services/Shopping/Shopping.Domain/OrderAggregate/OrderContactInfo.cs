@@ -5,7 +5,6 @@ namespace Shopping.Domain.OrderAggregate;
 
 public record OrderContactInfo : ValueObject
 {
-    public Guid BuyerId { get; private set; }
     public string CustomerName { get; private set; }
     public string ContactName { get; private set; }
     public string Email { get; private set; }
@@ -16,7 +15,6 @@ public record OrderContactInfo : ValueObject
     public string PostalCode { get; private set; }
     
     public OrderContactInfo(
-        Guid buyerId,
         string customerName, 
         string contactName, 
         string email, 
@@ -26,7 +24,6 @@ public record OrderContactInfo : ValueObject
         string state, 
         string postalCode)
     {
-        BuyerId = buyerId;
         CustomerName = Guard.Against.NullOrWhiteSpace(customerName, nameof(CustomerName));
         ContactName = Guard.Against.NullOrWhiteSpace(contactName, nameof(ContactName));
         Email = Guard.Against.NullOrWhiteSpace(email, nameof(Email));
