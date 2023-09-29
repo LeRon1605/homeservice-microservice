@@ -12,7 +12,7 @@ using Shopping.Infrastructure.EfCore;
 namespace Shopping.Infrastructure.EfCore.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    [Migration("20230929013607_Initial")]
+    [Migration("20230929073150_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -60,10 +60,6 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                     b.Property<string>("OrderNo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("OrderValue")
-                        .HasPrecision(20, 2)
-                        .HasColumnType("decimal(20,2)");
 
                     b.Property<DateTime>("PlacedDate")
                         .HasColumnType("datetime2");
@@ -229,12 +225,10 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Address")
-                                .IsRequired()
                                 .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Address");
 
                             b1.Property<string>("City")
-                                .IsRequired()
                                 .HasColumnType("nvarchar(max)")
                                 .HasColumnName("City");
 
@@ -249,7 +243,6 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                                 .HasColumnName("CustomerName");
 
                             b1.Property<string>("Email")
-                                .IsRequired()
                                 .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Email");
 
@@ -259,12 +252,10 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                                 .HasColumnName("Phone");
 
                             b1.Property<string>("PostalCode")
-                                .IsRequired()
                                 .HasColumnType("nvarchar(max)")
                                 .HasColumnName("PostalCode");
 
                             b1.Property<string>("State")
-                                .IsRequired()
                                 .HasColumnType("nvarchar(max)")
                                 .HasColumnName("State");
 

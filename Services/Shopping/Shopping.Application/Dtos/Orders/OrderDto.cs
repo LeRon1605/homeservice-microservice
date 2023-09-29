@@ -1,6 +1,6 @@
 ﻿using Shopping.Domain.OrderAggregate;
 
-namespace Shopping.Application.Dtos;
+namespace Shopping.Application.Dtos.Orders;
 
 public class OrderDto
 {

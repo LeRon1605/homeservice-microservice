@@ -1,4 +1,4 @@
-﻿namespace Shopping.Application.Dtos;
+﻿namespace Shopping.Application.Dtos.Buyers;
 
 public class BuyerDto
 {

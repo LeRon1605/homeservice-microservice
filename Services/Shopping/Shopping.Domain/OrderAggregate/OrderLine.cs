@@ -1,4 +1,5 @@
-﻿using BuildingBlocks.Domain.Models;
+﻿using Ardalis.GuardClauses;
+using BuildingBlocks.Domain.Models;
 
 namespace Shopping.Domain.OrderAggregate;
 
@@ -10,7 +11,7 @@ public record OrderLine : ValueObject
     public string ProductName { get; private set; }
     
     public string? UnitName { get; private set; }
-    public string Color { get; private set; }
+    public string? Color { get; private set; }
     public int Quantity { get; private set; }
     public decimal Cost { get; private set; }
 
@@ -19,16 +20,16 @@ public record OrderLine : ValueObject
         string productName,
         Guid orderId,
         string? unitName,
-        string color, 
+        string? color, 
         int quantity,
         decimal cost)
     {
-        ProductId = productId;
-        ProductName = productName;
-        OrderId = orderId;
+        ProductId = Guard.Against.NullOrEmpty(productId, nameof(ProductId));
+        ProductName = Guard.Against.NullOrEmpty(productName, nameof(ProductName));
+        OrderId = Guard.Against.Null(orderId);
         UnitName = unitName;
         Color = color;
-        Quantity = quantity;
-        Cost = cost;
+        Quantity = Guard.Against.NegativeOrZero(quantity, nameof(Quantity));
+        Cost = Guard.Against.Negative(cost, nameof(Cost));
     }
 }

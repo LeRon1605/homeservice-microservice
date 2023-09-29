@@ -2,7 +2,7 @@
 using BuildingBlocks.Application.Dtos;
 using Shopping.Domain.OrderAggregate;
 
-namespace Shopping.Application.Dtos;
+namespace Shopping.Application.Dtos.Orders;
 
 public class OrderFilterAndPagingDto : PagingParameters
 {

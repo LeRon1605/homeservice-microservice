@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shopping.Application.Commands;
 using Shopping.Application.Commands.RejectOrder;
 using Shopping.Application.Dtos;
+using Shopping.Application.Dtos.Orders;
 using Shopping.Application.Queries;
 
 namespace Shopping.API.Controllers;

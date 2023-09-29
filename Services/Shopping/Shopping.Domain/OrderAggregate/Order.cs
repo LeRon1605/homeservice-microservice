@@ -11,7 +11,6 @@ public class Order : AggregateRoot
     public string OrderNo { get; private set; }
     public Guid BuyerId { get; private set; }
     public OrderContactInfo ContactInfo { get; private set; }
-    public decimal OrderValue { get; private set; }
     public DateTime PlacedDate { get; private set; }
     public OrderStatus Status { get; private set; }
 
@@ -23,18 +22,16 @@ public class Order : AggregateRoot
         Guid buyerId,
         string customerName, 
         string contactName, 
-        string email, 
+        string? email, 
         string phone, 
-        string address, 
-        string city, 
-        string state, 
-        string postalCode,
-        decimal orderValue)
+        string? address, 
+        string? city, 
+        string? state, 
+        string? postalCode)
     {
         BuyerId = buyerId;
         OrderNo = Guard.Against.NullOrWhiteSpace(orderNo, nameof(OrderNo));
         ContactInfo = new OrderContactInfo(customerName, contactName, email, phone, address, city, state, postalCode);
-        OrderValue = orderValue;
         PlacedDate = DateTime.UtcNow;
         Status = OrderStatus.Pending;
 
@@ -59,16 +56,19 @@ public class Order : AggregateRoot
     public void AddOrderLine(
         Guid productId, 
         string productName,
-        string color, 
+        string? unitName,
+        string? color, 
         int quantity,
-        decimal cost,
-        string? unitName)
+        decimal cost)
     {
-        var isExisting = _orderLines.Any(x => x.ProductId == productId && x.Color == color);
-
-        if (isExisting)
+        if (!string.IsNullOrWhiteSpace(color))
         {
-            throw new ProductAlreadyAddedToOrderException(productId, color);
+            var isExisting = _orderLines.Any(x => x.ProductId == productId && x.Color == color);
+
+            if (isExisting)
+            {
+                throw new ProductAlreadyAddedToOrderException(productId, color);
+            }   
         }
 
         var orderLine = new OrderLine(productId, productName, Id, unitName, color, quantity, cost);

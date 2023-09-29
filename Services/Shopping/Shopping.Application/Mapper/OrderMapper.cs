@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Shopping.Application.Dtos;
+using Shopping.Application.Dtos.Buyers;
+using Shopping.Application.Dtos.Orders;
 using Shopping.Domain.BuyerAggregate;
 using Shopping.Domain.OrderAggregate;
 

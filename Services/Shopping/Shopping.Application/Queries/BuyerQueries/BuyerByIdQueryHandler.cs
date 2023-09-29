@@ -2,6 +2,7 @@ using AutoMapper;
 using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
 using Shopping.Application.Dtos;
+using Shopping.Application.Dtos.Buyers;
 using Shopping.Domain.BuyerAggregate;
 using Shopping.Domain.BuyerAggregate.Exceptions;
 using Shopping.Domain.OrderAggregate.Exceptions;

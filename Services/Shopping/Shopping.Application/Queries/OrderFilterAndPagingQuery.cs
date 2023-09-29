@@ -1,6 +1,7 @@
 ﻿using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Application.Dtos;
 using Shopping.Application.Dtos;
+using Shopping.Application.Dtos.Orders;
 using Shopping.Domain.OrderAggregate;
 
 namespace Shopping.Application.Queries;
