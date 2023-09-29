@@ -1,6 +1,7 @@
 using BuildingBlocks.Application.IntegrationEvent;
 using MediatR;
 using Shopping.Application.Commands;
+using Shopping.Application.Commands.ProductUnits.UpdateProductUnit;
 using Shopping.Application.IntegrationEvents.Events;
 
 namespace Shopping.Application.IntegrationEvents.EventHandling;

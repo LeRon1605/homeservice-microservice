@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Shopping.Application.Commands;
-using Shopping.Application.Commands.AddProduct;
+using Shopping.Application.Commands.Products.AddProduct;
 using Shopping.Application.IntegrationEvents.Events;
 
 namespace Shopping.Application.IntegrationEvents.EventHandling;
@@ -22,7 +22,7 @@ public class ProductAddedIntegrationEventHandler : IIntegrationEventHandler<Prod
     {
         _logger.LogInformation("Handling integration event add product: {IntegrationEventId} -  ({@IntegrationEvent})", @event.ProductId, @event);
 
-        var command = new AddedProductCommand(
+        var command = new AddProductCommand(
             @event.ProductId, 
             @event.Name, 
             @event.ProductGroupId,

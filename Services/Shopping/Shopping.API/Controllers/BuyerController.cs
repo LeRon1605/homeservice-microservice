@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Shopping.Application.Commands.EditBuyer;
-using Shopping.Application.Dtos;
+using Shopping.Application.Commands.Buyers.EditBuyer;
 using Shopping.Application.Dtos.Buyers;
 using Shopping.Application.Queries.BuyerQueries;
 

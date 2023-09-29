@@ -8,5 +8,6 @@ public class ProductByIncludedIdsSpecification : Specification<Product>
     {
         AddFilter(product => ids.Contains(product.Id));
         AddInclude(x => x.Reviews);
+        AddInclude(x => x.ProductUnit);
     }
 }

@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Shopping.Application.Commands;
-using Shopping.Application.Commands.DeleteProduct;
+using Shopping.Application.Commands.Products.DeleteProduct;
 using Shopping.Application.IntegrationEvents.Events;
 
 namespace Shopping.Application.IntegrationEvents.EventHandling;
@@ -23,7 +23,7 @@ public class ProductDeletedIntegrationEventHandler : IIntegrationEventHandler<Pr
                                "{IntegrationEventId} - ({@IntegrationEvent})", 
             @event.ProductId, @event);
         
-        var command = new DeletedProductCommand(@event.ProductId);
+        var command = new DeleteProductCommand(@event.ProductId);
         _logger.LogInformation("Sending command: {commandName}", command);
         
         await _mediator.Send(command);

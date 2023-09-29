@@ -1,5 +1,3 @@
-using BuildingBlocks.Application.IntegrationEvent;
-using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Authentication;
 using BuildingBlocks.Presentation.DataSeeder;
@@ -12,8 +10,6 @@ using Newtonsoft.Json.Converters;
 using Serilog;
 using Shopping.API.Extensions;
 using Shopping.Application.Grpc.Services;
-using Shopping.Application.IntegrationEvents.EventHandling;
-using Shopping.Application.IntegrationEvents.Events;
 using Shopping.Infrastructure.EfCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,6 +46,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapGrpcService<ShoppingProductGrpcService>();
 app.MapControllers();

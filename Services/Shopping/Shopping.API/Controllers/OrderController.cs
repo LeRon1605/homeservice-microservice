@@ -1,9 +1,9 @@
 ﻿using BuildingBlocks.Application.Dtos;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Shopping.Application.Commands;
-using Shopping.Application.Commands.RejectOrder;
-using Shopping.Application.Dtos;
+using Shopping.Application.Commands.Orders.RejectOrder;
+using Shopping.Application.Commands.Orders.SubmitOrder;
 using Shopping.Application.Dtos.Orders;
 using Shopping.Application.Queries;
 
@@ -26,6 +26,14 @@ public class OrderController : ControllerBase
     {
         var orders = await _mediator.Send(new OrderFilterAndPagingQuery(orderFilterAndPagingDto));
         return Ok(orders);
+    }
+    
+    [HttpPost]
+    [Authorize(Roles = "Customer")]
+    public async Task<IActionResult> SubmitOrderAsync(OrderSubmitDto dto)
+    {
+        await _mediator.Send(new SubmitOrderCommand(dto.Items));
+        return Ok();
     }
 
    [HttpPost("reject-order")]

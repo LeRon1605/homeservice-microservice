@@ -3,7 +3,7 @@ using BuildingBlocks.Domain.Models;
 
 namespace Shopping.Domain.OrderAggregate;
 
-public record OrderLine : ValueObject
+public class OrderLine : Entity
 {
     public Guid OrderId { get; private set; }
     

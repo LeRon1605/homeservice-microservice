@@ -11,10 +11,10 @@ public abstract class Entity : IEntity
     private List<IDomainEvent> _domainEvents = null!;
     public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
 
-    public Entity()
-    {
-        Id = Guid.NewGuid();
-    }
+    // public Entity()
+    // {
+    //     Id = Guid.NewGuid();
+    // }
     
     public void AddDomainEvent(IDomainEvent eventItem)
     {
