@@ -1,5 +1,6 @@
 ﻿using IAC.Application.Dtos.Authentication;
 using IAC.Application.Services.Interfaces;
+using IAC.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IAC.API.Controllers;
@@ -19,20 +20,27 @@ public class AuthenticateController : ControllerBase
 		_tokenService = tokenService;
 	}
 
-	[HttpPost("sign-up")]
+	[HttpPost("customer/sign-up")]
 	public async Task<IActionResult> SignUpAsync([FromBody] SignUpDto signUpDto)
 	{
 		await _authenticateService.SignUpAsync(signUpDto);
 		return Ok();
 	}
         
-	[HttpPost("log-in")]
-	public async Task<IActionResult> Login([FromBody] LoginDto logInDto)
+	[HttpPost("backoffice/log-in")]
+	public async Task<IActionResult> BackofficeLogin([FromBody] LoginDto logInDto)
 	{
-		var result = await _authenticateService.LoginAsync(logInDto);
+		var result = await _authenticateService.LoginAsync(logInDto, LoginPortal.BackOffice);
 		return Ok(result);
 	}
-        
+	
+	[HttpPost("customer/log-in")]
+	public async Task<IActionResult> CustomerLogin([FromBody] LoginDto logInDto)
+	{
+		var result = await _authenticateService.LoginAsync(logInDto, LoginPortal.Customer);
+		return Ok(result);
+	}
+	
 	[HttpPost("refresh-token")]
 	public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
 	{

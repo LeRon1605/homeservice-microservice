@@ -7,6 +7,7 @@ using IAC.Application.IntegrationEvents.Events;
 using IAC.Application.Services.Interfaces;
 using IAC.Domain.Constants;
 using IAC.Domain.Entities;
+using IAC.Domain.Enums;
 using IAC.Domain.Exceptions.Authentication;
 using IAC.Domain.Exceptions.Roles;
 using IAC.Domain.Exceptions.Users;
@@ -109,12 +110,15 @@ public class AuthenticateService : IAuthenticateService
         return tokenDto;
     }
     
-    public async Task<TokenDto> LoginAsync(LoginDto logInDto)
+    public async Task<TokenDto> LoginAsync(LoginDto logInDto, LoginPortal loginPortal)
     {
         var user = await _userRepository.GetByPhoneNumberAsync(logInDto.Identifier) 
                    ?? await _userRepository.GetByEmailAsync(logInDto.Identifier);
         
         if (user == null)
+            throw new UserNotFoundException(logInDto.Identifier);
+
+        if (!await CanUserAccessPortal(user, loginPortal))
             throw new UserNotFoundException(logInDto.Identifier);
         
         var isValid = await _userManager.CheckPasswordAsync(user, logInDto.Password);
@@ -134,4 +138,16 @@ public class AuthenticateService : IAuthenticateService
         
         return tokenDto;
     } 
+    
+    private async Task<bool> CanUserAccessPortal(ApplicationUser user, LoginPortal loginPortal)
+    {
+        var roleName = (await _userManager.GetRolesAsync(user)).First();
+        return loginPortal switch
+        {
+            LoginPortal.BackOffice => roleName == AppRole.Admin || roleName == AppRole.SalePerson,
+            LoginPortal.Installation => roleName == AppRole.Installer,
+            LoginPortal.Customer => roleName == AppRole.Customer,
+            _ => false
+        };
+    }
 }
