@@ -12,6 +12,9 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
     {
         builder.HasKey(x => x.Id);
 
+        builder.Property(x => x.OrderNo)
+               .ValueGeneratedOnAdd();
+
         builder.OwnsOne(x => x.ContactInfo)
                .Property(x => x.ContactName)
                .IsRequired(true)

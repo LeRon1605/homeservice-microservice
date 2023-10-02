@@ -18,21 +18,18 @@ public class SubmitOrderCommandHandler : ICommandHandler<SubmitOrderCommand>
     private readonly IRepository<Buyer> _buyerRepository;
     private readonly IRepository<Order> _orderRepository;
     private readonly IRepository<Product> _productRepository;
-    private readonly IRepository<ProductUnit> _productUnitRepository;
     private readonly IUnitOfWork _unitOfWork;
     
     public SubmitOrderCommandHandler(
         IRepository<Order> orderRepository,
         IRepository<Buyer> buyerRepository,
         IRepository<Product> productRepository,
-        IRepository<ProductUnit> productUnitRepository,
         ICurrentUser currentUser, 
         IUnitOfWork unitOfWork)
     {
         _orderRepository = orderRepository;
         _buyerRepository = buyerRepository;
         _productRepository = productRepository;
-        _productUnitRepository = productUnitRepository;
         _currentUser = currentUser;
         _unitOfWork = unitOfWork;
     }
@@ -57,9 +54,7 @@ public class SubmitOrderCommandHandler : ICommandHandler<SubmitOrderCommand>
         var products = await _productRepository.FindListAsync(new ProductByIncludedIdsSpecification(productIds));
 
         var order = new Order(
-            Guid.NewGuid().ToString(), 
             buyer.Id, 
-            buyer.FullName, 
             buyer.FullName, 
             buyer.Email, 
             buyer.Phone, 

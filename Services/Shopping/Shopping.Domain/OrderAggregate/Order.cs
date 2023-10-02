@@ -1,14 +1,11 @@
-﻿using Ardalis.GuardClauses;
-using BuildingBlocks.Domain.Data;
-using BuildingBlocks.Domain.Models;
+﻿using BuildingBlocks.Domain.Models;
 using Shopping.Domain.OrderAggregate.Exceptions;
-using Shopping.Domain.ProductAggregate;
 
 namespace Shopping.Domain.OrderAggregate;
 
 public class Order : AggregateRoot
 {
-    public string OrderNo { get; private set; }
+    public int OrderNo { get; private set; }
     public Guid BuyerId { get; private set; }
     public OrderContactInfo ContactInfo { get; private set; }
     public DateTime PlacedDate { get; private set; }
@@ -18,9 +15,7 @@ public class Order : AggregateRoot
     public IReadOnlyCollection<OrderLine> OrderLines => _orderLines;
 
     public Order(
-        string orderNo,
         Guid buyerId,
-        string customerName, 
         string contactName, 
         string? email, 
         string phone, 
@@ -30,8 +25,7 @@ public class Order : AggregateRoot
         string? postalCode)
     {
         BuyerId = buyerId;
-        OrderNo = Guard.Against.NullOrWhiteSpace(orderNo, nameof(OrderNo));
-        ContactInfo = new OrderContactInfo(customerName, contactName, email, phone, address, city, state, postalCode);
+        ContactInfo = new OrderContactInfo("Retail customer", contactName, email, phone, address, city, state, postalCode);
         PlacedDate = DateTime.UtcNow;
         Status = OrderStatus.Pending;
 

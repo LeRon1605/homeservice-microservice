@@ -12,8 +12,8 @@ using Shopping.Infrastructure.EfCore;
 namespace Shopping.Infrastructure.EfCore.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    [Migration("20231002022439_InitShoppingDb")]
-    partial class InitShoppingDb
+    [Migration("20231002081513_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,9 +57,11 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                     b.Property<Guid>("BuyerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("OrderNo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("OrderNo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderNo"));
 
                     b.Property<DateTime>("PlacedDate")
                         .HasColumnType("datetime2");

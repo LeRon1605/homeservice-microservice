@@ -45,16 +45,14 @@ public class OrderDataSeeder : IDataSeeder
             {
            
                 var order = new Order(
-                    $"ORDER-{i}",
                     buyer.Id,
-                    faker.Name.FullName(),
-                    faker.Name.FullName(),
-                    faker.Internet.Email(),
-                    faker.Phone.PhoneNumber(),
-                    faker.Address.StreetAddress(),
-                    faker.Address.City(),
-                    faker.Address.StateAbbr(),
-                    faker.Address.ZipCode()
+                    buyer.FullName,
+                    buyer.Email,
+                    buyer.Phone,
+                    buyer.Address.FullAddress,
+                    buyer.Address.City,
+                    buyer.Address.State,
+                    buyer.Address.PostalCode
                 );
                 var products = (await _productRepository.GetAllAsync()).ToList();
                 
@@ -82,10 +80,10 @@ public class OrderDataSeeder : IDataSeeder
             order.AddOrderLine(
                 product.Id,
                 product.Name,
-                product.ProductUnit.Name,
+                product.ProductUnit?.Name,
                 faker.Random.String(6),
                 faker.Random.Int(10),
-                faker.Random.Decimal(0,1000)
+                product.Price
             );
         }
     }
