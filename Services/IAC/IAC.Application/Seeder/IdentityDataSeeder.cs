@@ -75,7 +75,7 @@ public class IdentityDataSeeder : IDataSeeder
         await _userManager.CreateAsync(user, "User@123");
         await _userManager.AddToRoleAsync(user, AppRole.Customer);
 
-        await Task.Delay(15);
+        await Task.Delay(TimeSpan.FromSeconds(60));
         _eventBus.Publish(new UserSignedUpIntegrationEvent(Guid.Parse(user.Id), user.FullName, user.Email, user.PhoneNumber));
     }
 

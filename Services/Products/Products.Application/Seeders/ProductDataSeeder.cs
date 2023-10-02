@@ -41,7 +41,7 @@ public class ProductDataSeeder : IDataSeeder
             return;
         }
 
-        await Task.Delay(TimeSpan.FromSeconds(15));
+        await Task.Delay(TimeSpan.FromSeconds(60));
         
         var productUnits = SeedProductUnits();
         var productTypes = SeedProductTypes();
