@@ -11,7 +11,16 @@ public class OrderMapper : Profile
 {
     public OrderMapper()
     {
-        CreateMap<Order, OrderDto>();
+        CreateMap<Order, OrderDto>()
+            .ForMember(dest => dest.ContactName, opt => opt.MapFrom(src => src.ContactInfo.ContactName))
+            .ForMember(dest => dest.OrderNo, opt => opt.MapFrom(src => src.OrderNo))
+            .ForMember(dest => dest.ContactName, opt => opt.MapFrom(src => src.ContactInfo.ContactName))
+            .ForMember(dest => dest.BuyerId, opt => opt.MapFrom(src => src.BuyerId))
+            .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.ContactInfo.Phone))
+            .ForMember(dest => dest.EmailAddress, opt => opt.MapFrom(src => src.ContactInfo.Email))
+            .ForMember(dest => dest.OrderValue, opt => opt.MapFrom(src => src.OrderLines.Sum(x=>x.Quantity * x.Cost)))
+            .ForMember(dest => dest.PlacedDate, opt => opt.MapFrom(src => src.PlacedDate))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
         
         CreateMap<Buyer, BuyerDto>()
             .ForMember(dest => dest.Address, options => options.MapFrom(src => src.Address.FullAddress))

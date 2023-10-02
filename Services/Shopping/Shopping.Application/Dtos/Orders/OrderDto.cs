@@ -13,5 +13,4 @@ public class OrderDto
     public decimal OrderValue { get; set; }
     public DateTime PlacedDate { get; set; }
     public OrderStatus Status { get; set; }
-
 }

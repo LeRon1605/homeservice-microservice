@@ -10,10 +10,12 @@ public class OrderFilterAndPagingSpecification : Specification<Order>
         int pageSize,
         List<OrderStatus>? status)
     {
+        AddInclude(x=>x.OrderLines);
         if (!string.IsNullOrWhiteSpace(search))
         {
-            AddSearchTerm(search);
-            AddSearchField(nameof(Order.ContactInfo.ContactName));
+            AddSearchTerm(search.ToLower().Trim());
+            AddSearchField("ContactInfo.ContactName");
+            //AddFilter(o => o.ContactInfo.ContactName.ToLower().Contains(search.ToLower()));
         }
     
         if (status != null)
