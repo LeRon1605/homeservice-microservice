@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Shopping.Infrastructure.EfCore.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitShoppingDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -95,18 +95,18 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                 name: "OrderLine",
                 columns: table => new
                 {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UnitName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Color = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Color = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    Cost = table.Column<decimal>(type: "decimal(20,2)", precision: 20, scale: 2, nullable: false),
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Cost = table.Column<decimal>(type: "decimal(20,2)", precision: 20, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderLine", x => new { x.ProductId, x.OrderId });
+                    table.PrimaryKey("PK_OrderLine", x => x.Id);
                     table.ForeignKey(
                         name: "FK_OrderLine_Order_OrderId",
                         column: x => x.OrderId,
@@ -150,6 +150,11 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                 name: "IX_OrderLine_OrderId",
                 table: "OrderLine",
                 column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderLine_ProductId",
+                table: "OrderLine",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Product_ProductUnitId",

@@ -30,6 +30,7 @@ public class ProductReviewDataSeeder : IDataSeeder
     {
         if (!await _productReviewRepository.AnyAsync())
         {
+            await Task.Delay(TimeSpan.FromSeconds(60));
             var specification = new ProductFilterSpecification(string.Empty, 1, 10);
             var products = await _productRepository.FindListAsync(specification);
 

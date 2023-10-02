@@ -51,7 +51,7 @@ public class SubmitOrderCommandHandler : ICommandHandler<SubmitOrderCommand>
         await _unitOfWork.SaveChangesAsync();
     }
 
-    private async Task<Order> CreateOrderAsync(Buyer buyer, IEnumerable<OrderLineDto> items)
+    private async Task<Order> CreateOrderAsync(Buyer buyer, IEnumerable<SubmitOrderLineDto> items)
     {
         var productIds = items.Select(x => x.ProductId).ToArray();
         var products = await _productRepository.FindListAsync(new ProductByIncludedIdsSpecification(productIds));

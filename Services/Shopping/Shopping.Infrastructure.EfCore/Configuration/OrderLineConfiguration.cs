@@ -5,19 +5,19 @@ using Shopping.Domain.ProductAggregate;
 
 namespace Shopping.Infrastructure.EfCore.Configuration;
 
-public class OrderLineConfiguration: IEntityTypeConfiguration<OrderLine>
+public class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
 {
     public void Configure(EntityTypeBuilder<OrderLine> builder)
     {
-        builder.HasKey(x => new { x.ProductId, x.OrderId });
+        builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Color)
-            .IsRequired();
+            .IsRequired(false);
 
         builder.Property(x => x.Quantity)
             .IsRequired();
-        
-        builder.Property(x=> x.Cost)
+
+        builder.Property(x => x.Cost)
             .HasPrecision(20, 2)
             .IsRequired();
 

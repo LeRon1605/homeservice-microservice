@@ -73,21 +73,21 @@ namespace Shopping.Infrastructure.EfCore.Migrations
 
             modelBuilder.Entity("Shopping.Domain.OrderAggregate.OrderLine", b =>
                 {
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("OrderId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Color")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Cost")
                         .HasPrecision(20, 2)
                         .HasColumnType("decimal(20,2)");
 
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ProductName")
@@ -100,9 +100,11 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                     b.Property<string>("UnitName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ProductId", "OrderId");
+                    b.HasKey("Id");
 
                     b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("OrderLine");
                 });

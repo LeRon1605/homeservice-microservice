@@ -42,4 +42,11 @@ public class OrderController : ControllerBase
         var order = await _mediator.Send(new OrderRejectCommand(orderRejectDto));
         return Ok(order);
     }
+
+    [HttpGet("{id:guid}/detail")]
+    public async Task<IActionResult> GetOrderDetails(Guid id)
+    {
+        var orderDetails = await _mediator.Send(new OrderDetailQuery(id));
+        return Ok(orderDetails);
+    }
 }

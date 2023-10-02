@@ -5,9 +5,9 @@ namespace Shopping.Application.Commands.Orders.SubmitOrder;
 
 public class SubmitOrderCommand : ICommand
 {
-    public IEnumerable<OrderLineDto> Items { get; set; }
+    public IEnumerable<SubmitOrderLineDto> Items { get; set; }
     
-    public SubmitOrderCommand(IEnumerable<OrderLineDto> items)
+    public SubmitOrderCommand(IEnumerable<SubmitOrderLineDto> items)
     {
         Items = items;
     }

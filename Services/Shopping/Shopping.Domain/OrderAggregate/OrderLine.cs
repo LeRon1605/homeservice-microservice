@@ -6,10 +6,8 @@ namespace Shopping.Domain.OrderAggregate;
 public class OrderLine : Entity
 {
     public Guid OrderId { get; private set; }
-    
     public Guid ProductId { get; private set; }
     public string ProductName { get; private set; }
-    
     public string? UnitName { get; private set; }
     public string? Color { get; private set; }
     public int Quantity { get; private set; }
