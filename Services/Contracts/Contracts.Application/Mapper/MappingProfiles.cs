@@ -1,5 +1,7 @@
 using AutoMapper;
+using Contracts.Application.Dtos.Contracts;
 using Contracts.Application.Dtos.Customers;
+using Contracts.Domain.ContractAggregate;
 using Contracts.Domain.CustomerAggregate;
 
 namespace Contracts.Application.Mapper;
@@ -13,5 +15,10 @@ public class MappingProfiles : Profile
             .ForMember(dest => dest.City, options => options.MapFrom(src => src.Address.City))
             .ForMember(dest => dest.State, options => options.MapFrom(src => src.Address.State))
             .ForMember(dest => dest.PostalCode, options => options.MapFrom(src => src.Address.PostalCode));
+
+        CreateMap<InstallationAddress, InstallationAddressDto>();
+
+        CreateMap<Contract, ContractDetailDto>();
+        CreateMap<ContractLine, ContractLineDto>();
     } 
 }

@@ -25,9 +25,10 @@ public class ContractController : ControllerBase
     }
     
     [HttpPost]
+    [ProducesResponseType(typeof(ContractDetailDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> CreateContracts(ContractCreateDto dto)
     {
-        await _mediator.Send(new AddContractCommand(dto));
-        return Ok();
+        var contract = await _mediator.Send(new AddContractCommand(dto));
+        return Ok(contract);
     }
 }

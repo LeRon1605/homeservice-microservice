@@ -1,5 +1,7 @@
-﻿using BuildingBlocks.Application.CQRS;
+﻿using AutoMapper;
+using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
+using Contracts.Application.Dtos.Contracts;
 using Contracts.Domain.ContractAggregate;
 using Contracts.Domain.CustomerAggregate;
 using Contracts.Domain.CustomerAggregate.Exceptions;
@@ -13,7 +15,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Contracts.Application.Commands.Contracts.AddContract;
 
-public class AddContractCommandHandler : ICommandHandler<AddContractCommand>
+public class AddContractCommandHandler : ICommandHandler<AddContractCommand, ContractDetailDto>
 {
     private readonly IRepository<Contract> _contractRepository;
     private readonly IReadOnlyRepository<Product> _productRepository;
@@ -21,6 +23,7 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand>
     private readonly IRepository<Customer> _customerRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<AddContractCommandHandler> _logger;
+    private readonly IMapper _mapper;
     
     public AddContractCommandHandler(
         IRepository<Contract> contractRepository,
@@ -28,7 +31,8 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand>
         IReadOnlyRepository<ProductUnit> productUnitRepository,
         IRepository<Customer> customerRepository,
         IUnitOfWork unitOfWork,
-        ILogger<AddContractCommandHandler> logger)
+        ILogger<AddContractCommandHandler> logger,
+        IMapper mapper)
     {
         _contractRepository = contractRepository;
         _productRepository = productRepository;
@@ -36,9 +40,10 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand>
         _customerRepository = customerRepository;
         _unitOfWork = unitOfWork;
         _logger = logger;
+        _mapper = mapper;
     }
     
-    public async Task Handle(AddContractCommand request, CancellationToken cancellationToken)
+    public async Task<ContractDetailDto> Handle(AddContractCommand request, CancellationToken cancellationToken)
     {
         // Todo: Validate employee exist
         await CheckCustomerExistAsync(request.CustomerId);
@@ -49,6 +54,8 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand>
         await _unitOfWork.SaveChangesAsync();
         
         _logger.LogInformation("Contract added {ContractId}", contract.Id);
+
+        return _mapper.Map<ContractDetailDto>(contract);
     }
 
     private async Task CheckCustomerExistAsync(Guid customerId)

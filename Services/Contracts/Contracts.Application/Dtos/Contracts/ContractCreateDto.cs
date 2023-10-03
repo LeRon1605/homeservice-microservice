@@ -20,7 +20,7 @@ public class ContractCreateDto
     
     public DateTime? EstimatedInstallationDate { get; set; }
     public DateTime? ActualInstallationDate { get; set; }
-    public InstallationAddessDto InstallationAddress { get; set; } = null!;
+    public InstallationAddressDto InstallationAddress { get; set; } = null!;
     
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ContractStatus Status { get; set; }

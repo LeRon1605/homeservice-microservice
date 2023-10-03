@@ -1,6 +1,6 @@
 ﻿namespace Contracts.Application.Dtos.Contracts;
 
-public class InstallationAddessDto
+public class InstallationAddressDto
 {
     public string? FullAddress { get; set; }
     public string? City { get; set; }

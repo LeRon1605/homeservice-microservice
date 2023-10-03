@@ -3,7 +3,7 @@ using Contracts.Application.Dtos.Contracts;
 
 namespace Contracts.Application.Commands.Contracts.AddContract;
 
-public class AddContractCommand : ContractCreateDto, ICommand
+public class AddContractCommand : ContractCreateDto, ICommand<ContractDetailDto>
 {
     public AddContractCommand(ContractCreateDto dto)
     {
