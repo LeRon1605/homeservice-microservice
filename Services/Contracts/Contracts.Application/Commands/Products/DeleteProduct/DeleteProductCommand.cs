@@ -1,6 +1,6 @@
 ﻿using BuildingBlocks.Application.CQRS;
 
-namespace Shopping.Application.Commands.Products.DeleteProduct;
+namespace Contracts.Application.Commands.Products.DeleteProduct;
 
 public class DeleteProductCommand : ICommand
 {

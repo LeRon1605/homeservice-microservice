@@ -26,7 +26,8 @@ builder.Services
     .AddCqrs()
     .AddMapper()
     .AddIntegrationEventHandlers()
-    .AddRedisDistributedCache(builder.Configuration);
+    .AddRedisDistributedCache(builder.Configuration)
+    .AddValidators();
 
 builder.Services.AddControllers();
 

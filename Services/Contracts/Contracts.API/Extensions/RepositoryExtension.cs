@@ -12,7 +12,6 @@ public static class RepositoryExtension
     {
         services.AddScoped<IUnitOfWork, EfCoreUnitOfWork<ContractDbContext>>();
         services.AddScoped<IContractRepository, ContractRepository>();
-        
         return services;
     }
 }

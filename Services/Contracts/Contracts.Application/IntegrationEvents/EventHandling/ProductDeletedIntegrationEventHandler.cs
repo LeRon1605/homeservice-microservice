@@ -1,8 +1,8 @@
 ﻿using BuildingBlocks.Application.IntegrationEvent;
+using Contracts.Application.Commands.Products.DeleteProduct;
 using Contracts.Application.IntegrationEvents.Events;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Shopping.Application.Commands.Products.DeleteProduct;
 
 namespace Contracts.Application.IntegrationEvents.EventHandling;
 

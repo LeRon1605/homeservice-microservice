@@ -2,7 +2,6 @@
 using BuildingBlocks.Domain.Data;
 using Contracts.Domain.ProductAggregate;
 using Contracts.Domain.ProductUnitAggregate.Exceptions;
-using Shopping.Application.Commands.Products.DeleteProduct;
 
 namespace Contracts.Application.Commands.Products.DeleteProduct;
 
