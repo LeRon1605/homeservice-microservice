@@ -1,3 +1,5 @@
+using Contracts.Application.Commands.Contracts.AddContract;
+using Contracts.Application.Dtos.Contracts;
 using Contracts.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -20,5 +22,12 @@ public class ContractController : ControllerBase
     {
         var result = await _mediator.Send(new GetContractByIdQuery(id));
         return Ok(result);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> CreateContracts(ContractCreateDto dto)
+    {
+        await _mediator.Send(new AddContractCommand(dto));
+        return Ok();
     }
 }

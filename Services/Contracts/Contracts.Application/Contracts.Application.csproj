@@ -13,8 +13,24 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Application\BuildingBlocks.Application.csproj" />
+
+
+
+
+
+
       <ProjectReference Include="..\Contracts.Domain\Contracts.Domain.csproj" />
+
+
+
+
+
+
+
+
     </ItemGroup>
+
+
 
 
 

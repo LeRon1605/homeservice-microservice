@@ -1,0 +1,31 @@
+﻿using BuildingBlocks.Domain.Models;
+
+namespace Contracts.Domain.PendingOrdersAggregate;
+
+public class PendingOrder : AggregateRoot
+{
+    public Guid BuyerId { get; private set; }
+    public OrderContactInfo ContactInfo { get; private set; }
+
+    public PendingOrder(
+        Guid id,
+        Guid buyerId,
+        string customerName,
+        string contactName, 
+        string? email, 
+        string phone, 
+        string? address, 
+        string? city, 
+        string? state, 
+        string? postalCode)
+    {
+        Id = id;
+        BuyerId = buyerId;
+        ContactInfo = new OrderContactInfo(customerName, contactName, email, phone, address, city, state, postalCode);
+    }
+
+    private PendingOrder()
+    {
+        
+    }
+}

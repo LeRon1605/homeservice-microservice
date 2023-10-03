@@ -5,6 +5,7 @@ using BuildingBlocks.EventBus.Interfaces;
 using Microsoft.Extensions.Logging;
 using Shopping.Application.Dtos.Buyers;
 using Shopping.Application.IntegrationEvents.Events;
+using Shopping.Application.IntegrationEvents.Events.Buyers;
 using Shopping.Domain.BuyerAggregate;
 using Shopping.Domain.BuyerAggregate.Exceptions;
 

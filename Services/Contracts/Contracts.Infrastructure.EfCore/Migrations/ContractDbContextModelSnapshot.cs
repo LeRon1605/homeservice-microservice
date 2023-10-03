@@ -156,6 +156,20 @@ namespace Contracts.Infrastructure.EfCore.Migrations
                     b.ToTable("Customer");
                 });
 
+            modelBuilder.Entity("Contracts.Domain.PendingOrdersAggregate.PendingOrder", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BuyerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PendingOrder");
+                });
+
             modelBuilder.Entity("Contracts.Domain.ProductAggregate.Product", b =>
                 {
                     b.Property<Guid>("Id")
@@ -290,6 +304,60 @@ namespace Contracts.Infrastructure.EfCore.Migrations
                         });
 
                     b.Navigation("Address")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Contracts.Domain.PendingOrdersAggregate.PendingOrder", b =>
+                {
+                    b.OwnsOne("Contracts.Domain.PendingOrdersAggregate.OrderContactInfo", "ContactInfo", b1 =>
+                        {
+                            b1.Property<Guid>("PendingOrderId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Address")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Address");
+
+                            b1.Property<string>("City")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("City");
+
+                            b1.Property<string>("ContactName")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("ContactName");
+
+                            b1.Property<string>("CustomerName")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("CustomerName");
+
+                            b1.Property<string>("Email")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Email");
+
+                            b1.Property<string>("Phone")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Phone");
+
+                            b1.Property<string>("PostalCode")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("PostalCode");
+
+                            b1.Property<string>("State")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("State");
+
+                            b1.HasKey("PendingOrderId");
+
+                            b1.ToTable("PendingOrder");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PendingOrderId");
+                        });
+
+                    b.Navigation("ContactInfo")
                         .IsRequired();
                 });
 

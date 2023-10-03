@@ -1,5 +1,6 @@
 using Contracts.Domain.ContractAggregate;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Contracts.Infrastructure.EfCore.Configuration;
@@ -11,7 +12,8 @@ public class ContractConfiguration : IEntityTypeConfiguration<Contract>
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.No)
-            .ValueGeneratedOnAdd();
+            .ValueGeneratedOnAdd()
+            .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
         builder.Property(x => x.Balance)
             .HasPrecision(20, 2)

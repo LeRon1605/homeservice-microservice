@@ -9,6 +9,7 @@ using BuildingBlocks.Presentation.Redis;
 using BuildingBlocks.Presentation.Swagger;
 using Contracts.API.Extensions;
 using Contracts.Infrastructure.EfCore;
+using Newtonsoft.Json.Converters;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,7 +30,10 @@ builder.Services
     .AddRedisDistributedCache(builder.Configuration)
     .AddValidators();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new StringEnumConverter()));
+
+builder.Services.AddSwaggerGenNewtonsoftSupport();
 
 builder.Host.UseSerilog();
 

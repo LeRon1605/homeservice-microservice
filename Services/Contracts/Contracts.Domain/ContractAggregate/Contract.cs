@@ -1,5 +1,6 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Domain.Models;
+using Contracts.Domain.ContractAggregate.Exceptions;
 using Contracts.Domain.CustomerAggregate;
 
 namespace Contracts.Domain.ContractAggregate;
@@ -48,12 +49,12 @@ public class Contract : AggregateRoot
         string? fullInstallationAddress,
         string? installationCity,
         string? installationState,
-        string? installationPostalCode
-        )
+        string? installationPostalCode,
+        ContractStatus status)
     {
         Balance = 0;
         CustomerId = Guard.Against.Null(customerId, nameof(CustomerId));
-        CustomerNote = Guard.Against.NullOrWhiteSpace(customerNote, nameof(CustomerNote));
+        CustomerNote = customerNote;
         SalePersonId = Guard.Against.Null(salePersonId, nameof(SalePersonId));
         SupervisorId = supervisorId;
         CustomerServiceRepId = customerServiceRepId;
@@ -65,9 +66,38 @@ public class Contract : AggregateRoot
         InstallationAddress = new InstallationAddress(fullInstallationAddress, installationCity, installationState, installationPostalCode);
         QuotedAt = DateTime.UtcNow;
         SoldAt = null;
-        Status = ContractStatus.Quotation;
+        Status = status;
 
         Items = new List<ContractLine>();
+    }
+    
+    public void AddContractLine(
+        Guid productId, 
+        string productName,
+        Guid unitId,
+        string unitName,
+        string? color, 
+        int quantity,
+        decimal cost,
+        decimal sellPrice)
+    {
+        if (Items.Any(x => x.ProductId == productId && x.UnitId == unitId && (string.IsNullOrWhiteSpace(color) || x.Color == color)))
+        {
+            throw new ContractLineExistedException(productId, unitId, color);
+        }
+        
+        var contractLine = new ContractLine(
+            productId, 
+            productName, 
+            Id, 
+            unitId, 
+            unitName,
+            color, 
+            quantity, 
+            cost, 
+            sellPrice);
+        
+        Items.Add(contractLine);
     }
 
     private Contract()

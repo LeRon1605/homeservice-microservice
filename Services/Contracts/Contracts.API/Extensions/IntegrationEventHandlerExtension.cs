@@ -1,6 +1,12 @@
 using BuildingBlocks.Application.IntegrationEvent;
 using Contracts.Application.IntegrationEvents.EventHandling;
+using Contracts.Application.IntegrationEvents.EventHandling.Orders;
+using Contracts.Application.IntegrationEvents.EventHandling.Products;
+using Contracts.Application.IntegrationEvents.EventHandling.ProductUnits;
 using Contracts.Application.IntegrationEvents.Events;
+using Contracts.Application.IntegrationEvents.Events.Orders;
+using Contracts.Application.IntegrationEvents.Events.Products;
+using Contracts.Application.IntegrationEvents.Events.ProductUnits;
 
 namespace Contracts.API.Extensions;
 
@@ -16,6 +22,7 @@ public static class IntegrationEventHandlerExtension
         services.AddScoped<IIntegrationEventHandler<ProductUnitUpdatedIntegrationEvent>, ProductUnitUpdatedIntegrationEventHandler>();
         services.AddScoped<IIntegrationEventHandler<ProductUnitDeletedIntegrationEvent>, ProductUnitDeletedIntegrationEventHandler>();
 
+        services.AddScoped<IIntegrationEventHandler<OrderAddedIntegrationEvent>, OrderAddedIntegrationEventHandler>();
         return services;
     }
 }

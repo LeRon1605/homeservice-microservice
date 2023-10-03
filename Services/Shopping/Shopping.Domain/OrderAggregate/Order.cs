@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.Domain.Models;
+using Shopping.Domain.OrderAggregate.Events;
 using Shopping.Domain.OrderAggregate.Exceptions;
 
 namespace Shopping.Domain.OrderAggregate;
@@ -30,6 +31,8 @@ public class Order : AggregateRoot
         Status = OrderStatus.Pending;
 
         _orderLines = new List<OrderLine>();
+        
+        AddDomainEvent(new OrderAddedDomainEvent(this));
     }
 
     public void Reject()

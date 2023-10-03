@@ -1,4 +1,3 @@
-﻿
 namespace Shopping.Domain.OrderAggregate;
 
 public static class ErrorCodes
