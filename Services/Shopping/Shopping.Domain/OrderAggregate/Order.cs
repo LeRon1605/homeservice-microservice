@@ -45,6 +45,16 @@ public class Order : AggregateRoot
         Status = OrderStatus.Rejected;
     }
 
+    public void Finish()
+    {
+        if (IsProcessedOrder())
+        {
+            throw new OrderProcessedException(Id);
+        }
+
+        Status = OrderStatus.Finished;
+    }
+
     private bool IsProcessedOrder()
     {
         return Status is OrderStatus.Finished or OrderStatus.Rejected;

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shopping.Domain.BuyerAggregate;
 using Shopping.Domain.Constants;
@@ -13,7 +14,8 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.OrderNo)
-               .ValueGeneratedOnAdd();
+               .ValueGeneratedOnAdd()
+               .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);;
 
         builder.OwnsOne(x => x.ContactInfo)
                .Property(x => x.ContactName)

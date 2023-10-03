@@ -1,6 +1,7 @@
 using BuildingBlocks.Application.IntegrationEvent;
 using BuildingBlocks.EventBus.Interfaces;
 using Shopping.Application.IntegrationEvents.Events;
+using Shopping.Application.IntegrationEvents.Events.Orders;
 using Shopping.Application.IntegrationEvents.Events.Products;
 using Shopping.Application.IntegrationEvents.Events.ProductUnits;
 using Shopping.Application.IntegrationEvents.Events.Users;
@@ -22,5 +23,6 @@ public static class EventBusExtension
         eventBus.Subscribe<ProductUnitDeletedIntegrationEvent, IIntegrationEventHandler<ProductUnitDeletedIntegrationEvent>>();
         
         eventBus.Subscribe<UserSignedUpIntegrationEvent, IIntegrationEventHandler<UserSignedUpIntegrationEvent>>();
+        eventBus.Subscribe<OrderFinishedIntegrationEvent, IIntegrationEventHandler<OrderFinishedIntegrationEvent>>();
     }
 }

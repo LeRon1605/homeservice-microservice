@@ -1,9 +1,11 @@
 using BuildingBlocks.Application.IntegrationEvent;
 using Shopping.Application.IntegrationEvents.EventHandling;
+using Shopping.Application.IntegrationEvents.EventHandling.Orders;
 using Shopping.Application.IntegrationEvents.EventHandling.Products;
 using Shopping.Application.IntegrationEvents.EventHandling.ProductUnits;
 using Shopping.Application.IntegrationEvents.EventHandling.Users;
 using Shopping.Application.IntegrationEvents.Events;
+using Shopping.Application.IntegrationEvents.Events.Orders;
 using Shopping.Application.IntegrationEvents.Events.Products;
 using Shopping.Application.IntegrationEvents.Events.ProductUnits;
 using Shopping.Application.IntegrationEvents.Events.Users;
@@ -24,6 +26,7 @@ public static class IntegrationEventHandlerExtension
         
         services.AddScoped<IIntegrationEventHandler<UserSignedUpIntegrationEvent>, UserSignedUpIntegrationEventHandler>();
 
+        services.AddScoped<IIntegrationEventHandler<OrderFinishedIntegrationEvent>, OrderFinishedIntegrationEventHandler>();
         return services;
     }
 }

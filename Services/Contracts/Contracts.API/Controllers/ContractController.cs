@@ -1,4 +1,5 @@
 using Contracts.Application.Commands.Contracts.AddContract;
+using Contracts.Application.Commands.Contracts.ConvertContractFromOrder;
 using Contracts.Application.Dtos.Contracts;
 using Contracts.Application.Queries;
 using MediatR;
@@ -26,7 +27,7 @@ public class ContractController : ControllerBase
     
     [HttpPost]
     [ProducesResponseType(typeof(ContractDetailDto), StatusCodes.Status200OK)]
-    public async Task<IActionResult> CreateContracts(ContractCreateDto dto)
+    public async Task<IActionResult> CreateContract(ContractCreateDto dto)
     {
         var contract = await _mediator.Send(new AddContractCommand(dto));
         return Ok(contract);

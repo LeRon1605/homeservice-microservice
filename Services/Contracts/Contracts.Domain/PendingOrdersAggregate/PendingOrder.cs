@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.Domain.Models;
+using Contracts.Domain.PendingOrdersAggregate.Events;
 
 namespace Contracts.Domain.PendingOrdersAggregate;
 
@@ -22,6 +23,11 @@ public class PendingOrder : AggregateRoot
         Id = id;
         BuyerId = buyerId;
         ContactInfo = new OrderContactInfo(customerName, contactName, email, phone, address, city, state, postalCode);
+    }
+
+    public void Finish()
+    {
+        AddDomainEvent(new OrderFinishedDomainEvent(this));
     }
 
     private PendingOrder()
