@@ -21,11 +21,13 @@ public class ProductUpdatedDomainEventHandler : IDomainEventHandler<ProductUpdat
     public Task Handle(ProductUpdatedDomainEvent domainEvent, CancellationToken cancellationToken)
     {
         var productUpdatedIntegrationEvent = new ProductUpdatedIntegrationEvent(
-                                                domainEvent.Product.Id,
-                                                domainEvent.Product.Name,
-                                                domainEvent.Product.ProductGroupId,
-                                                domainEvent.Product.SellUnitId,
-                                                domainEvent.Product.SellPrice);
+            domainEvent.Product.Id,
+            domainEvent.Product.Name,
+            domainEvent.Product.ProductGroupId,
+            domainEvent.Product.SellUnitId,
+            domainEvent.Product.SellPrice,
+            domainEvent.Product.Colors);
+        
         _eventBus.Publish(productUpdatedIntegrationEvent);
         _logger.LogInformation("Published update product event with ProductId:{productId}", domainEvent.Product.Id);
         return Task.CompletedTask;

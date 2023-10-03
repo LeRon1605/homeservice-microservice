@@ -26,7 +26,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         
         builder.HasOne<ProductUnit>(x => x.Unit)
             .WithMany()
-            .HasForeignKey(x => x.Unit)
+            .HasForeignKey(x => x.UnitId)
             .IsRequired(false);
     }
 }

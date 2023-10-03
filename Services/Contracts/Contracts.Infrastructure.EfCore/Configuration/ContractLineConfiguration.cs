@@ -38,7 +38,7 @@ public class ContractLineConfiguration : IEntityTypeConfiguration<ContractLine>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne<Contract>()
-            .WithMany()
+            .WithMany(x => x.Items)
             .HasForeignKey(x => x.ContractId)
             .OnDelete(DeleteBehavior.Cascade);
 

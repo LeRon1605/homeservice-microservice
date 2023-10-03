@@ -12,15 +12,30 @@ public class Product : AggregateRoot
     public ProductUnit? Unit { get; private set; }
     public List<string> Colors { get; private set; }
     
-    private Product(
+    public Product(
+        Guid id,
         string name,
         Guid? unitId,
         decimal price,
         List<string>? colors = null)
     {
+        Id = id;
         Name = Guard.Against.NullOrWhiteSpace(name, nameof(Name));
         UnitId = unitId;
-        Price = Guard.Against.NegativeOrZero(price, nameof(Price));
+        Price = Guard.Against.Negative(price, nameof(Price));
         Colors = colors ?? new List<string>();
+    }
+
+    public void Update(string name, Guid? unitId, decimal price, List<string>? colors)
+    {
+        Name = Guard.Against.NullOrWhiteSpace(name, nameof(Name));
+        UnitId = unitId;
+        Price = Guard.Against.Negative(price, nameof(Price));
+        Colors = colors ?? new List<string>();
+    }
+
+    private Product()
+    {
+        
     }
 }

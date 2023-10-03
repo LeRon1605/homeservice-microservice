@@ -14,6 +14,7 @@ public class ContractConfiguration : IEntityTypeConfiguration<Contract>
             .ValueGeneratedOnAdd();
 
         builder.Property(x => x.Balance)
+            .HasPrecision(20, 2)
             .IsRequired();
 
         builder.Property(x => x.CustomerNote)

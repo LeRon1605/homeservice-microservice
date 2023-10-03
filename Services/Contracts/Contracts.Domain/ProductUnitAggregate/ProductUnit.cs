@@ -12,4 +12,14 @@ public class ProductUnit : AggregateRoot
         Id = id;
         Name = Guard.Against.NullOrWhiteSpace(name, nameof(Name));
     }
+
+    public void Update(string name)
+    {
+        Name = Guard.Against.NullOrWhiteSpace(name, nameof(Name));
+    }
+
+    private ProductUnit()
+    {
+        
+    }
 }

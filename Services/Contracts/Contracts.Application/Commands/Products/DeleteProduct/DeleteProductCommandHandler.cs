@@ -1,9 +1,10 @@
 ﻿using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
-using Shopping.Domain.ProductAggregate;
-using Shopping.Domain.ProductAggregate.Exceptions;
+using Contracts.Domain.ProductAggregate;
+using Contracts.Domain.ProductUnitAggregate.Exceptions;
+using Shopping.Application.Commands.Products.DeleteProduct;
 
-namespace Shopping.Application.Commands.Products.DeleteProduct;
+namespace Contracts.Application.Commands.Products.DeleteProduct;
 
 public class DeleteProductCommandHandler : ICommandHandler<DeleteProductCommand>
 {
@@ -21,8 +22,9 @@ public class DeleteProductCommandHandler : ICommandHandler<DeleteProductCommand>
         var product = await _productRepository.GetByIdAsync(request.Id);
         if (product == null)
         {
-            throw new ProductNotFoundException(request.Id);
+            throw new ProductUnitNotFoundException(request.Id);
         }
+        
         _productRepository.Delete(product);
         await _unitOfWork.SaveChangesAsync();
     }

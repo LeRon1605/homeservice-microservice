@@ -1,4 +1,3 @@
-using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Authentication;
 using BuildingBlocks.Presentation.DataSeeder;
@@ -26,6 +25,7 @@ builder.Services
     .AddCurrentUser()
     .AddCqrs()
     .AddMapper()
+    .AddIntegrationEventHandlers()
     .AddRedisDistributedCache(builder.Configuration);
 
 builder.Services.AddControllers();
@@ -34,7 +34,7 @@ builder.Host.UseSerilog();
 
 var app = builder.Build();
 
-var eventBus = app.Services.GetRequiredService<IEventBus>();
+app.UseEventBus();
 
 app.UseApplicationExceptionHandler();
 app.UseSwagger();

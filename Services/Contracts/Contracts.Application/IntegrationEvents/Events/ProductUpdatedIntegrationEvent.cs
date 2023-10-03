@@ -1,8 +1,8 @@
 ﻿using BuildingBlocks.Application.IntegrationEvent;
 
-namespace Products.Application.IntegrationEvents.Events;
+namespace Contracts.Application.IntegrationEvents.Events;
 
-public record ProductAddedIntegrationEvent : IntegrationEvent
+public record ProductUpdatedIntegrationEvent : IntegrationEvent
 {
     public Guid ProductId { get; private set; }
     public string Name { get; private set; }
@@ -11,7 +11,7 @@ public record ProductAddedIntegrationEvent : IntegrationEvent
     public decimal SellPrice { get; private set; }
     public string? Colors { get; private set; }
 
-    public ProductAddedIntegrationEvent(
+    public ProductUpdatedIntegrationEvent(
         Guid productId, 
         string name, 
         Guid productGroupId,

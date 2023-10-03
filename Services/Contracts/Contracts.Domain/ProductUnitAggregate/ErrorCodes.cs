@@ -1,5 +1,4 @@
-namespace Products.Domain.ProductUnitAggregate;
-
+namespace Contracts.Domain.ProductUnitAggregate;
 
 public static class ErrorCodes
 {

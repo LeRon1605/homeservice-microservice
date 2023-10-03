@@ -69,4 +69,9 @@ public class Contract : AggregateRoot
 
         Items = new List<ContractLine>();
     }
+
+    private Contract()
+    {
+        
+    }
 }
