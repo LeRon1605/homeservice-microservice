@@ -5,19 +5,19 @@ using Microsoft.Extensions.Logging;
 
 namespace IAC.Application.IntegrationEvents.Handlers;
 
-public class CustomerDeletedIntegrationEventHandler : IIntegrationEventHandler<CustomerDeletedIntegrationEvent>
+public class BuyerDeletedIntegrationEventHandler : IIntegrationEventHandler<BuyerDeletedIntegrationEvent>
 {
     private readonly IUserService _userService;
-    private readonly ILogger<CustomerDeletedIntegrationEventHandler> _logger;
+    private readonly ILogger<BuyerDeletedIntegrationEventHandler> _logger;
 
-    public CustomerDeletedIntegrationEventHandler(IUserService userService,
-                                                  ILogger<CustomerDeletedIntegrationEventHandler> logger)
+    public BuyerDeletedIntegrationEventHandler(IUserService userService,
+                                                  ILogger<BuyerDeletedIntegrationEventHandler> logger)
     {
         _userService = userService;
         _logger = logger;
     }
 
-    public async Task Handle(CustomerDeletedIntegrationEvent @event)
+    public async Task Handle(BuyerDeletedIntegrationEvent @event)
     {
         _logger.LogInformation("Received CustomerDeletedIntegrationEvent for customer with id: {customerId}", @event.CustomerId);
         

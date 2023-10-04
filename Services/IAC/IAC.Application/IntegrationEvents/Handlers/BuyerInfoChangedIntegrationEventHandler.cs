@@ -6,19 +6,19 @@ using Microsoft.Extensions.Logging;
 
 namespace IAC.Application.IntegrationEvents.Handlers;
 
-public class CustomerInfoChangedIntegrationEventHandler : IIntegrationEventHandler<CustomerInfoChangedIntegrationEvent>
+public class BuyerInfoChangedIntegrationEventHandler : IIntegrationEventHandler<BuyerInfoChangedIntegrationEvent>
 {
     private readonly IUserService _userService;
-    private readonly ILogger<CustomerInfoChangedIntegrationEventHandler> _logger;
+    private readonly ILogger<BuyerInfoChangedIntegrationEventHandler> _logger;
 
-    public CustomerInfoChangedIntegrationEventHandler(ILogger<CustomerInfoChangedIntegrationEventHandler> logger,
+    public BuyerInfoChangedIntegrationEventHandler(ILogger<BuyerInfoChangedIntegrationEventHandler> logger,
                                                       IUserService userService)
     {
         _logger = logger;
         _userService = userService;
     }
 
-    public async Task Handle(CustomerInfoChangedIntegrationEvent @event)
+    public async Task Handle(BuyerInfoChangedIntegrationEvent @event)
     {
         _logger.LogInformation("Received CustomerInfoChangedIntegrationEvent for customer with id: {customerId}", @event.CustomerId);
         
@@ -30,7 +30,7 @@ public class CustomerInfoChangedIntegrationEventHandler : IIntegrationEventHandl
         var userInfoDto = new UserInfoDto
         {
             Id = @event.CustomerId,
-            FullName = @event.ContactName,
+            FullName = @event.FullName,
             Phone = @event.Phone,
             Email = @event.Email
         };

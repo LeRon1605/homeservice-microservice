@@ -36,10 +36,10 @@ builder.Services.AddSwagger("IdentityService")
 builder.Services.AddControllers();
 
 builder.Services
-    .AddScoped<IIntegrationEventHandler<CustomerInfoChangedIntegrationEvent>, CustomerInfoChangedIntegrationEventHandler>();
+    .AddScoped<IIntegrationEventHandler<BuyerInfoChangedIntegrationEvent>, BuyerInfoChangedIntegrationEventHandler>();
 
 builder.Services
-    .AddScoped<IIntegrationEventHandler<CustomerDeletedIntegrationEvent>, CustomerDeletedIntegrationEventHandler>();
+    .AddScoped<IIntegrationEventHandler<BuyerDeletedIntegrationEvent>, BuyerDeletedIntegrationEventHandler>();
 
 builder.Host.UseSerilog();
 
@@ -49,8 +49,8 @@ app.UseApplicationExceptionHandler();
 
 var eventBus = app.Services.GetRequiredService<IEventBus>();
 
-eventBus.Subscribe<CustomerInfoChangedIntegrationEvent, IIntegrationEventHandler<CustomerInfoChangedIntegrationEvent>>();
-eventBus.Subscribe<CustomerDeletedIntegrationEvent, IIntegrationEventHandler<CustomerDeletedIntegrationEvent>>();
+eventBus.Subscribe<BuyerInfoChangedIntegrationEvent, IIntegrationEventHandler<BuyerInfoChangedIntegrationEvent>>();
+eventBus.Subscribe<BuyerDeletedIntegrationEvent, IIntegrationEventHandler<BuyerDeletedIntegrationEvent>>();
 
 app.UseSwagger();
 app.UseSwaggerUI();

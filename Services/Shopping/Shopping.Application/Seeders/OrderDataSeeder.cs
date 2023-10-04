@@ -1,7 +1,10 @@
 ﻿using Bogus;
 using BuildingBlocks.Application.Seeder;
 using BuildingBlocks.Domain.Data;
+using MediatR;
 using Microsoft.Extensions.Logging;
+using Shopping.Application.Commands.Buyers.EditBuyer;
+using Shopping.Application.Commands.Orders.SubmitOrder;
 using Shopping.Domain.BuyerAggregate;
 using Shopping.Domain.OrderAggregate;
 using Shopping.Domain.ProductAggregate;
@@ -11,15 +14,22 @@ namespace Shopping.Application.Seeders;
 
 public class OrderDataSeeder : IDataSeeder
 {
+    private readonly IMediator _mediator;
     private readonly IRepository<Order> _orderRepository;
     private readonly IReadOnlyRepository<Product> _productRepository;
     private readonly IReadOnlyRepository<Buyer> _buyerRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<OrderDataSeeder> _logger;
 
-    public OrderDataSeeder(IRepository<Order> orderRepository, IUnitOfWork unitOfWork,
-        ILogger<OrderDataSeeder> logger, IReadOnlyRepository<Product> productRepository, IReadOnlyRepository<Buyer> buyerRepository)
+    public OrderDataSeeder(
+        IMediator mediator,
+        IRepository<Order> orderRepository, 
+        IUnitOfWork unitOfWork,
+        ILogger<OrderDataSeeder> logger, 
+        IReadOnlyRepository<Product> productRepository, 
+        IReadOnlyRepository<Buyer> buyerRepository)
     {
+        _mediator = mediator;
         _orderRepository = orderRepository;
         _unitOfWork = unitOfWork;
         _logger = logger;
@@ -31,7 +41,7 @@ public class OrderDataSeeder : IDataSeeder
     {
         if (await _orderRepository.AnyAsync())
         {
-            _logger.LogInformation("No need to seed data!");
+            _logger.LogInformation("No need to seed order data!");
             return;
         }
         
@@ -40,21 +50,34 @@ public class OrderDataSeeder : IDataSeeder
             _logger.LogTrace("Begin seeding orders...");
         
             var faker = new Faker();
-            var buyer = (await _buyerRepository.GetAllAsync()).ToList().First();
+            
+            var editBuyerCommand = new EditBuyerCommand(
+                faker.Person.FullName, 
+                faker.Person.Email, 
+                faker.Person.Address.City, 
+                faker.Person.Phone, 
+                faker.Person.Address.City, 
+                faker.Person.Address.State, 
+                faker.Person.Address.ZipCode, 
+                faker.Person.Avatar)
+            {
+                Id = (await _buyerRepository.GetAllAsync()).ToList().First().Id
+            };
+            
+            var buyer = await _mediator.Send(editBuyerCommand);
+            
             for (var i = 0; i < 10; i++)
             {
-           
                 var order = new Order(
                     buyer.Id,
                     buyer.FullName,
                     buyer.Email,
                     buyer.Phone,
-                    buyer.Address.FullAddress,
-                    buyer.Address.City,
-                    buyer.Address.State,
-                    buyer.Address.PostalCode
+                    buyer.Address,
+                    buyer.City,
+                    buyer.State,
+                    buyer.PostalCode
                 );
-                var products = (await _productRepository.GetAllAsync()).ToList();
                 
                 await SeedOrderLinesAsync(order);
         

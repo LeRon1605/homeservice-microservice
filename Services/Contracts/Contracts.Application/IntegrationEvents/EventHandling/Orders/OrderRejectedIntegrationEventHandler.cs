@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.Application.IntegrationEvent;
 using Contracts.Application.Commands;
+using Contracts.Application.Commands.PendingOrders.DeletePendingOrder;
 using Contracts.Application.IntegrationEvents.Events.Orders;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -22,7 +23,7 @@ public class OrderRejectedIntegrationEventHandler : IIntegrationEventHandler<Ord
                                "{IntegrationEventId} - ({@IntegrationEvent})", 
             @event.Id, @event);
         
-        var command = new RejectOrderCommand(@event.Id);
+        var command = new DeletePendingOrderCommand(@event.Id);
         _logger.LogInformation("Sending command: {commandName}", command);
         
         await _mediator.Send(command);

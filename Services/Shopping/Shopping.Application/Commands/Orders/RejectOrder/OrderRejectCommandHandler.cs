@@ -36,9 +36,8 @@ public class OrderRejectCommandHandler : ICommandHandler<OrderRejectCommand, Ord
         await _unitOfWork.SaveChangesAsync();
         if (order.ContactInfo.Email != null)
         {
-            //var message = new Message(new string[] { "mvq1404@gmail.com" }, "NamVietAnh-Dog", request.Description);
-            //var message = new Message(new string[] { order.ContactInfo.Email }, "Reject Order", request.Description);
-            //_emailSender.SendEmail(message);
+            var message = new Message(new string[] { order.ContactInfo.Email }, "Reject Order", request.Description);
+            _emailSender.SendEmail(message);
         }
         return _mapper.Map<OrderDto>(order);
     }

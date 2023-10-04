@@ -30,7 +30,6 @@ public class ProductReviewDataSeeder : IDataSeeder
     {
         if (!await _productReviewRepository.AnyAsync())
         {
-            await Task.Delay(TimeSpan.FromSeconds(60));
             var specification = new ProductFilterSpecification(string.Empty, 1, 10);
             var products = await _productRepository.FindListAsync(specification);
 
@@ -41,7 +40,7 @@ public class ProductReviewDataSeeder : IDataSeeder
             
             try
             {
-                _logger.LogTrace("Begin seeding product reviews...");
+                _logger.LogInformation("Begin seeding product reviews...");
                 
                 var faker = new Faker();
                 foreach (var product in products)
@@ -52,11 +51,11 @@ public class ProductReviewDataSeeder : IDataSeeder
             
                 await _unitOfWork.SaveChangesAsync();
                 
-                _logger.LogTrace("Seed product reviews successfully!");
+                _logger.LogInformation("Seed product reviews successfully!");
             }
             catch
             {
-                _logger.LogTrace("Seed product reviews failed!");
+                _logger.LogError("Seed product reviews failed!");
             }
         }
     }

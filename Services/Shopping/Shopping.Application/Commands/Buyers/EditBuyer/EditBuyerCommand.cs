@@ -1,10 +1,12 @@
 using BuildingBlocks.Application.CQRS;
+using Newtonsoft.Json;
 using Shopping.Application.Dtos.Buyers;
 
 namespace Shopping.Application.Commands.Buyers.EditBuyer;
 
 public class EditBuyerCommand : ICommand<BuyerDto>
 {
+    [JsonIgnore]
     public Guid Id { get; set; }
     
     public string Name { get; init; }

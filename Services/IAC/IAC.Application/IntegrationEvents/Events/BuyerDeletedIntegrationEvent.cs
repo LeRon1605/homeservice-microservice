@@ -2,11 +2,11 @@ using BuildingBlocks.Application.IntegrationEvent;
 
 namespace IAC.Application.IntegrationEvents.Events;
 
-public record CustomerDeletedIntegrationEvent : IntegrationEvent
+public record BuyerDeletedIntegrationEvent : IntegrationEvent
 {
     public Guid CustomerId { get; init; }
 
-    public CustomerDeletedIntegrationEvent(Guid customerId)
+    public BuyerDeletedIntegrationEvent(Guid customerId)
     {
         CustomerId = customerId;
     }

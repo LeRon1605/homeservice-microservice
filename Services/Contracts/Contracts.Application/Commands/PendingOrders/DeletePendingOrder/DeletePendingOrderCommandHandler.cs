@@ -1,28 +1,28 @@
 ﻿using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
 using Contracts.Domain.PendingOrdersAggregate;
-using Shopping.Domain.OrderAggregate;
-using Shopping.Domain.ProductAggregate.Exceptions;
+using Contracts.Domain.ProductAggregate.Exceptions;
 
-namespace Contracts.Application.Commands;
+namespace Contracts.Application.Commands.PendingOrders.DeletePendingOrder;
 
-public class RejectOrderCommandHandler : ICommandHandler<RejectOrderCommand>
+public class DeletePendingOrderCommandHandler : ICommandHandler<DeletePendingOrderCommand>
 {
     private readonly IRepository<PendingOrder> _pendingOrderRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public RejectOrderCommandHandler(IRepository<PendingOrder> pendingOrderRepository, IUnitOfWork unitOfWork)
+    public DeletePendingOrderCommandHandler(IRepository<PendingOrder> pendingOrderRepository, IUnitOfWork unitOfWork)
     {
         _pendingOrderRepository = pendingOrderRepository;
         _unitOfWork = unitOfWork;
     }
-    public async Task Handle(RejectOrderCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeletePendingOrderCommand request, CancellationToken cancellationToken)
     {
         var pendingOrder = await _pendingOrderRepository.GetByIdAsync(request.Id);
         if (pendingOrder == null)
         {
             throw new ProductNotFoundException(request.Id);
         }
+        
         _pendingOrderRepository.Delete(pendingOrder);
         await _unitOfWork.SaveChangesAsync();
     }
