@@ -16,7 +16,7 @@ public interface IRepository<TAggregateRoot> where TAggregateRoot : AggregateRoo
 
     Task<TAggregateRoot?> FindAsync(ISpecification<TAggregateRoot> specification);
 
-    Task<IEnumerable<TAggregateRoot>> FindListAsync(ISpecification<TAggregateRoot> specification);
+    Task<IList<TAggregateRoot>> FindListAsync(ISpecification<TAggregateRoot> specification);
     
     Task<bool> AnyAsync(ISpecification<TAggregateRoot> specification);
     

@@ -26,7 +26,7 @@ public class EfCoreReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity>
         return await GetQuery<TEntity>.From(DbSet, spec).FirstOrDefaultAsync();
     }
 
-    public async Task<IEnumerable<TEntity>> FindListAsync(ISpecification<TEntity> spec)
+    public async Task<IList<TEntity>> FindListAsync(ISpecification<TEntity> spec)
     {
         return await GetQuery<TEntity>.From(DbSet, spec).ToListAsync(); 
     }
@@ -36,12 +36,12 @@ public class EfCoreReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity>
         return await GetQuery<TEntity>.From(DbSet, specification).CountAsync();
     }
     
-    public async Task<IEnumerable<TEntity>> GetAllAsync()
+    public async Task<IList<TEntity>> GetAllAsync()
     {
         return await DbSet.AsNoTracking().ToListAsync();
     }
 
-    public async Task<(IEnumerable<TEntity>, int)> FindWithTotalCountAsync(ISpecification<TEntity> spec)
+    public async Task<(IList<TEntity>, int)> FindWithTotalCountAsync(ISpecification<TEntity> spec)
     {
         var query = GetQuery<TEntity>.From(DbSet, spec);
         var count = await query.CountAsync();

@@ -36,7 +36,7 @@ public class EfCoreRepository<TAggregateRoot> : IRepository<TAggregateRoot>
         return await GetQuery<TAggregateRoot>.From(DbSet.AsQueryable(), spec).FirstOrDefaultAsync();
     }
 
-    public async Task<IEnumerable<TAggregateRoot>> FindListAsync(ISpecification<TAggregateRoot> spec)
+    public async Task<IList<TAggregateRoot>> FindListAsync(ISpecification<TAggregateRoot> spec)
     {
         return await GetQuery<TAggregateRoot>.From(DbSet, spec).ToListAsync();
     }

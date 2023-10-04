@@ -7,15 +7,15 @@ public interface IReadOnlyRepository<TEntity> where TEntity : Entity
 {
     Task<TEntity?> GetByIdAsync(Guid id);
     
-    Task<IEnumerable<TEntity>> GetAllAsync();
+    Task<IList<TEntity>> GetAllAsync();
 
     Task<TEntity?> FindAsync(ISpecification<TEntity> specification);
 
-    Task<IEnumerable<TEntity>> FindListAsync(ISpecification<TEntity> specification);
+    Task<IList<TEntity>> FindListAsync(ISpecification<TEntity> specification);
     
     Task<int> CountAsync(ISpecification<TEntity> specification);
     
-    Task<(IEnumerable<TEntity>, int)> FindWithTotalCountAsync(ISpecification<TEntity> specification);
+    Task<(IList<TEntity>, int)> FindWithTotalCountAsync(ISpecification<TEntity> specification);
 
     Task<bool> AnyAsync(ISpecification<TEntity> specification);
     
