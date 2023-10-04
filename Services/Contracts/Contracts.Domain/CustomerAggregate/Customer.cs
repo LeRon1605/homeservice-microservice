@@ -1,5 +1,6 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Domain.Models;
+using Contracts.Domain.CustomerAggregate.Events;
 
 namespace Contracts.Domain.CustomerAggregate;
 
@@ -52,9 +53,7 @@ namespace Contracts.Domain.CustomerAggregate;
      
      public void Delete()
      {
-         // TODO:
-         // Add domain event
-         // Check constraints? (customer has no orders, etc.)
+         AddDomainEvent(new CustomerDeletedDomainEvent(Id));
      }
      
      public static Customer CreateWithId(
