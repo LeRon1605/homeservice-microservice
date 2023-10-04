@@ -22,5 +22,7 @@ public static class EventBusExtension
         eventBus.Subscribe<ProductUnitDeletedIntegrationEvent, IIntegrationEventHandler<ProductUnitDeletedIntegrationEvent>>();
         
         eventBus.Subscribe<OrderAddedIntegrationEvent, IIntegrationEventHandler<OrderAddedIntegrationEvent>>();
+        
+        eventBus.Subscribe<OrderRejectedIntegrationEvent, IIntegrationEventHandler<OrderRejectedIntegrationEvent>>();
     }
 }

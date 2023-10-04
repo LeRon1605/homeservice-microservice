@@ -9,6 +9,7 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.DynamicLinq" Version="7.3.4" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.10" />
+      <PackageReference Include="NETCore.MailKit" Version="2.0.3" />
       <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
       <PackageReference Include="Serilog.Sinks.Console" Version="4.2.0-dev-00918" />
       <PackageReference Include="Serilog.Sinks.Seq" Version="5.2.3-dev-00262" />

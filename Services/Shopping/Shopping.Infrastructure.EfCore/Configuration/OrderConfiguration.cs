@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shopping.Domain.BuyerAggregate;
-using Shopping.Domain.Constants;
 using Shopping.Domain.OrderAggregate;
 
 namespace Shopping.Infrastructure.EfCore.Configuration;

@@ -36,10 +36,10 @@ public class OrderController : ControllerBase
         return Ok();
     }
 
-   [HttpPost("reject-order")]
-    public async Task<IActionResult> RejectOrder(OrderRejectDto orderRejectDto)
+   [HttpPost("{id:guid}/reject-order")]
+    public async Task<IActionResult> RejectOrder(Guid id, [FromBody]OrderRejectDto orderRejectDto)
     {
-        var order = await _mediator.Send(new OrderRejectCommand(orderRejectDto));
+        var order = await _mediator.Send(new OrderRejectCommand(id, orderRejectDto));
         return Ok(order);
     }
 

@@ -23,6 +23,8 @@ public static class IntegrationEventHandlerExtension
         services.AddScoped<IIntegrationEventHandler<ProductUnitDeletedIntegrationEvent>, ProductUnitDeletedIntegrationEventHandler>();
 
         services.AddScoped<IIntegrationEventHandler<OrderAddedIntegrationEvent>, OrderAddedIntegrationEventHandler>();
+
+        services.AddScoped<IIntegrationEventHandler<OrderRejectedIntegrationEvent>, OrderRejectedIntegrationEventHandler>();
         return services;
     }
 }

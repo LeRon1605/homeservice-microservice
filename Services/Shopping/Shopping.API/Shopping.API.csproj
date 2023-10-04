@@ -22,6 +22,7 @@
         <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.EventBus\BuildingBlocks.EventBus.csproj" />
         <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Infrastructure\BuildingBlocks.Infrastructure.csproj" />
         <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Presentation\BuildingBlocks.Presentation.csproj" />
+        <ProjectReference Include="..\..\Contracts\Contracts.API\Contracts.API.csproj" />
         <ProjectReference Include="..\Shopping.Application\Shopping.Application.csproj" />
         <ProjectReference Include="..\Shopping.Domain\Shopping.Domain.csproj" />
         <ProjectReference Include="..\Shopping.Infrastructure.EfCore\Shopping.Infrastructure.EfCore.csproj" />

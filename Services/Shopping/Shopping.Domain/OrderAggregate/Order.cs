@@ -43,6 +43,7 @@ public class Order : AggregateRoot
         }
 
         Status = OrderStatus.Rejected;
+        AddDomainEvent(new OrderRejectDomainEvent(this));
     }
 
     public void Finish()

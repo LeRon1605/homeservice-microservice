@@ -5,6 +5,7 @@ using BuildingBlocks.Presentation.EfCore;
 using BuildingBlocks.Presentation.EventBus;
 using BuildingBlocks.Presentation.ExceptionHandlers;
 using BuildingBlocks.Presentation.Extension;
+using BuildingBlocks.Presentation.MailSender;
 using BuildingBlocks.Presentation.Swagger;
 using Newtonsoft.Json.Converters;
 using Serilog;
@@ -27,6 +28,7 @@ builder.Services.AddSwagger("ShoppingService")
                 .AddCurrentUser()
                 .AddDataSeeder()
                 .AddIntegrationEventHandlers()
+                .AddEmailSetting(builder.Configuration)
                 .AddGrpc();
 
 builder.Services.AddControllers()

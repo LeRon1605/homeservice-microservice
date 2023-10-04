@@ -34,4 +34,9 @@ public class PendingOrder : AggregateRoot
     {
         
     }
+
+    public void RejectOrder()
+    {
+        
+    }
 }
