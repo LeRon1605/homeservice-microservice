@@ -2,7 +2,7 @@ using BuildingBlocks.Application.Cache;
 using BuildingBlocks.Application.CQRS;
 using Contracts.Application.Dtos.Contracts;
 
-namespace Contracts.Application.Queries;
+namespace Contracts.Application.Queries.Contracts;
 
 public class GetContractByIdQueryHandler : IQueryHandler<GetContractByIdQuery, ContractDto>
 {

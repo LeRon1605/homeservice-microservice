@@ -2,6 +2,7 @@ using Contracts.Application.Commands.Contracts.AddContract;
 using Contracts.Application.Commands.Contracts.ConvertContractFromOrder;
 using Contracts.Application.Dtos.Contracts;
 using Contracts.Application.Queries;
+using Contracts.Application.Queries.Contracts;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,12 +25,19 @@ public class ContractController : ControllerBase
         var result = await _mediator.Send(new GetContractByIdQuery(id));
         return Ok(result);
     }
-    
+
     [HttpPost]
     [ProducesResponseType(typeof(ContractDetailDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> CreateContract(ContractCreateDto dto)
     {
         var contract = await _mediator.Send(new AddContractCommand(dto));
         return Ok(contract);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetContracts()
+    {
+        var result = await _mediator.Send(new GetContractsQuery());
+        return Ok(result);
     }
 }
