@@ -20,16 +20,11 @@ public class
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<ContractsOfCustomerDto>> Handle(ContractsOfCustomerQuery request,
-        CancellationToken cancellationToken)
+    public async Task<IEnumerable<ContractsOfCustomerDto>> Handle(ContractsOfCustomerQuery request, CancellationToken cancellationToken)
     {
-        var contractOfCustomerSpecification =
-            new ContractOfCustomerSpecification(request.CustomerId, request.ContractNo);
+        var contractOfCustomerSpecification = new ContractOfCustomerSpecification(request.CustomerId, request.ContractNo);
         var contracts = await _contractRepository.FindListAsync(contractOfCustomerSpecification);
-        // if (contracts == null)
-        // {
-        //     throw new ContractNotFoundException(request.CustomerId);
-        // }
+
         return _mapper.Map<IEnumerable<ContractsOfCustomerDto>>(contracts);
     }
 }

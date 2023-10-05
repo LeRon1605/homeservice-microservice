@@ -71,7 +71,50 @@ public class Contract : AggregateRoot
 
         Items = new List<ContractLine>();
     }
+    
+    public void UpdateContractInfo(
+        string? customerNote,
+        int? purchaseOrderNo,
+        int? invoiceNo,
+        DateTime? invoiceDate,
+        DateTime? estimatedInstallationDate,
+        DateTime? actualInstallationDate,
+        string? fullInstallationAddress,
+        string? installationCity,
+        string? installationState,
+        string? installationPostalCode,
+        ContractStatus status)
+    {
+        CustomerNote = customerNote;
+        PurchaseOrderNo = purchaseOrderNo;
+        InvoiceNo = invoiceNo;
+        InvoiceDate = invoiceDate;
+        EstimatedInstallationDate = estimatedInstallationDate;
+        ActualInstallationDate = actualInstallationDate;
+        InstallationAddress = new InstallationAddress(fullInstallationAddress, installationCity, installationState, installationPostalCode);
+        Status = status;
+    }
 
+    public void UpdateCustomer(Guid customerId)
+    {
+        CustomerId = Guard.Against.Null(customerId, nameof(CustomerId));
+    }
+    
+    public void UpdateSalePerson(Guid salePersonId)
+    {
+        SalePersonId = Guard.Against.Null(salePersonId, nameof(SalePersonId));
+    }
+    
+    public void UpdateSupervisor(Guid supervisorId)
+    {
+        SupervisorId = supervisorId;
+    }
+    
+    public void UpdateCustomerServiceRep(Guid customerServiceRepId)
+    {
+        CustomerServiceRepId = customerServiceRepId;
+    }
+    
     public void AddContractLine(
         Guid productId, 
         string productName,
@@ -103,6 +146,49 @@ public class Contract : AggregateRoot
             sellPrice);
         
         Items.Add(contractLine);
+    }
+
+    public void RemoveItem(Guid id)
+    {
+        var item = Items.FirstOrDefault(x => x.Id == id);
+        if (item == null)
+        {
+            throw new ContractLineNotFoundException(id);
+        }
+        
+        Items.Remove(item);
+    }
+
+    public void UpdateItem(
+        Guid id,
+        Guid productId, 
+        string productName,
+        Guid unitId,
+        string unitName,
+        Guid? taxId,
+        string? taxName,
+        string? color, 
+        int quantity,
+        decimal cost,
+        decimal sellPrice)
+    {
+        var item = Items.FirstOrDefault(x => x.Id == id);
+        if (item == null)
+        {
+            throw new ContractLineNotFoundException(id);
+        }
+        
+        item.Update(
+            productId, 
+            productName, 
+            unitId, 
+            unitName,
+            taxId,
+            taxName,
+            color, 
+            quantity, 
+            cost, 
+            sellPrice);
     }
 
     private Contract()
