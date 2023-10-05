@@ -1,3 +1,4 @@
+using BuildingBlocks.Application.Dtos;
 using Contracts.Application.Commands.Contracts.AddContract;
 using Contracts.Application.Commands.Contracts.ConvertContractFromOrder;
 using Contracts.Application.Dtos.Contracts;
@@ -19,6 +20,14 @@ public class ContractController : ControllerBase
         _mediator = mediator;
     }
     
+    [HttpGet]
+    [ProducesResponseType(typeof(PagedResult<ContractDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetContracts([FromQuery] GetContractsQuery query)
+    {
+        var result = await _mediator.Send(query);
+        return Ok(result);
+    }
+    
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetContracts(Guid id)
     {
@@ -32,12 +41,5 @@ public class ContractController : ControllerBase
     {
         var contract = await _mediator.Send(new AddContractCommand(dto));
         return Ok(contract);
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> GetContracts()
-    {
-        var result = await _mediator.Send(new GetContractsQuery());
-        return Ok(result);
     }
 }

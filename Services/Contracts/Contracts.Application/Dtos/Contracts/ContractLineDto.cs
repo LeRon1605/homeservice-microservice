@@ -10,6 +10,9 @@ public class ContractLineDto
     public Guid UnitId { get; set; }
     public string UnitName { get; set; } = null!;
     
+    public Guid? TaxId { get; set; }
+    public string? TaxName { get; set; }
+    
     public string? Color { get; set; }
     public int Quantity { get; set; }
     public decimal Cost { get; set; }

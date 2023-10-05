@@ -1,6 +1,7 @@
 using Contracts.Domain.ContractAggregate;
 using Contracts.Domain.ProductAggregate;
 using Contracts.Domain.ProductUnitAggregate;
+using Contracts.Domain.TaxAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -31,6 +32,17 @@ public class ContractLineConfiguration : IEntityTypeConfiguration<ContractLine>
 
         builder.Property(x => x.ProductName)
             .IsRequired();
+
+        builder.Property(x => x.TaxId)
+            .IsRequired(false);
+
+        builder.Property(x => x.TaxName)
+            .IsRequired(false);
+        
+        builder.HasOne<Tax>()
+            .WithMany()
+            .HasForeignKey(x => x.TaxId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne<Product>()
             .WithMany()

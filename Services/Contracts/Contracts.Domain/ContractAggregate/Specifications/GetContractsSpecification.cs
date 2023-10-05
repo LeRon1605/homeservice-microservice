@@ -16,6 +16,8 @@ public class GetContractsSpecification : Specification<Contract>
                                      Guid? salePersonId,
                                      Guid? customerServiceRepId)
     {
+        AddInclude(x => x.Customer);
+        
         if (!string.IsNullOrWhiteSpace(search))
         {
             AddSearchTerm(search);

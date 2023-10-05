@@ -4,6 +4,7 @@ public class ContractLineCreateDto
 {
     public Guid ProductId { get; set; }
     public Guid UnitId { get; set; }
+    public Guid? TaxId { get; set; }
     
     public string? Color { get; set; }
     public int Quantity { get; set; }
