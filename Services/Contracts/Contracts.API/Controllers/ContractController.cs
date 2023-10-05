@@ -13,12 +13,12 @@ namespace Contracts.API.Controllers;
 public class ContractController : ControllerBase
 {
     private readonly IMediator _mediator;
-    
+
     public ContractController(IMediator mediator)
     {
         _mediator = mediator;
     }
-    
+
     [HttpGet]
     [ProducesResponseType(typeof(PagedResult<ContractDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetContracts([FromQuery] GetContractsQuery query)
@@ -26,7 +26,7 @@ public class ContractController : ControllerBase
         var result = await _mediator.Send(query);
         return Ok(result);
     }
-    
+
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetContracts(Guid id)
     {
@@ -50,15 +50,9 @@ public class ContractController : ControllerBase
         return Ok(contract);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetContracts()
-    {
-        var result = await _mediator.Send(new GetContractsQuery());
-        return Ok(result);
-    }
-
     [HttpGet("customer/{customerId:guid}")]
-    public async Task<IActionResult> GetContracts(Guid customerId, [FromQuery]ContractOfCustomerFilterDto contractOfCustomerFilterDto)
+    public async Task<IActionResult> GetContracts(Guid customerId,
+        [FromQuery] ContractOfCustomerFilterDto contractOfCustomerFilterDto)
     {
         var contracts = await _mediator.Send(new ContractsOfCustomerQuery(customerId, contractOfCustomerFilterDto));
         return Ok(contracts);

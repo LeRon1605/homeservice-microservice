@@ -4,6 +4,7 @@ using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
 using Contracts.Application.Dtos.Contracts;
 using Contracts.Domain.ContractAggregate;
+using Contracts.Domain.ContractAggregate.Exceptions;
 using Contracts.Domain.ContractAggregate.Specifications;
 
 namespace Contracts.Application.Queries.Contracts;
@@ -21,9 +22,12 @@ public class GetContractByIdQueryHandler : IQueryHandler<GetContractByIdQuery, C
 
     public async Task<ContractDetailDto> Handle(GetContractByIdQuery request, CancellationToken cancellationToken)
     {
-        var contractDetailSpecification = new ContractDetailSpecification(request.Id);
+        var contractDetailSpecification = new ContractByIdSpecification(request.Id);
         var contractDetail = await _contractRepository.FindAsync(contractDetailSpecification);
-
+        if (contractDetail == null)
+        {
+            throw new ContractNotFoundException(request.Id);
+        }
         return _mapper.Map<ContractDetailDto>(contractDetail);
     }
 }
