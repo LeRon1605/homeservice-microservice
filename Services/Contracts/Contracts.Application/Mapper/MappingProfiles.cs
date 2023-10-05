@@ -24,6 +24,14 @@ public class MappingProfiles : Profile
             .ForMember(dest => dest.CustomerName, options => options.MapFrom(src => src.Customer!.Name));
         CreateMap<Contract, ContractDetailDto>();
         CreateMap<ContractLine, ContractLineDto>();
+
+        CreateMap<Contract, ContractsOfCustomerDto>()
+            .ForMember(dest => dest.ContractNo, opt => opt.MapFrom(src => src.No))
+            .ForMember(dest => dest.Balance, opt => opt.MapFrom(src => src.Balance))
+            .ForMember(dest =>dest.ContractValue, opt => opt.MapFrom(src=> src.Items.Sum(x=>x.Quantity * x.SellPrice)))
+            .ForMember(dest => dest.QuotedAt, opt => opt.MapFrom(src => src.QuotedAt))
+            .ForMember(dest => dest.SoldAt, opt => opt.MapFrom(src => src.SoldAt))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
         
         CreateMap<Tax, TaxDto>();
     } 

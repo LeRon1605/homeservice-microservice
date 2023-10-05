@@ -63,21 +63,20 @@ public class Contract : AggregateRoot
         InvoiceDate = invoiceDate;
         EstimatedInstallationDate = estimatedInstallationDate;
         ActualInstallationDate = actualInstallationDate;
-        InstallationAddress = new InstallationAddress(fullInstallationAddress, installationCity, installationState, installationPostalCode);
+        InstallationAddress = new InstallationAddress(fullInstallationAddress, installationCity, installationState,
+            installationPostalCode);
         QuotedAt = DateTime.UtcNow;
         SoldAt = null;
         Status = status;
 
         Items = new List<ContractLine>();
     }
-    
+
     public void AddContractLine(
         Guid productId, 
         string productName,
         Guid unitId,
         string unitName,
-        Guid? taxId,
-        string? taxName,
         string? color, 
         int quantity,
         decimal cost,

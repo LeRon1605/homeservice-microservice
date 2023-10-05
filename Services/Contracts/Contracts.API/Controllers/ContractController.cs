@@ -1,8 +1,6 @@
 using BuildingBlocks.Application.Dtos;
 using Contracts.Application.Commands.Contracts.AddContract;
-using Contracts.Application.Commands.Contracts.ConvertContractFromOrder;
 using Contracts.Application.Dtos.Contracts;
-using Contracts.Application.Queries;
 using Contracts.Application.Queries.Contracts;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -41,5 +39,19 @@ public class ContractController : ControllerBase
     {
         var contract = await _mediator.Send(new AddContractCommand(dto));
         return Ok(contract);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetContracts()
+    {
+        var result = await _mediator.Send(new GetContractsQuery());
+        return Ok(result);
+    }
+
+    [HttpGet("customer/{customerId:guid}")]
+    public async Task<IActionResult> GetContracts(Guid customerId, [FromQuery]ContractOfCustomerFilterDto contractOfCustomerFilterDto)
+    {
+        var contracts = await _mediator.Send(new ContractsOfCustomerQuery(customerId, contractOfCustomerFilterDto));
+        return Ok(contracts);
     }
 }
