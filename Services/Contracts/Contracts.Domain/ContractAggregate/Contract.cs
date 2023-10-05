@@ -77,6 +77,8 @@ public class Contract : AggregateRoot
         string productName,
         Guid unitId,
         string unitName,
+        Guid? taxId,
+        string? taxName,
         string? color, 
         int quantity,
         decimal cost,
