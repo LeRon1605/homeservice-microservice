@@ -14,8 +14,8 @@ public class ContractDto
     public decimal Value { get; set; }
     public decimal Balance { get; set; }
     
-    public DateTime? DateQuoted { get; set; }
-    public DateTime? DateSold { get; set; }
+    public DateTime QuoteAt { get; set; }
+    public DateTime? SolAt { get; set; }
     
     [JsonConverter(typeof(JsonStringEnumConverter))]
     [EnumDataType(typeof(ContractStatus))]

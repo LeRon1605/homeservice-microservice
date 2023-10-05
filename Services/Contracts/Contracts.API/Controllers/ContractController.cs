@@ -4,6 +4,7 @@ using Contracts.Application.Dtos.Contracts;
 using Contracts.Application.Queries;
 using Contracts.Application.Queries.Contracts;
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Contracts.API.Controllers;
@@ -39,5 +40,12 @@ public class ContractController : ControllerBase
     {
         var result = await _mediator.Send(new GetContractsQuery());
         return Ok(result);
+    }
+
+    [HttpGet("customer/{customerId:guid}")]
+    public async Task<IActionResult> GetContracts(Guid customerId, [FromQuery]ContractOfCustomerFilterDto contractOfCustomerFilterDto)
+    {
+        var contracts = await _mediator.Send(new ContractsOfCustomerQuery(customerId, contractOfCustomerFilterDto));
+        return Ok(contracts);
     }
 }

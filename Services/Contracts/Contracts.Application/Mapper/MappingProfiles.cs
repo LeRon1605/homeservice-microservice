@@ -1,3 +1,4 @@
+using System.Runtime.Intrinsics.X86;
 using AutoMapper;
 using Contracts.Application.Dtos.Contracts;
 using Contracts.Application.Dtos.Customers;
@@ -20,5 +21,13 @@ public class MappingProfiles : Profile
 
         CreateMap<Contract, ContractDetailDto>();
         CreateMap<ContractLine, ContractLineDto>();
+
+        CreateMap<Contract, ContractsOfCustomerDto>()
+            .ForMember(dest => dest.ContractNo, opt => opt.MapFrom(src => src.No))
+            .ForMember(dest => dest.Balance, opt => opt.MapFrom(src => src.Balance))
+            .ForMember(dest =>dest.ContractValue, opt => opt.MapFrom(src=> src.Items.Sum(x=>x.Quantity * x.SellPrice)))
+            .ForMember(dest => dest.QuotedAt, opt => opt.MapFrom(src => src.QuotedAt))
+            .ForMember(dest => dest.SoldAt, opt => opt.MapFrom(src => src.SoldAt))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
     } 
 }
