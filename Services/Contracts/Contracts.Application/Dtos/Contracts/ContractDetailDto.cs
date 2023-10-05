@@ -1,6 +1,5 @@
 ﻿using System.Text.Json.Serialization;
 using Contracts.Domain.ContractAggregate;
-using Contracts.Domain.CustomerAggregate;
 
 namespace Contracts.Application.Dtos.Contracts;
 
@@ -9,6 +8,7 @@ public class ContractDetailDto
     public Guid Id { get; set; }
     public int No { get; set; }
     
+    public decimal ContractValue { get; set; }
     public decimal Balance { get; set; }
     public string? CustomerNote { get; set; }
     

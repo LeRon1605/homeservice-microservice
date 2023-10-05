@@ -26,6 +26,7 @@ public class
         var contractOfCustomerSpecification =
             new ContractOfCustomerSpecification(request.CustomerId, request.ContractNo);
         var contracts = await _contractRepository.FindListAsync(contractOfCustomerSpecification);
+
         return _mapper.Map<IEnumerable<ContractsOfCustomerDto>>(contracts);
     }
 }

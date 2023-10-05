@@ -11,7 +11,7 @@ public class ContractDto
     public int InstallationNo { get; set; } = 0;
     public string CustomerName { get; set; } = string.Empty;
     
-    public decimal Value { get; set; }
+    public decimal ContractValue { get; set; }
     public decimal Balance { get; set; }
     
     public DateTime QuotedAt { get; set; }

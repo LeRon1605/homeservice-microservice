@@ -46,4 +46,28 @@ public class ContractLine : Entity
         Cost = Guard.Against.Negative(cost, nameof(Cost));
         SellPrice = Guard.Against.Negative(sellPrice, nameof(SellPrice));
     }
+
+    public void Update(
+        Guid productId, 
+        string productName,
+        Guid unitId,
+        string unitName,
+        Guid? taxId,
+        string? taxName,
+        string? color, 
+        int quantity,
+        decimal cost,
+        decimal sellPrice)
+    {
+        ProductId = Guard.Against.NullOrEmpty(productId, nameof(ProductId));
+        ProductName = Guard.Against.NullOrEmpty(productName, nameof(ProductName));
+        UnitId = Guard.Against.Null(unitId, nameof(UnitId));
+        UnitName = unitName;
+        TaxId = taxId;
+        TaxName = taxName;
+        Color = color;
+        Quantity = Guard.Against.NegativeOrZero(quantity, nameof(Quantity));
+        Cost = Guard.Against.Negative(cost, nameof(Cost));
+        SellPrice = Guard.Against.Negative(sellPrice, nameof(SellPrice));
+    }
 }

@@ -21,8 +21,10 @@ public class MappingProfiles : Profile
         CreateMap<InstallationAddress, InstallationAddressDto>();
 
         CreateMap<Contract, ContractDto>()
-            .ForMember(dest => dest.CustomerName, options => options.MapFrom(src => src.Customer!.Name));
-        CreateMap<Contract, ContractDetailDto>();
+            .ForMember(dest => dest.CustomerName, options => options.MapFrom(src => src.Customer!.Name))
+            .ForMember(dest => dest.ContractValue, options => options.MapFrom(src => src.Items.Sum(x => x.Quantity * x.SellPrice)));
+        CreateMap<Contract, ContractDetailDto>()
+            .ForMember(dest => dest.ContractValue, options => options.MapFrom(src => src.Items.Sum(x => x.Quantity * x.SellPrice)));
         CreateMap<ContractLine, ContractLineDto>();
 
         CreateMap<Contract, ContractsOfCustomerDto>()
