@@ -58,7 +58,7 @@ public class ContractController : ControllerBase
     }
 
     [HttpGet("customer/{customerId:guid}")]
-    public async Task<IActionResult> GetContracts(Guid customerId, [FromQuery] ContractOfCustomerFilterDto contractOfCustomerFilterDto)
+    public async Task<IActionResult> GetContracts(Guid customerId, [FromQuery]ContractOfCustomerFilterDto contractOfCustomerFilterDto)
     {
         var contracts = await _mediator.Send(new ContractsOfCustomerQuery(customerId, contractOfCustomerFilterDto));
         return Ok(contracts);

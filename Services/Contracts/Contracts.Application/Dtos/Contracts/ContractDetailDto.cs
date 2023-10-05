@@ -21,10 +21,6 @@ public class ContractDetailDto
     public int? InvoiceNo { get; set; }
     public DateTime? InvoiceDate { get; set; }
     
-    public DateTime? EstimatedInstallationDate { get; set; }
-    public DateTime? ActualInstallationDate { get; set; }
-    public InstallationAddressDto InstallationAddress { get; set; } = null!;
-    
     public DateTime QuotedAt { get; set; }
     public DateTime? SoldAt { get; set; }
     
@@ -34,4 +30,8 @@ public class ContractDetailDto
     public ContractStatus Status { get; set; }
 
     public IEnumerable<ContractLineDto> Items { get; set; } = null!;
+    
+    public InstallationAddressDto InstallationAddress { get; set; } = null!;
+    public DateTime? EstimatedInstallationDate { get; set; }
+    public DateTime? ActualInstallationDate { get; set; }
 }

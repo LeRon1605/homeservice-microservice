@@ -13,8 +13,5 @@ public class ContractsOfCustomerDto
     public string SalePersonName { get; set; } = string.Empty;
     public DateTime QuotedAt { get; set; }
     public DateTime? SoldAt { get; set; }
-    
-    // [Newtonsoft.Json.JsonConverter(typeof(JsonStringEnumConverter))]
-    // [EnumDataType(typeof(ContractStatus))]
     public ContractStatus Status { get; set; }
 }

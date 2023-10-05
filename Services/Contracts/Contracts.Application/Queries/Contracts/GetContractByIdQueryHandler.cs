@@ -1,31 +1,29 @@
+using AutoMapper;
 using BuildingBlocks.Application.Cache;
 using BuildingBlocks.Application.CQRS;
+using BuildingBlocks.Domain.Data;
 using Contracts.Application.Dtos.Contracts;
+using Contracts.Domain.ContractAggregate;
+using Contracts.Domain.ContractAggregate.Specifications;
 
 namespace Contracts.Application.Queries.Contracts;
 
-public class GetContractByIdQueryHandler : IQueryHandler<GetContractByIdQuery, ContractDto>
+public class GetContractByIdQueryHandler : IQueryHandler<GetContractByIdQuery, ContractDetailDto>
 {
-    private readonly ICacheService _cache;
+    private readonly IReadOnlyRepository<Contract> _contractRepository;
+    private readonly IMapper _mapper;
 
-    public GetContractByIdQueryHandler(ICacheService cache)
+    public GetContractByIdQueryHandler(IReadOnlyRepository<Contract> contractRepository, IMapper mapper)
     {
-        _cache = cache;
+        _contractRepository = contractRepository;
+        _mapper = mapper;
     }
-    
-    public async Task<ContractDto> Handle(GetContractByIdQuery request, CancellationToken cancellationToken)
-    {
-        var data = await _cache.GetCachedDataAsync<ContractDto>("test");
-        
-        if (data == null)
-        {
-            data = new ContractDto()
-            {
-                Id = Guid.NewGuid()
-            };
-            await _cache.SetCachedDataAsync("test", data, TimeSpan.FromMinutes(1));
-        }
 
-        return data;
+    public async Task<ContractDetailDto> Handle(GetContractByIdQuery request, CancellationToken cancellationToken)
+    {
+        var contractDetailSpecification = new ContractDetailSpecification(request.Id);
+        var contractDetail = await _contractRepository.FindAsync(contractDetailSpecification);
+
+        return _mapper.Map<ContractDetailDto>(contractDetail);
     }
 }
