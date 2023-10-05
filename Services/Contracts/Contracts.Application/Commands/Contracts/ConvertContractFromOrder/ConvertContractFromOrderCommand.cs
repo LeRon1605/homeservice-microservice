@@ -5,9 +5,10 @@ namespace Contracts.Application.Commands.Contracts.ConvertContractFromOrder;
 
 public class ConvertContractFromOrderCommand : ContractConvertedFromOrderDto, ICommand<ContractDetailDto>
 {
-    public ConvertContractFromOrderCommand(Guid id, ContractCreateDto dto)
+    public Guid OrderId { get; set; }
+    
+    public ConvertContractFromOrderCommand(Guid id, ContractConvertedFromOrderDto dto)
     {
-        CustomerId = dto.CustomerId;
         CustomerNote = dto.CustomerNote;
         SalePersonId = dto.SalePersonId;
         SupervisorId = dto.SupervisorId;

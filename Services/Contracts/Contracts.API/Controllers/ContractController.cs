@@ -1,10 +1,8 @@
+using BuildingBlocks.Application.Dtos;
 using Contracts.Application.Commands.Contracts.AddContract;
-using Contracts.Application.Commands.Contracts.ConvertContractFromOrder;
 using Contracts.Application.Dtos.Contracts;
-using Contracts.Application.Queries;
 using Contracts.Application.Queries.Contracts;
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Contracts.API.Controllers;
@@ -18,6 +16,14 @@ public class ContractController : ControllerBase
     public ContractController(IMediator mediator)
     {
         _mediator = mediator;
+    }
+    
+    [HttpGet]
+    [ProducesResponseType(typeof(PagedResult<ContractDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetContracts([FromQuery] GetContractsQuery query)
+    {
+        var result = await _mediator.Send(query);
+        return Ok(result);
     }
     
     [HttpGet("{id:guid}")]

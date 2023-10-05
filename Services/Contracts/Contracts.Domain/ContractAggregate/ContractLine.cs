@@ -13,6 +13,9 @@ public class ContractLine : Entity
     public Guid UnitId { get; private set; }
     public string UnitName { get; private set; }
     
+    public Guid? TaxId { get; private set; }
+    public string? TaxName { get; private set; }
+    
     public string? Color { get; private set; }
     public int Quantity { get; private set; }
     public decimal Cost { get; private set; }
@@ -24,6 +27,8 @@ public class ContractLine : Entity
         Guid contractId,
         Guid unitId,
         string unitName,
+        Guid? taxId,
+        string? taxName,
         string? color, 
         int quantity,
         decimal cost,
@@ -31,9 +36,11 @@ public class ContractLine : Entity
     {
         ProductId = Guard.Against.NullOrEmpty(productId, nameof(ProductId));
         ProductName = Guard.Against.NullOrEmpty(productName, nameof(ProductName));
-        ContractId = Guard.Against.Null(contractId);
+        ContractId = Guard.Against.Null(contractId, nameof(ContractId));
         UnitId = Guard.Against.Null(unitId, nameof(UnitId));
         UnitName = unitName;
+        TaxId = taxId;
+        TaxName = taxName;
         Color = color;
         Quantity = Guard.Against.NegativeOrZero(quantity, nameof(Quantity));
         Cost = Guard.Against.Negative(cost, nameof(Cost));

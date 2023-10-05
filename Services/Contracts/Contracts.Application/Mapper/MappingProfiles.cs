@@ -1,9 +1,10 @@
-using System.Runtime.Intrinsics.X86;
 using AutoMapper;
 using Contracts.Application.Dtos.Contracts;
 using Contracts.Application.Dtos.Customers;
+using Contracts.Application.Dtos.Taxes;
 using Contracts.Domain.ContractAggregate;
 using Contracts.Domain.CustomerAggregate;
+using Contracts.Domain.TaxAggregate;
 
 namespace Contracts.Application.Mapper;
 
@@ -19,6 +20,8 @@ public class MappingProfiles : Profile
 
         CreateMap<InstallationAddress, InstallationAddressDto>();
 
+        CreateMap<Contract, ContractDto>()
+            .ForMember(dest => dest.CustomerName, options => options.MapFrom(src => src.Customer!.Name));
         CreateMap<Contract, ContractDetailDto>();
         CreateMap<ContractLine, ContractLineDto>();
 
@@ -29,5 +32,7 @@ public class MappingProfiles : Profile
             .ForMember(dest => dest.QuotedAt, opt => opt.MapFrom(src => src.QuotedAt))
             .ForMember(dest => dest.SoldAt, opt => opt.MapFrom(src => src.SoldAt))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
+        
+        CreateMap<Tax, TaxDto>();
     } 
 }

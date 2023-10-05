@@ -18,7 +18,7 @@ public class OrderController : ControllerBase
     
     [HttpPost("{id:guid}/contract")]
     [ProducesResponseType(typeof(ContractDetailDto), StatusCodes.Status200OK)]
-    public async Task<IActionResult> ConvertOrderToContract(Guid id, ContractCreateDto dto)
+    public async Task<IActionResult> ConvertOrderToContract(Guid id, ContractConvertedFromOrderDto dto)
     {
         var contract = await _mediator.Send(new ConvertContractFromOrderCommand(id, dto));
         return Ok(contract);

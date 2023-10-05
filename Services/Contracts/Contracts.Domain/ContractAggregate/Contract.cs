@@ -8,38 +8,38 @@ namespace Contracts.Domain.ContractAggregate;
 public class Contract : AggregateRoot
 {
     public int No { get; private set; }
-
+    
     public decimal Balance { get; private set; }
     public string? CustomerNote { get; private set; }
-
+    
     public Guid SalePersonId { get; private set; }
     public Guid? SupervisorId { get; private set; }
     public Guid? CustomerServiceRepId { get; private set; }
-
+    
     public int? PurchaseOrderNo { get; private set; }
-
+    
     public int? InvoiceNo { get; private set; }
     public DateTime? InvoiceDate { get; private set; }
-
+    
     public DateTime? EstimatedInstallationDate { get; private set; }
     public DateTime? ActualInstallationDate { get; private set; }
     public InstallationAddress InstallationAddress { get; private set; }
-
+    
     public DateTime QuotedAt { get; private set; }
     public DateTime? SoldAt { get; private set; }
-
+    
     public Guid CustomerId { get; private set; }
     public Customer? Customer { get; private set; }
-
+    
     public ContractStatus Status { get; private set; }
-
+    
     public List<ContractLine> Items { get; private set; }
 
     public Contract(
         Guid customerId,
-        string? customerNote,
-        Guid salePersonId,
-        Guid? supervisorId,
+        string? customerNote, 
+        Guid salePersonId, 
+        Guid? supervisorId, 
         Guid? customerServiceRepId,
         int? purchaseOrderNo,
         int? invoiceNo,
@@ -73,37 +73,38 @@ public class Contract : AggregateRoot
     }
 
     public void AddContractLine(
-        Guid productId,
+        Guid productId, 
         string productName,
         Guid unitId,
         string unitName,
-        string? color,
+        string? color, 
         int quantity,
         decimal cost,
         decimal sellPrice)
     {
-        if (Items.Any(x =>
-                x.ProductId == productId && x.UnitId == unitId &&
-                (string.IsNullOrWhiteSpace(color) || x.Color == color)))
+        if (Items.Any(x => x.ProductId == productId && x.UnitId == unitId && (string.IsNullOrWhiteSpace(color) || x.Color == color)))
         {
             throw new ContractLineExistedException(productId, unitId, color);
         }
-
+        
         var contractLine = new ContractLine(
-            productId,
-            productName,
-            Id,
-            unitId,
+            productId, 
+            productName, 
+            Id, 
+            unitId, 
             unitName,
-            color,
-            quantity,
-            cost,
+            taxId,
+            taxName,
+            color, 
+            quantity, 
+            cost, 
             sellPrice);
-
+        
         Items.Add(contractLine);
     }
 
     private Contract()
     {
+        
     }
 }
