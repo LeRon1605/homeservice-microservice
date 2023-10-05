@@ -29,7 +29,7 @@ public class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
             .HasForeignKey(x => x.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne<Order>()
+        builder.HasOne<Order>(x => x.Order)
             .WithMany(x => x.OrderLines)
             .HasForeignKey(x => x.OrderId)
             .OnDelete(DeleteBehavior.Cascade);

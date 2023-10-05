@@ -12,6 +12,8 @@ public class OrderLine : Entity
     public string? Color { get; private set; }
     public int Quantity { get; private set; }
     public decimal Cost { get; private set; }
+    
+    public Order Order { get; private set; } = null!;
 
     public OrderLine(
         Guid productId, 

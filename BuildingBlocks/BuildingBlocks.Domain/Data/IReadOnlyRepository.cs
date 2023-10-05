@@ -1,4 +1,5 @@
-﻿using BuildingBlocks.Domain.Models;
+﻿using System.Linq.Expressions;
+using BuildingBlocks.Domain.Models;
 using BuildingBlocks.Domain.Specification;
 
 namespace BuildingBlocks.Domain.Data;
@@ -14,6 +15,9 @@ public interface IReadOnlyRepository<TEntity> where TEntity : Entity
     Task<IList<TEntity>> FindListAsync(ISpecification<TEntity> specification);
     
     Task<int> CountAsync(ISpecification<TEntity> specification);
+    
+    Task<int> SumAsync(ISpecification<TEntity> specification, Expression<Func<TEntity, int>> selector);
+    Task<decimal> SumAsync(ISpecification<TEntity> specification, Expression<Func<TEntity, decimal>> selector);
     
     Task<(IList<TEntity>, int)> FindWithTotalCountAsync(ISpecification<TEntity> specification);
 
