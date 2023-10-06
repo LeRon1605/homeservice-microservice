@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BuildingBlocks.Application.Identity;
 using BuildingBlocks.Domain.Data;
 using BuildingBlocks.EventBus.Interfaces;
 using IAC.Application.Dtos.Authentication;
@@ -22,18 +23,23 @@ public class AuthenticateService : IAuthenticateService
     private readonly IUserRepository _userRepository;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ITokenService _tokenService;
+    private readonly IRoleService _roleService;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IEventBus _eventBus;
+    private readonly ICurrentUser _currentUser;
     private readonly ILogger<AuthenticateService> _logger;
 
-    public AuthenticateService(IUserRepository userRepository,
-                               ITokenService tokenService,
-                               UserManager<ApplicationUser> userManager,
-                               IMapper mapper,
-                               IUnitOfWork unitOfWork, 
-                               IEventBus eventBus, 
-                               ILogger<AuthenticateService> logger)
+    public AuthenticateService(
+        IUserRepository userRepository,
+        ITokenService tokenService,
+        UserManager<ApplicationUser> userManager,
+        IMapper mapper,
+        IUnitOfWork unitOfWork, 
+        IEventBus eventBus, 
+        ILogger<AuthenticateService> logger,
+        ICurrentUser currentUser,
+        IRoleService roleService)
     {
         _userRepository = userRepository;
         _tokenService = tokenService;
@@ -42,6 +48,8 @@ public class AuthenticateService : IAuthenticateService
         _unitOfWork = unitOfWork;
         _eventBus = eventBus;
         _logger = logger;
+        _currentUser = currentUser;
+        _roleService = roleService;
     }
     public async Task SignUpAsync(SignUpDto signUpDto)
     {
@@ -100,7 +108,8 @@ public class AuthenticateService : IAuthenticateService
         var tokenDto = new TokenDto
         {
             AccessToken = await _tokenService.GenerateAccessTokenAsync(user.Id),
-            RefreshToken = _tokenService.GenerateRefreshToken()
+            RefreshToken = _tokenService.GenerateRefreshToken(),
+            User = await GetUserInfoAsync(user),
         };
         
         await _tokenService.RevokeRefreshTokenAsync(refreshTokenDto.RefreshToken);
@@ -109,7 +118,15 @@ public class AuthenticateService : IAuthenticateService
         
         return tokenDto;
     }
-    
+
+    public async Task<UserDto> GetCurrentUserInfoAsync()
+    {
+        var user = await _userManager.FindByIdAsync(_currentUser.Id!)
+                              ?? throw new UserNotFoundException(_currentUser.Id!);
+
+        return await GetUserInfoAsync(user);
+    }
+
     public async Task<TokenDto> LoginAsync(LoginDto logInDto, LoginPortal loginPortal)
     {
         var user = await _userRepository.GetByPhoneNumberAsync(logInDto.Identifier) 
@@ -124,20 +141,33 @@ public class AuthenticateService : IAuthenticateService
         var isValid = await _userManager.CheckPasswordAsync(user, logInDto.Password);
         if (!isValid)
             throw new InvalidPasswordException();
-        
-        var userDto = _mapper.Map<UserDto>(user);
 
         var tokenDto = new TokenDto
         {
             AccessToken = await _tokenService.GenerateAccessTokenAsync(user.Id),
             RefreshToken = _tokenService.GenerateRefreshToken(),
-            User = userDto
+            User = await GetUserInfoAsync(user),
         };
         
         await _tokenService.AddRefreshTokenAsync(user.Id, tokenDto.RefreshToken);
         
         return tokenDto;
-    } 
+    }
+
+    private async Task<UserDto> GetUserInfoAsync(ApplicationUser user)
+    {
+        var roles = (await _roleService.GetByUserAsync(user.Id)).ToArray();
+        var permissions = new List<string>();
+        foreach (var role in roles)
+        {
+            permissions.AddRange(await _roleService.GetPermissionsInRoleAsync(role.Id));
+        }
+        
+        var userDto = _mapper.Map<UserDto>(user);
+        userDto.Permissions = permissions.Distinct().ToList();
+        userDto.Roles = roles;
+        return userDto;
+    }
     
     private async Task<bool> CanUserAccessPortal(ApplicationUser user, LoginPortal loginPortal)
     {

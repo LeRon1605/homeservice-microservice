@@ -28,6 +28,7 @@ public class AuthenticateController : ControllerBase
 	}
         
 	[HttpPost("backoffice/log-in")]
+	[ProducesResponseType(typeof(TokenDto), StatusCodes.Status200OK)]
 	public async Task<IActionResult> BackofficeLogin([FromBody] LoginDto logInDto)
 	{
 		var result = await _authenticateService.LoginAsync(logInDto, LoginPortal.BackOffice);

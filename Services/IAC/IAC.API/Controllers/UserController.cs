@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using IAC.Application.Dtos.Roles;
+using IAC.Application.Dtos.Users;
 using IAC.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace IAC.API.Controllers;
 public class UserController : ControllerBase
 {
     private readonly IRoleService _roleService;
+    private readonly IAuthenticateService _authService;
 
-    public UserController(IRoleService roleService)
+    public UserController(IRoleService roleService, IAuthenticateService authenticateService)
     {
         _roleService = roleService;
+        _authService = authenticateService;
     }
     
     [HttpGet("{id}/roles")]
@@ -27,11 +30,10 @@ public class UserController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public IActionResult Get()
+    [ProducesResponseType(typeof(UserInfoDto), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetCurrentUserInfoAsync()
     {
-        return Ok(new
-        {
-            UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
-        });
+        var userInfo = await _authService.GetCurrentUserInfoAsync();
+        return Ok(userInfo);
     }
 }
