@@ -29,8 +29,12 @@ public class EmailSender : IEmailSender
         emailMessage.From.Add(new MailboxAddress(_emailConfig.From));
         emailMessage.To.AddRange(message.To.Select(x => new MailboxAddress(string.Empty, x)));
         emailMessage.Subject = message.Subject;
-        emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Text) { Text = message.Content };
-
+        //emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Text) { Text = message.Content };
+        var builder = new BodyBuilder();
+        builder.HtmlBody = message.Content;
+        emailMessage.Body = builder.ToMessageBody ();
+        
+        
         return emailMessage;
     }
 

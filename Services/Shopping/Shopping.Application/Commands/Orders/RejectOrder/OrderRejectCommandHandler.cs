@@ -17,14 +17,15 @@ public class OrderRejectCommandHandler : ICommandHandler<OrderRejectCommand, Ord
     private readonly IUnitOfWork _unitOfWork;
     private readonly IEmailSender _emailSender;
 
-    public OrderRejectCommandHandler(IRepository<Order> oderRepository, IMapper mapper, IUnitOfWork unitOfWork, IEmailSender emailSender)
+    public OrderRejectCommandHandler(IRepository<Order> oderRepository, IMapper mapper, IUnitOfWork unitOfWork,
+        IEmailSender emailSender)
     {
         _oderRepository = oderRepository;
         _mapper = mapper;
         _unitOfWork = unitOfWork;
         _emailSender = emailSender;
     }
-    
+
     public async Task<OrderDto> Handle(OrderRejectCommand request, CancellationToken cancellationToken)
     {
         var orderByIdSpecification = new OrderByIdSpecification(request.Id);
@@ -36,9 +37,16 @@ public class OrderRejectCommandHandler : ICommandHandler<OrderRejectCommand, Ord
         await _unitOfWork.SaveChangesAsync();
         if (order.ContactInfo.Email != null)
         {
-            var message = new Message(new string[] { order.ContactInfo.Email }, "Reject Order", request.Description);
+            //var message = new Message(new string[] { order.ContactInfo.Email }, "Reject Order", request.Description);
+            string content = $"<p>Dear {order.ContactInfo.CustomerName},</p>\n " +
+                             $"<p>We regret to inform you that your order for order No: {order.OrderNo} has been rejected.</p>\n " +
+                             $"<p>The reason for the rejection is: {request.Description}</p>\n " +
+                             "<p>If you have any questions or concerns, please do not hesitate to contact us at <strong>homeserviceapp@gmail.com</strong>.</p>\n " +
+                             "<p>Thank you for your understanding.</p>\n <p>Sincerely,</p>\n <p><strong>Home Service Company</strong></p>";
+            var message = new Message(new string[] { order.ContactInfo.Email  }, "Reject Order", content);
             _emailSender.SendEmail(message);
         }
+
         return _mapper.Map<OrderDto>(order);
     }
 }

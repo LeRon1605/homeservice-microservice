@@ -46,6 +46,7 @@ public class OrderMapper : Profile
             .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.ContactInfo.City))
             .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.ContactInfo.State))
             .ForMember(dest => dest.PostalCode, opt => opt.MapFrom(src => src.ContactInfo.PostalCode))
-            .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.OrderLines));
+            .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.OrderLines))
+            .ForMember(dest => dest.OrderStatus, opt => opt.MapFrom(src => src.Status));
     }
 }
