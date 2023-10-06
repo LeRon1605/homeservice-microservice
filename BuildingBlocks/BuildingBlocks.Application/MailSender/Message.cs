@@ -1,6 +1,4 @@
-﻿using MimeKit;
-
-namespace BuildingBlocks.Infrastructure.MailSender;
+﻿namespace BuildingBlocks.Application.MailSender;
 
 public class Message
 {

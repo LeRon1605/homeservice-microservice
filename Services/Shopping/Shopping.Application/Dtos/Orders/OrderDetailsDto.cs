@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Shopping.Domain.OrderAggregate;
 
 namespace Shopping.Application.Dtos.Orders;
 
@@ -12,6 +13,7 @@ public class OrderDetailsDto
     public string? City { get; private set; }
     public string? State { get; private set; }
     public string? PostalCode { get; private set; }
-    
+
     public List<OrderLineDto>? Items { get; private set; }
+    public OrderStatus OrderStatus { get; private set; }
 }

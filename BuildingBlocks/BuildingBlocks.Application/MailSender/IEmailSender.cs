@@ -1,4 +1,4 @@
-﻿namespace BuildingBlocks.Infrastructure.MailSender;
+﻿namespace BuildingBlocks.Application.MailSender;
 
 public interface IEmailSender
 {
