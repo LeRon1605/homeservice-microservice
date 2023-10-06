@@ -38,7 +38,7 @@ public class OrderRejectCommandHandler : ICommandHandler<OrderRejectCommand, Ord
         if (order.ContactInfo.Email != null)
         {
             //var message = new Message(new string[] { order.ContactInfo.Email }, "Reject Order", request.Description);
-            string content = $"<p>Dear {order.ContactInfo.CustomerName},</p>\n " +
+            string content = $"<p>Dear {order.ContactInfo.ContactName},</p>\n " +
                              $"<p>We regret to inform you that your order for order No: {order.OrderNo} has been rejected.</p>\n " +
                              $"<p>The reason for the rejection is: {request.Description}</p>\n " +
                              "<p>If you have any questions or concerns, please do not hesitate to contact us at <strong>homeserviceapp@gmail.com</strong>.</p>\n " +
