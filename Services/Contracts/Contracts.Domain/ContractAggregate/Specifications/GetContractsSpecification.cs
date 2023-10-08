@@ -18,14 +18,12 @@ public class GetContractsSpecification : Specification<Contract>
     {
         AddInclude(x => x.Customer);
         AddInclude(x => x.Items);
-        
+
         if (!string.IsNullOrWhiteSpace(search))
         {
-            AddSearchTerm(search);
-            AddSearchField(nameof(Contract.Customer.Name));
-            AddSearchField(nameof(Contract.No));
+            AddFilter(x => x.No.ToString().Contains(search) || x.Customer!.Name.Contains(search));
         }
-        
+
         if (statusList != null)
             AddFilter(x => statusList.Contains(x.Status));
 
@@ -40,16 +38,16 @@ public class GetContractsSpecification : Specification<Contract>
                 DateFilterType.EstimatedInstallDate => x => x.EstimatedInstallationDate >= fromDate && x.EstimatedInstallationDate <= toDate,
                 _ => x => false
             };
-            
+
             AddFilter(dateFilter);
         }
-        
+
         if (salePersonId.HasValue)
             AddFilter(x => x.SalePersonId == salePersonId.Value);
-        
+
         if (customerServiceRepId.HasValue)
             AddFilter(x => x.CustomerServiceRepId == customerServiceRepId.Value);
-        
+
         ApplyPaging(pageIndex: pageIndex, pageSize: pageSize);
-    } 
+    }
 }
