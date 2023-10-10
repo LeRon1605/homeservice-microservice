@@ -103,6 +103,7 @@ public class OrderDataSeeder : IDataSeeder
             order.AddOrderLine(
                 product.Id,
                 product.Name,
+                product.ProductUnitId,
                 product.ProductUnit?.Name,
                 faker.Random.String(6),
                 faker.Random.Int(10),

@@ -4,11 +4,13 @@ namespace Shopping.Application.Dtos.Orders;
 
 public class OrderLineDto
 {
-    [Required] public string ProductName { get; private set; }
-    public string? UnitName { get; private set; }
-    public string? Color { get; private set; }
-    public int Quantity { get; private set; }
-    public decimal Cost { get; private set; }
-
-    public decimal TotalCost { get; private set; }
+    public Guid Id { get; set; }
+    public Guid ProductId { get; set; }
+    public string ProductName { get; set; } = null!;
+    public Guid? ProductUnitId { get; set; }
+    public string? UnitName { get; set; }
+    public string? Color { get; set; }
+    public int Quantity { get; set; }
+    public decimal Cost { get; set; }
+    public decimal TotalCost { get; set; }
 }

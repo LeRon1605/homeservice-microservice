@@ -75,6 +75,7 @@ public class SubmitOrderCommandHandler : ICommandHandler<SubmitOrderCommand>
             order.AddOrderLine(
                 item.ProductId, 
                 product.Name, 
+                product.ProductUnitId,
                 product.ProductUnit?.Name, 
                 item.Color, 
                 item.Quantity, 
