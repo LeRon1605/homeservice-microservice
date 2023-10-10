@@ -11,6 +11,8 @@ public interface ISpecification<T>
     
     bool IsNoTracking { get; set; }
     
+    bool IsIgnoreSoftDelete { get; set; }
+    
     List<Expression<Func<T, object>>> Includes { get; }
     
     List<string> IncludeStrings { get; }

@@ -6,6 +6,7 @@ using Contracts.Application.Commands.Customers.AddCustomer;
 using Contracts.Application.Dtos.Contracts;
 using Contracts.Domain.ContractAggregate;
 using Contracts.Domain.CustomerAggregate;
+using Contracts.Domain.PaymentMethodAggregate;
 using Contracts.Domain.ProductAggregate;
 using Contracts.Domain.ProductUnitAggregate;
 using Contracts.Domain.TaxAggregate;
@@ -20,6 +21,7 @@ public class ContractDataSeeder : IDataSeeder
     private readonly IReadOnlyRepository<Customer> _customerRepository;
     private readonly IReadOnlyRepository<Product> _productRepository;
     private readonly IRepository<Tax> _taxRepository;
+    private readonly IRepository<PaymentMethod> _paymentMethodRepository;
     private readonly IMediator _mediator;
     private readonly ILogger<ContractDataSeeder> _logger;
     private readonly IReadOnlyRepository<ProductUnit> _productUnitRepository;
@@ -28,6 +30,7 @@ public class ContractDataSeeder : IDataSeeder
     public ContractDataSeeder(
         IMediator mediator, 
         IRepository<Tax> taxRepository,
+        IRepository<PaymentMethod> paymentMethodRepository,
         IRepository<Contract> contractRepository, 
         IReadOnlyRepository<Customer> customerRepository,
         IReadOnlyRepository<Product> productRepository,
@@ -36,6 +39,7 @@ public class ContractDataSeeder : IDataSeeder
         IUnitOfWork unitOfWork)
     {
         _taxRepository = taxRepository;
+        _paymentMethodRepository = paymentMethodRepository;
         _productRepository = productRepository;
         _mediator = mediator;
         _contractRepository = contractRepository;
@@ -49,6 +53,7 @@ public class ContractDataSeeder : IDataSeeder
     {
         try
         {
+            await SeedPaymentMethodsAsync();
             await SeedTaxesAsync();
             await SeedCustomersAsync();
             await SeedContractsAsync();
@@ -174,6 +179,30 @@ public class ContractDataSeeder : IDataSeeder
 
             await _unitOfWork.SaveChangesAsync();
             _logger.LogInformation("Finished seeding customers data...");
+        }
+    }
+    
+    private async Task SeedPaymentMethodsAsync()
+    {
+        if (!await _paymentMethodRepository.AnyAsync())
+        {
+            _logger.LogInformation("Begin seeding payment methods data...");
+
+            var paymentMethods = new List<PaymentMethod>()
+            {
+                new PaymentMethod("Cash"),
+                new PaymentMethod("Visa"),
+                new PaymentMethod("Mastercard"),
+                new PaymentMethod("American Express")
+            };
+
+            foreach (var method in paymentMethods)
+            {
+                _paymentMethodRepository.Add(method);
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+            _logger.LogInformation("Finished seeding payment methods data...");
         }
     }
 }

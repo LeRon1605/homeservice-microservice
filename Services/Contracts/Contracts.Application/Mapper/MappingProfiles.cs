@@ -1,9 +1,11 @@
 using AutoMapper;
 using Contracts.Application.Dtos.Contracts;
 using Contracts.Application.Dtos.Customers;
+using Contracts.Application.Dtos.PaymentMethods;
 using Contracts.Application.Dtos.Taxes;
 using Contracts.Domain.ContractAggregate;
 using Contracts.Domain.CustomerAggregate;
+using Contracts.Domain.PaymentMethodAggregate;
 using Contracts.Domain.TaxAggregate;
 
 namespace Contracts.Application.Mapper;
@@ -36,5 +38,7 @@ public class MappingProfiles : Profile
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
         
         CreateMap<Tax, TaxDto>();
+        
+        CreateMap<PaymentMethod, PaymentMethodDto>();
     } 
 }

@@ -14,7 +14,7 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-Log.Logger = ApplicationLoggerFactory.CreateSerilogLogger(builder.Configuration, "ContractService");
+// Log.Logger = ApplicationLoggerFactory.CreateSerilogLogger(builder.Configuration, "ContractService");
 
 builder.Services
     .AddSwagger("ContractService")
@@ -36,7 +36,7 @@ builder.Services.AddControllers()
 
 builder.Services.AddSwaggerGenNewtonsoftSupport();
 
-builder.Host.UseSerilog();
+// builder.Host.UseSerilog();
 
 var app = builder.Build();
 

@@ -15,6 +15,7 @@ public class CurrentUser : ICurrentUser
     public string? Id => _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
     public string? Name => _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Name);
     public string? Email => _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Email);
+    public string? FullName => _httpContextAccessor.HttpContext?.User.FindFirstValue("FullName");
     public bool IsAuthenticated => _httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated ?? false;
     public ClaimsPrincipal? ClaimPrincipal => _httpContextAccessor.HttpContext?.User;
     

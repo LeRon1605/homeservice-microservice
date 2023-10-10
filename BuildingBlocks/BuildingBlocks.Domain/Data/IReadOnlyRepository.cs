@@ -24,4 +24,6 @@ public interface IReadOnlyRepository<TEntity> where TEntity : Entity
     Task<bool> AnyAsync(ISpecification<TEntity> specification);
     
     Task<bool> AnyAsync();
+    
+    Task<bool> AnyAsync(Guid id);
 }

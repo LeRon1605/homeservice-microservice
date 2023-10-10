@@ -70,4 +70,9 @@ public class EfCoreReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity>
     {
         return DbSet.AsNoTracking().AnyAsync();
     }
+
+    public Task<bool> AnyAsync(Guid id)
+    {
+        return DbSet.AsNoTracking().AnyAsync(e => e.Id == id);
+    }
 }
