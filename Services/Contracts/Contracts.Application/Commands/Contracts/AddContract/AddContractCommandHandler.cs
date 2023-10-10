@@ -3,8 +3,12 @@ using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
 using Contracts.Application.Dtos.Contracts;
 using Contracts.Domain.ContractAggregate;
+using Contracts.Domain.ContractAggregate.Exceptions;
 using Contracts.Domain.CustomerAggregate;
 using Contracts.Domain.CustomerAggregate.Exceptions;
+using Contracts.Domain.PaymentMethodAggregate;
+using Contracts.Domain.PaymentMethodAggregate.Exceptions;
+using Contracts.Domain.PaymentMethodAggregate.Specifications;
 using Contracts.Domain.ProductAggregate;
 using Contracts.Domain.ProductAggregate.Exceptions;
 using Contracts.Domain.ProductAggregate.Specifications;
@@ -23,6 +27,7 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
     private readonly IRepository<Contract> _contractRepository;
     private readonly IReadOnlyRepository<Product> _productRepository;
     private readonly IReadOnlyRepository<ProductUnit> _productUnitRepository;
+    private readonly IReadOnlyRepository<PaymentMethod> _paymentMethodRepository;
     private readonly IReadOnlyRepository<Tax> _taxRepository;
     private readonly IRepository<Customer> _customerRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -33,6 +38,7 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
         IRepository<Contract> contractRepository,
         IReadOnlyRepository<Product> productRepository,
         IReadOnlyRepository<ProductUnit> productUnitRepository,
+        IReadOnlyRepository<PaymentMethod> paymentMethodRepository,
         IRepository<Customer> customerRepository,
         IReadOnlyRepository<Tax> taxRepository,
         IUnitOfWork unitOfWork,
@@ -43,6 +49,7 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
         _productRepository = productRepository;
         _productUnitRepository = productUnitRepository;
         _customerRepository = customerRepository;
+        _paymentMethodRepository = paymentMethodRepository;
         _taxRepository = taxRepository;
         _unitOfWork = unitOfWork;
         _logger = logger;
@@ -54,7 +61,15 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
         // Todo: Validate employee exist
         await CheckCustomerExistAsync(request.CustomerId);
 
-        var contract = await CreateContractAsync(request);
+        var contract = new Contract(
+            request.CustomerId, request.CustomerNote, request.SalePersonId,
+            request.SupervisorId, request.CustomerServiceRepId, request.PurchaseOrderNo, request.InvoiceNo,
+            request.InvoiceDate, request.EstimatedInstallationDate, request.ActualInstallationDate,
+            request.InstallationAddress.FullAddress, request.InstallationAddress.City,
+            request.InstallationAddress.State, request.InstallationAddress.PostalCode, request.Status);
+
+        await AddContractLineAsync(contract, request);
+        await AddPaymentsAsync(contract, request);
         
         _contractRepository.Add(contract);
         await _unitOfWork.SaveChangesAsync();
@@ -64,23 +79,12 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
         return _mapper.Map<ContractDetailDto>(contract);
     }
 
-    private async Task CheckCustomerExistAsync(Guid customerId)
+    private async Task AddContractLineAsync(Contract contract, AddContractCommand request)
     {
-        if (!await _customerRepository.AnyAsync(customerId))
+        if (!request.Items.Any())
         {
-            // Todo: create exception class
-            throw new CustomerNotFoundException(customerId);
+            throw new ContractLineEmptyException();
         }
-    }
-
-    private async Task<Contract> CreateContractAsync(AddContractCommand request)
-    {
-        var contract = new Contract(
-            request.CustomerId, request.CustomerNote, request.SalePersonId,
-            request.SupervisorId, request.CustomerServiceRepId, request.PurchaseOrderNo, request.InvoiceNo,
-            request.InvoiceDate, request.EstimatedInstallationDate, request.ActualInstallationDate,
-            request.InstallationAddress.FullAddress, request.InstallationAddress.City,
-            request.InstallationAddress.State, request.InstallationAddress.PostalCode, request.Status);
         
         var productIds = request.Items.Select(x => x.ProductId).ToArray();
         var products = await _productRepository.FindListAsync(new ProductByIncludedIdsSpecification(productIds));
@@ -109,8 +113,49 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
                 item.SellPrice
             );
         }
+    }
 
-        return contract;
+    private async Task AddPaymentsAsync(Contract contract, AddContractCommand request)
+    {
+        if (request.Payments == null || !request.Payments.Any())
+        {
+            return;
+        }
+        
+        var paymentMethodIds = request.Payments.Where(x => x.PaymentMethodId.HasValue).Select(x => x.PaymentMethodId!.Value).ToArray();
+        var paymentMethods =await _paymentMethodRepository.FindListAsync(new PaymentMethodsByIncludedIdsSpecification(paymentMethodIds));
+        
+        foreach (var payment in request.Payments)
+        {
+            contract.AddPayment(
+                payment.DatePaid,
+                payment.PaidAmount,
+                payment.Surcharge,
+                payment.Reference,
+                payment.Comments,
+                payment.PaymentMethodId,
+                GetPaymentMethodNameById(payment.PaymentMethodId, paymentMethods)
+            );    
+        }
+    }
+    
+    private async Task CheckCustomerExistAsync(Guid customerId)
+    {
+        if (!await _customerRepository.AnyAsync(customerId))
+        {
+            throw new CustomerNotFoundException(customerId);
+        }
+    }
+
+    private PaymentMethod GetPaymentMethodById(Guid paymentMethodId, IEnumerable<PaymentMethod> paymentMethods)
+    {
+        var paymentMethod = paymentMethods.FirstOrDefault(x => x.Id == paymentMethodId);
+        if (paymentMethod == null)
+        {
+            throw new PaymentMethodNotFoundException(paymentMethodId);
+        }
+
+        return paymentMethod;
     }
     
     private Product GetProductById(Guid productId, IEnumerable<Product> products)
@@ -146,6 +191,22 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
             }
 
             return tax.Name;
+        }
+
+        return null;
+    }
+
+    private string? GetPaymentMethodNameById(Guid? paymentMethodId, IEnumerable<PaymentMethod> paymentMethods)
+    {
+        if (paymentMethodId.HasValue)
+        {
+            var paymentMethod = paymentMethods.FirstOrDefault(x => x.Id == paymentMethodId);
+            if (paymentMethod == null)
+            {
+                throw new PaymentMethodNotFoundException(paymentMethodId.Value);
+            }
+
+            return paymentMethod.Name;
         }
 
         return null;

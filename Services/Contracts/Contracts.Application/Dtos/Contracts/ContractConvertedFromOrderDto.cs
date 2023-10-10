@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using Contracts.Domain.ContractAggregate;
 
 namespace Contracts.Application.Dtos.Contracts;
@@ -23,5 +24,7 @@ public class ContractConvertedFromOrderDto
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ContractStatus Status { get; set; }
 
+    [MinLength(1)]
     public List<ContractLineCreateDto> Items { get; set; } = null!;
+    public List<ContractPaymentCreateDto>? Payments { get; set; }
 }

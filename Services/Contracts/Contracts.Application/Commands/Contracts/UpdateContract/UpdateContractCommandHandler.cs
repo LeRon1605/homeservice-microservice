@@ -127,6 +127,11 @@ public class UpdateContractCommandHandler : ICommandHandler<UpdateContractComman
 
     private async Task UpdateItemsAsync(Contract contract, IList<ContractLineUpdateDto> items)
     {
+        if (!items.Any())
+        {
+            throw new ContractLineEmptyException();
+        }
+        
         var updatedLines = items.Where(x => x.Id.HasValue).ToArray();
         var deletedLines = contract.Items.ExceptBy(updatedLines.Select(x => x.Id), x => x.Id).ToArray();
         var newLines = items.Where(x => !x.Id.HasValue).ToArray();

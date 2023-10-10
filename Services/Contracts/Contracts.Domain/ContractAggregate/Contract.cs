@@ -34,6 +34,7 @@ public class Contract : AggregateRoot
     public ContractStatus Status { get; private set; }
     
     public List<ContractLine> Items { get; private set; }
+    public List<ContractPayment> Payments { get; private set; }
 
     public Contract(
         Guid customerId,
@@ -70,6 +71,7 @@ public class Contract : AggregateRoot
         Status = status;
 
         Items = new List<ContractLine>();
+        Payments = new List<ContractPayment>();
     }
     
     public void UpdateContractInfo(
@@ -189,6 +191,29 @@ public class Contract : AggregateRoot
             quantity, 
             cost, 
             sellPrice);
+    }
+
+    public void AddPayment(
+        DateTime datePaid, 
+        decimal paidAmount, 
+        decimal? surcharge, 
+        string? reference, 
+        string? comments,
+        Guid? paymentMethodId,
+        string? paymentMethodName)
+    {
+        var contractPayment = new ContractPayment(
+            Id, 
+            datePaid, 
+            paidAmount, 
+            surcharge, 
+            reference, 
+            comments,
+            paymentMethodId,
+            paymentMethodName);
+        
+        Balance -= paidAmount;
+        Payments.Add(contractPayment);
     }
 
     private Contract()

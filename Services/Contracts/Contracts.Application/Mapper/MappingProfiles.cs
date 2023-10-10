@@ -38,6 +38,7 @@ public class MappingProfiles : Profile
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
         
         CreateMap<Tax, TaxDto>();
+        CreateMap<ContractPayment, ContractPaymentDto>();
         
         CreateMap<PaymentMethod, PaymentMethodDto>();
     } 

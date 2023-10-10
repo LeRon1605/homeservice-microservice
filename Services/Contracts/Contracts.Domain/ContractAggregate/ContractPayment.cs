@@ -13,10 +13,8 @@ public class ContractPayment : AuditableEntity
     public string? Comments { get; private set; }
     
     public Guid ContractId { get; private set; }
-    public Contract? Contract { get; private set; }
     
     public Guid? PaymentMethodId { get; private set; }
-    public PaymentMethod? PaymentMethod { get; private set; }
     
     public string? PaymentMethodName { get; private set; }
     
@@ -36,8 +34,8 @@ public class ContractPayment : AuditableEntity
         Surcharge = surcharge.HasValue ? Guard.Against.Negative(surcharge.Value, nameof(Surcharge)) : 0;
         Reference = reference;
         Comments = comments;
-        paymentMethodId = paymentMethodId;
-        paymentMethodName = paymentMethodName;
+        PaymentMethodId = paymentMethodId;
+        PaymentMethodName = paymentMethodName;
     }
 
     private ContractPayment()

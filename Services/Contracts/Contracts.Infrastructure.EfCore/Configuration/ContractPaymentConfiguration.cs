@@ -1,4 +1,5 @@
 ﻿using Contracts.Domain.ContractAggregate;
+using Contracts.Domain.PaymentMethodAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -34,11 +35,11 @@ public class ContractPaymentConfiguration : IEntityTypeConfiguration<ContractPay
             .IsRequired()
             .HasDefaultValue(false);
 
-        builder.HasOne(x => x.Contract)
-            .WithMany()
+        builder.HasOne<Contract>()
+            .WithMany(x => x.Payments)
             .HasForeignKey(x => x.ContractId);
 
-        builder.HasOne(x => x.PaymentMethod)
+        builder.HasOne<PaymentMethod>()
             .WithMany()
             .HasForeignKey(x => x.PaymentMethodId)
             .IsRequired(false);
