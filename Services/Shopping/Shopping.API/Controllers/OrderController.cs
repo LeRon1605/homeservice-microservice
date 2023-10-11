@@ -44,6 +44,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(PagedResult<OrderDetailsDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetOrderDetails(Guid id)
     {
         var orderDetails = await _mediator.Send(new OrderDetailQuery(id));
