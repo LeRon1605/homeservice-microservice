@@ -1,9 +1,12 @@
 using BuildingBlocks.Application.IntegrationEvent;
 using BuildingBlocks.EventBus.Interfaces;
+using Contracts.Application.IntegrationEvents.EventHandling.Materials;
 using Contracts.Application.IntegrationEvents.Events;
+using Contracts.Application.IntegrationEvents.Events.Materials;
 using Contracts.Application.IntegrationEvents.Events.Orders;
 using Contracts.Application.IntegrationEvents.Events.Products;
 using Contracts.Application.IntegrationEvents.Events.ProductUnits;
+using Contracts.Domain.MaterialAggregate;
 
 namespace Contracts.API.Extensions;
 
@@ -20,6 +23,10 @@ public static class EventBusExtension
         eventBus.Subscribe<ProductUnitAddedIntegrationEvent, IIntegrationEventHandler<ProductUnitAddedIntegrationEvent>>();
         eventBus.Subscribe<ProductUnitUpdatedIntegrationEvent, IIntegrationEventHandler<ProductUnitUpdatedIntegrationEvent>>();
         eventBus.Subscribe<ProductUnitDeletedIntegrationEvent, IIntegrationEventHandler<ProductUnitDeletedIntegrationEvent>>();
+        
+        eventBus.Subscribe<MaterialAddedIntegrationEvent, IIntegrationEventHandler<MaterialAddedIntegrationEvent>>();
+        eventBus.Subscribe<MaterialDeletedIntegrationEvent, IIntegrationEventHandler<MaterialDeletedIntegrationEvent>>();
+        eventBus.Subscribe<MaterialUpdatedIntegrationEvent, IIntegrationEventHandler<MaterialUpdatedIntegrationEvent>>();
         
         eventBus.Subscribe<OrderAddedIntegrationEvent, IIntegrationEventHandler<OrderAddedIntegrationEvent>>();
         

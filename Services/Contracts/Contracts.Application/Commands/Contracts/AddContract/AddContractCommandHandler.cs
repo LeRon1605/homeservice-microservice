@@ -1,11 +1,17 @@
 ﻿using AutoMapper;
 using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
+using BuildingBlocks.EventBus.Interfaces;
 using Contracts.Application.Dtos.Contracts;
+using Contracts.Application.IntegrationEvents.Events.Contracts;
+using Contracts.Application.IntegrationEvents.Events.Contracts.EventDtos;
 using Contracts.Domain.ContractAggregate;
 using Contracts.Domain.ContractAggregate.Exceptions;
 using Contracts.Domain.CustomerAggregate;
 using Contracts.Domain.CustomerAggregate.Exceptions;
+using Contracts.Domain.MaterialAggregate;
+using Contracts.Domain.MaterialAggregate.Exceptions;
+using Contracts.Domain.MaterialAggregate.Specifications;
 using Contracts.Domain.PaymentMethodAggregate;
 using Contracts.Domain.PaymentMethodAggregate.Exceptions;
 using Contracts.Domain.PaymentMethodAggregate.Specifications;
@@ -26,6 +32,7 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
 {
     private readonly IRepository<Contract> _contractRepository;
     private readonly IReadOnlyRepository<Product> _productRepository;
+    private readonly IReadOnlyRepository<Material> _materialRepository;
     private readonly IReadOnlyRepository<ProductUnit> _productUnitRepository;
     private readonly IReadOnlyRepository<PaymentMethod> _paymentMethodRepository;
     private readonly IReadOnlyRepository<Tax> _taxRepository;
@@ -33,6 +40,7 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<AddContractCommandHandler> _logger;
     private readonly IMapper _mapper;
+    private readonly IEventBus _eventBus;
     
     public AddContractCommandHandler(
         IRepository<Contract> contractRepository,
@@ -43,7 +51,9 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
         IReadOnlyRepository<Tax> taxRepository,
         IUnitOfWork unitOfWork,
         ILogger<AddContractCommandHandler> logger,
-        IMapper mapper)
+        IMapper mapper,
+        IEventBus eventBus,
+        IReadOnlyRepository<Material> materialRepository)
     {
         _contractRepository = contractRepository;
         _productRepository = productRepository;
@@ -54,12 +64,15 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
         _unitOfWork = unitOfWork;
         _logger = logger;
         _mapper = mapper;
+        _eventBus = eventBus;
+        _materialRepository = materialRepository;
     }
     
     public async Task<ContractDetailDto> Handle(AddContractCommand request, CancellationToken cancellationToken)
     {
-        // Todo: Validate employee exist
+        // Todo: Validate employee exist (salesperson, supervisor, customer service rep and installer)
         await CheckCustomerExistAsync(request.CustomerId);
+        await SetInstallationItemsNameAndUnit(request.Installations);
 
         var contract = new Contract(
             request.CustomerId, request.CustomerNote, request.SalePersonId,
@@ -74,6 +87,20 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
         
         _contractRepository.Add(contract);
         await _unitOfWork.SaveChangesAsync();
+        
+        var installations = _mapper.Map<List<InstallationEventDto>>(request.Installations);
+        // Each installation differs by its product and color, so I use them to find the corresponding contract line id
+        MapContractLineIdToInstallations(installations, contract.Items);
+        
+        _eventBus.Publish(new ContractCreatedIntegrationEvent
+        {
+            ContractId = contract.Id,
+            InstallationAddress = _mapper.Map<InstallationAddressEventDto>(request.InstallationAddress),
+            CustomerId = contract.CustomerId,
+            SalespersonId = contract.SalePersonId,
+            SupervisorId = contract.SupervisorId,
+            Installations = installations
+        });
         
         _logger.LogInformation("Contract added {ContractId}", contract.Id);
 
@@ -220,5 +247,43 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
         }
 
         return null;
+    }
+
+    private void MapContractLineIdToInstallations(IList<InstallationEventDto> installations, IList<ContractLine> contractLines)
+    {
+        foreach (var installation in installations)
+        {
+            installation.ContractLineId = contractLines.First(x => x.ProductId == installation.ProductId && x.Color == installation.Color).Id;
+        }
+    }
+
+    // Set material name and unit name for each installation item
+    private async Task SetInstallationItemsNameAndUnit(IList<InstallationCreateDto>? installations)
+    {
+        if (installations == null || !installations.Any())
+        {
+            return;
+        }
+        
+        foreach (var installation in installations)
+        {
+            var materialIds = installation.Items.Select(x => x.MaterialId).ToList();
+            var materials = await _materialRepository.FindListAsync(new MaterialByIncludeIdsSpecification(materialIds)); 
+            if (materials.Count != materialIds.Count)
+            {
+                var notFoundMaterialIds = materialIds.Except(materials.Select(x => x.Id));
+                throw new MaterialNotFoundException(notFoundMaterialIds.First());
+            }
+            installation.Items.ForEach(i => i.MaterialName = materials.First(x => x.Id == i.MaterialId).Name);
+            
+            var unitIds = installation.Items.Select(x => x.UnitId).ToList();
+            var units = await _productUnitRepository.FindListAsync(new ProductUnitByIncludedIdsSpecification(unitIds));
+            if (units.Count != unitIds.Count)
+            {
+                var notFoundUnitIds = unitIds.Except(units.Select(x => x.Id));
+                throw new ProductUnitNotFoundException(notFoundUnitIds.First());
+            }
+            installation.Items.ForEach(i => i.UnitName = units.First(x => x.Id == i.UnitId).Name);
+        }
     }
 }

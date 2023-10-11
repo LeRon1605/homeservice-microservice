@@ -29,4 +29,5 @@ public class ContractCreateDto
     public List<ContractLineCreateDto> Items { get; set; } = null!;
     public List<ContractPaymentCreateDto>? Payments { get; set; }
     public List<ContractActionCreateDto>? Actions { get; set; }
+    public List<InstallationCreateDto>? Installations { get; set; }
 }

@@ -1,7 +1,9 @@
 ﻿using Bogus;
 using BuildingBlocks.Application.Seeder;
 using BuildingBlocks.Domain.Data;
+using MediatR;
 using Microsoft.Extensions.Logging;
+using Products.Application.Commands.MaterialCommands.AddMaterial;
 using Products.Domain.MaterialAggregate;
 using Products.Domain.MaterialAggregate.DomainServices;
 using Products.Domain.ProductTypeAggregate;
@@ -17,19 +19,22 @@ public class MaterialDataSeeder: IDataSeeder
     private readonly IMaterialDomainService _materialDomainService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<MaterialDataSeeder> _logger;
+    private readonly IMediator _mediator;
 
     public MaterialDataSeeder(IRepository<Material> materialRepository, 
         IMaterialDomainService materialDomainService,
         IUnitOfWork unitOfWork,
         ILogger<MaterialDataSeeder> logger, 
         IReadOnlyRepository<ProductType> productTypeRepository,
-        IReadOnlyRepository<ProductUnit> productUnitRepository)
+        IReadOnlyRepository<ProductUnit> productUnitRepository,
+        IMediator mediator)
     {
         _materialRepository = materialRepository;
         _unitOfWork = unitOfWork;
         _logger = logger;
         _productTypeRepository = productTypeRepository;
         _productUnitRepository = productUnitRepository;
+        _mediator = mediator;
         _materialDomainService = materialDomainService;
     }
 
@@ -67,7 +72,14 @@ public class MaterialDataSeeder: IDataSeeder
                 faker.Random.Decimal(1, 100),
                 faker.Random.Decimal(1, 100),
                 faker.Random.Bool(0.1f));
-            _materialRepository.Add(material);
+            await _mediator.Send(new AddMaterialCommand(
+                material.MaterialCode,
+                material.Name,
+                material.ProductTypeId,
+                material.SellUnitId,
+                material.SellPrice,
+                material.Cost,
+                material.IsObsolete));
         }
     }
 }

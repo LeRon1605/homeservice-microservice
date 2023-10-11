@@ -116,6 +116,35 @@
       - seq
       - redis
       
+  installation.api:
+    image: installation.api
+    build:
+      context: .
+      dockerfile: Services/Installation/Presentation/Installations.API/Dockerfile
+    ports:
+      - "5009:80"
+    environment:
+      - EventBus__HostName=rabbitmq
+      - EventBus__Port=5672
+      - EventBus__UserName=admin
+      - EventBus__Password=admin
+      - EventBus__SubscriptionClientName=InstallationService
+      - EventBus__RetryCount=5
+      - Serilog__SeqServerUrl=http://seq:5341
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__Default=Server=db,1433;Database=HomeCare.InstallationDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
+      - ConnectionStrings__Redis=redis
+      - GrpcUrls__Identity=http://iac.api:3000
+      - Kestrel__Endpoints__Http__Url=http://+:80
+      - Kestrel__Endpoints__gRPC__Url=http://+:3000
+    restart: always
+    depends_on:
+      - db
+      - rabbitmq
+      - seq
+      - redis
+        
   apigateway:
     image: apigateway
     build:
@@ -143,6 +172,8 @@
       - GrpcUrls__Identity=http://iac.api:3000
       - GrpcUrls__Product=http://products.api:3000
       - GrpcUrls__Shopping=http://shopping.api:3000
+      - GrpcUrls__Contract=http://contracts.api:3000
+      - GrpcUrls__Installation=http://installation.api:3000
       - HttpUrls__Product=http://products.api:80/api/products/
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest

@@ -290,6 +290,25 @@ namespace Contracts.Infrastructure.EfCore.Migrations
                     b.ToTable("Customer");
                 });
 
+            modelBuilder.Entity("Contracts.Domain.MaterialAggregate.Material", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsObsolete")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Material");
+                });
+
             modelBuilder.Entity("Contracts.Domain.PaymentMethodAggregate.PaymentMethod", b =>
                 {
                     b.Property<Guid>("Id")

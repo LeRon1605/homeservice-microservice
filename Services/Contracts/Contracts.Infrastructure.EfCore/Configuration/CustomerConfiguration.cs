@@ -1,9 +1,9 @@
-﻿using Contracts.Domain.CustomerAggregate;
-using Customers.Domain.Constants;
+﻿using Contracts.Domain.Constants;
+using Contracts.Domain.CustomerAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Customers.Infrastructure.EfCore.Configuration;
+namespace Contracts.Infrastructure.EfCore.Configuration;
 
 public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
 {

@@ -3,6 +3,7 @@ using Contracts.Application.Dtos.Contracts;
 using Contracts.Application.Dtos.Customers;
 using Contracts.Application.Dtos.PaymentMethods;
 using Contracts.Application.Dtos.Taxes;
+using Contracts.Application.IntegrationEvents.Events.Contracts.EventDtos;
 using Contracts.Domain.ContractAggregate;
 using Contracts.Domain.CustomerAggregate;
 using Contracts.Domain.PaymentMethodAggregate;
@@ -42,5 +43,9 @@ public class MappingProfiles : Profile
         CreateMap<ContractAction, ContractActionDto>();
         
         CreateMap<PaymentMethod, PaymentMethodDto>();
+
+        CreateMap<InstallationAddressDto, InstallationAddressEventDto>();
+        CreateMap<InstallationItemCreateDto, InstallationItemEventDto>();
+        CreateMap<InstallationCreateDto, InstallationEventDto>();
     } 
 }

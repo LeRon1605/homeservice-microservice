@@ -1,4 +1,4 @@
-namespace Customers.Domain.Constants;
+namespace Contracts.Domain.Constants;
 
 public static class StringLength
 {
