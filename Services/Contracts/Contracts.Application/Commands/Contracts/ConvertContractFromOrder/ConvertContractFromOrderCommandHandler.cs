@@ -73,7 +73,8 @@ public class ConvertContractFromOrderCommandHandler : ICommandHandler<ConvertCon
             CustomerServiceRepId = request.CustomerServiceRepId,
             InvoiceNo = request.InvoiceNo,
             Items = request.Items,
-            Payments = request.Payments
+            Payments = request.Payments,
+            Actions = request.Actions
         };
         
         return await _mediator.Send(new AddContractCommand(contractCreateDto));

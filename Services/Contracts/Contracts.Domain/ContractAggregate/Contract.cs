@@ -247,6 +247,12 @@ public class Contract : AggregateRoot
         
         Payments.Remove(payment);
     }
+    
+    public void AddAction(string name, DateTime date, string? comment, Guid actionByEmployeeId)
+    {
+        var contractAction = new ContractAction(Id, name, date, actionByEmployeeId, comment);
+        Actions.Add(contractAction);
+    }
 
     private Contract()
     {

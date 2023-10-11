@@ -39,6 +39,7 @@ public class MappingProfiles : Profile
         
         CreateMap<Tax, TaxDto>();
         CreateMap<ContractPayment, ContractPaymentDto>();
+        CreateMap<ContractAction, ContractActionDto>();
         
         CreateMap<PaymentMethod, PaymentMethodDto>();
     } 

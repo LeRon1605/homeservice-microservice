@@ -70,6 +70,7 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
 
         await AddContractLineAsync(contract, request);
         await AddPaymentsAsync(contract, request);
+        await AddActionsAsync(contract, request);
         
         _contractRepository.Add(contract);
         await _unitOfWork.SaveChangesAsync();
@@ -135,6 +136,26 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
                 payment.Comments,
                 payment.PaymentMethodId,
                 GetPaymentMethodNameById(payment.PaymentMethodId, paymentMethods)
+            );    
+        }
+    }
+    
+    private async Task AddActionsAsync(Contract contract, AddContractCommand request)
+    {
+        if (request.Actions == null || !request.Actions.Any())
+        {
+            return;
+        }
+        
+        // Todo: Validate employee
+        
+        foreach (var action in request.Actions)
+        {
+            contract.AddAction(
+                action.Name,
+                action.Date,
+                action.Comment,
+                action.ActionByEmployeeId
             );    
         }
     }

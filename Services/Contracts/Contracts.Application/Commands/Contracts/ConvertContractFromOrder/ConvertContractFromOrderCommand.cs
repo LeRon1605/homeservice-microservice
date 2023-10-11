@@ -23,5 +23,6 @@ public class ConvertContractFromOrderCommand : ContractConvertedFromOrderDto, IC
         Status = dto.Status;
         OrderId = id;
         Payments = dto.Payments;
+        Actions = dto.Actions;
     }
 }

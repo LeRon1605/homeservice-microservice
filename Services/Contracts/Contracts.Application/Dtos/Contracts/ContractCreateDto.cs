@@ -28,4 +28,5 @@ public class ContractCreateDto
     [MinLength(1)]
     public List<ContractLineCreateDto> Items { get; set; } = null!;
     public List<ContractPaymentCreateDto>? Payments { get; set; }
+    public List<ContractActionCreateDto>? Actions { get; set; }
 }
