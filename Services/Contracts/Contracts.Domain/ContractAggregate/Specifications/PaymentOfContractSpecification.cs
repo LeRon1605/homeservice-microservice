@@ -19,7 +19,10 @@ public class PaymentOfContractSpecification : Specification<ContractPayment>
             AddSearchField(nameof(ContractPayment.PaymentMethodName));
             AddSearchField(nameof(ContractPayment.CreatedBy));
             AddSearchField(nameof(ContractPayment.LastModifiedBy));
-            AddSearchField(nameof(ContractPayment.DeletedBy));
+            if (showDeleted)
+            {
+                AddSearchField(nameof(ContractPayment.DeletedBy));
+            }
             
             AddSearchTerm(search);
         }

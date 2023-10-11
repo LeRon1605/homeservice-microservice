@@ -4,6 +4,7 @@ using Contracts.Application.Commands.Contracts.UpdateContract;
 using Contracts.Application.Dtos.Contracts;
 using Contracts.Application.Dtos.PaymentMethods;
 using Contracts.Application.Queries.Contracts;
+using Contracts.Application.Queries.Contracts.GetActionsOfContract;
 using Contracts.Application.Queries.Contracts.GetPaymentsOfContract;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -65,5 +66,13 @@ public class ContractController : ControllerBase
     {
         var payments = await _mediator.Send(new GetPaymentsOfContractQuery(id, dto));
         return Ok(payments);
+    }
+    
+    [HttpGet("{id:guid}/actions")]
+    [ProducesResponseType(typeof(PagedResult<ContractActionDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetActionsOfContract(Guid id, [FromQuery] ActionsOfContractFilterDto dto)
+    {
+        var actions = await _mediator.Send(new GetActionsOfContractQuery(id, dto));
+        return Ok(actions);
     }
 }

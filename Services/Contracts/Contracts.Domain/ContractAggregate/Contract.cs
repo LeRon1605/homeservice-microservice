@@ -35,6 +35,7 @@ public class Contract : AggregateRoot
     
     public List<ContractLine> Items { get; private set; }
     public List<ContractPayment> Payments { get; private set; }
+    public List<ContractAction> Actions { get; private set; }
 
     public Contract(
         Guid customerId,
@@ -72,6 +73,7 @@ public class Contract : AggregateRoot
 
         Items = new List<ContractLine>();
         Payments = new List<ContractPayment>();
+        Actions = new List<ContractAction>();
     }
     
     public void UpdateContractInfo(

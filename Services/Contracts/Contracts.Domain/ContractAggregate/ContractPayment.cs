@@ -1,6 +1,5 @@
 ﻿using Ardalis.GuardClauses;
 using BuildingBlocks.Domain.Models;
-using Contracts.Domain.PaymentMethodAggregate;
 
 namespace Contracts.Domain.ContractAggregate;
 
