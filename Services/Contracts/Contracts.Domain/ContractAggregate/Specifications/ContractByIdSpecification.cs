@@ -8,5 +8,6 @@ public class ContractByIdSpecification : Specification<Contract>
     {
         AddFilter(x => x.Id == id);
         AddInclude(x => x.Items);
+        AddInclude(x => x.Payments);
     }
 }

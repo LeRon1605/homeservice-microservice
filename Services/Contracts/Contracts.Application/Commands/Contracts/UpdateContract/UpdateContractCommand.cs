@@ -22,6 +22,7 @@ public class UpdateContractCommand : ContractUpdateDto, ICommand<ContractDetailD
         ActualInstallationDate = dto.ActualInstallationDate;
         InstallationAddress = dto.InstallationAddress;
         Items = dto.Items;
+        Payments = dto.Payments;
         Status = dto.Status;
     }
 }

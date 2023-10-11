@@ -146,17 +146,6 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
             throw new CustomerNotFoundException(customerId);
         }
     }
-
-    private PaymentMethod GetPaymentMethodById(Guid paymentMethodId, IEnumerable<PaymentMethod> paymentMethods)
-    {
-        var paymentMethod = paymentMethods.FirstOrDefault(x => x.Id == paymentMethodId);
-        if (paymentMethod == null)
-        {
-            throw new PaymentMethodNotFoundException(paymentMethodId);
-        }
-
-        return paymentMethod;
-    }
     
     private Product GetProductById(Guid productId, IEnumerable<Product> products)
     {

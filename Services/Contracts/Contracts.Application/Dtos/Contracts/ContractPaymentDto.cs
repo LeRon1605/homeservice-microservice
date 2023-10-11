@@ -12,6 +12,8 @@ public class ContractPaymentDto
     
     public string? PaymentMethodName { get; set; }
     
+    public bool IsDeleted { get; set; }
+    
     public string? CreatedBy { get; set; }
     public string? LastModifiedBy { get; set; }
     public string? DeletedBy { get; set; }

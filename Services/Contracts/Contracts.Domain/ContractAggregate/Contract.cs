@@ -216,6 +216,36 @@ public class Contract : AggregateRoot
         Payments.Add(contractPayment);
     }
 
+    public void UpdatePayment(
+        Guid id, 
+        DateTime datePaid, 
+        decimal paidAmount, 
+        decimal? surcharge, 
+        string? reference, 
+        string? comments,
+        Guid? paymentMethodId,
+        string? paymentMethodName)
+    {
+        var payment = Payments.FirstOrDefault(x => x.Id == id);
+        if (payment == null)
+        {
+            throw new ContractPaymentNotFoundException(id);
+        }
+        
+        payment.Update(datePaid, paidAmount, surcharge, reference, comments, paymentMethodId, paymentMethodName);
+    }
+
+    public void RemovePayment(Guid id)
+    {
+        var payment = Payments.FirstOrDefault(x => x.Id == id);
+        if (payment == null)
+        {
+            throw new ContractPaymentNotFoundException(id);
+        }
+        
+        Payments.Remove(payment);
+    }
+
     private Contract()
     {
         
