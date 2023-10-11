@@ -26,4 +26,5 @@ public class ContractUpdateDto
     
     public List<ContractLineUpdateDto> Items { get; set; } = null!;
     public List<ContractPaymentUpdateDto>? Payments { get; set; }
+    public List<ContractActionUpdateDto>? Actions { get; set; }
 }

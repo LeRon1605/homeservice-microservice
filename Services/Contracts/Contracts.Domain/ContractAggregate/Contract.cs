@@ -254,6 +254,28 @@ public class Contract : AggregateRoot
         Actions.Add(contractAction);
     }
 
+    public void UpdateAction(Guid id, string name, DateTime date, Guid actionByEmployeeId, string? comment)
+    {
+        var action = Actions.FirstOrDefault(x => x.Id == id);
+        if (action == null)
+        {
+            throw new ContractActionNotFoundException(id);
+        }
+        
+        action.Update(name, date, actionByEmployeeId, comment);
+    }
+
+    public void RemoveAction(Guid id)
+    {
+        var action = Actions.FirstOrDefault(x => x.Id == id);
+        if (action == null)
+        {
+            throw new ContractActionNotFoundException(id);
+        }
+
+        Actions.Remove(action);
+    }
+
     private Contract()
     {
         

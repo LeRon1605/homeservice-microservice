@@ -26,6 +26,14 @@ public class ContractAction : AuditableEntity
         Comment = comment;
     }
 
+    public void Update(string name, DateTime date, Guid actionByEmployeeId, string? comment)
+    {
+        Name = Guard.Against.NullOrEmpty(name, nameof(Name));
+        Date = Guard.Against.Null(date, nameof(Date));
+        ActionByEmployeeId = Guard.Against.Null(actionByEmployeeId, nameof(ActionByEmployeeId));
+        Comment = comment;
+    }
+
     private ContractAction()
     {
         

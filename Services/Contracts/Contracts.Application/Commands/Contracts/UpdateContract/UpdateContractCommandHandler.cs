@@ -86,6 +86,7 @@ public class UpdateContractCommandHandler : ICommandHandler<UpdateContractComman
         UpdateCustomerServiceRep(contract, request.CustomerServiceRepId);
         await UpdateItemsAsync(contract, request.Items);
         await UpdateContractPaymentsAsync(contract, request.Payments);
+        await UpdateContractActionsAsync(contract, request.Actions);
         
         _contractRepository.Update(contract);
         await _unitOfWork.SaveChangesAsync();
@@ -313,5 +314,45 @@ public class UpdateContractCommandHandler : ICommandHandler<UpdateContractComman
         }
 
         return null;
+    }
+    
+    private async Task UpdateContractActionsAsync(Contract contract, IList<ContractActionUpdateDto>? items)
+    {
+        if (items == null || !items.Any())
+        {
+            return;
+        }
+        
+        var newActions = items.Where(x => !x.Id.HasValue).ToArray();
+        var updatedActions = items.Where(x => x.Id.HasValue && !x.IsDelete.GetValueOrDefault(false)).ToArray();
+        var deletedActions = items.Where(x => x.Id.HasValue && x.IsDelete.GetValueOrDefault(false)).ToArray();
+        
+        foreach (var item in deletedActions)
+        {
+            contract.RemoveAction(item.Id!.Value);
+        }
+        
+        // Todo: Validate employee
+        
+        foreach (var item in updatedActions)
+        {
+            contract.UpdateAction(
+                item.Id!.Value,
+                item.Name,
+                item.Date,
+                item.ActionByEmployeeId,
+                item.Comment
+            );
+        }
+        
+        foreach (var item in newActions)
+        {
+            contract.AddAction(
+                item.Name,
+                item.Date,
+                item.Comment,
+                item.ActionByEmployeeId
+            );    
+        }
     }
 }

@@ -24,5 +24,6 @@ public class UpdateContractCommand : ContractUpdateDto, ICommand<ContractDetailD
         Items = dto.Items;
         Payments = dto.Payments;
         Status = dto.Status;
+        Actions = dto.Actions;
     }
 }

@@ -31,6 +31,7 @@ public class ContractDetailDto
 
     public IEnumerable<ContractLineDto> Items { get; set; } = null!;
     public IEnumerable<ContractPaymentDto> Payments { get; set; } = null!;
+    public IEnumerable<ContractActionDto> Actions { get; set; } = null!;
     
     public InstallationAddressDto InstallationAddress { get; set; } = null!;
     public DateTime? EstimatedInstallationDate { get; set; }
