@@ -48,38 +48,47 @@ public class OrderDataSeeder : IDataSeeder
         try
         {
             _logger.LogTrace("Begin seeding orders...");
-        
-            var faker = new Faker();
             
-            var editBuyerCommand = new EditBuyerCommand(
-                faker.Person.FullName, 
-                faker.Person.Email, 
-                faker.Person.Address.City, 
-                faker.Person.Phone, 
-                faker.Person.Address.City, 
-                faker.Person.Address.State, 
-                faker.Person.Address.ZipCode, 
-                faker.Person.Avatar)
+            var buyers = await _buyerRepository.GetAllAsync();
+            
+            for (var i = 0; i < 50; i++)
             {
-                Id = (await _buyerRepository.GetAllAsync()).ToList().First().Id
-            };
-            
-            var buyer = await _mediator.Send(editBuyerCommand);
-            
-            for (var i = 0; i < 10; i++)
-            {
+                var faker = new Faker();
+                
+                var buyer = buyers[faker.Random.Int(0, buyers.Count - 1)];
+                var editBuyerCommand = new EditBuyerCommand(
+                    buyer.FullName, 
+                    buyer.Email, 
+                    faker.Person.Address.City, 
+                    faker.Person.Phone, 
+                    faker.Person.Address.City, 
+                    faker.Person.Address.State, 
+                    faker.Person.Address.ZipCode, 
+                    faker.Person.Avatar)
+                {
+                    Id = buyer.Id
+                };
+                var editedBuyer = await _mediator.Send(editBuyerCommand);
+                
                 var order = new Order(
                     buyer.Id,
-                    buyer.FullName,
-                    buyer.Email,
-                    buyer.Phone,
-                    buyer.Address,
-                    buyer.City,
-                    buyer.State,
-                    buyer.PostalCode
+                    editedBuyer.FullName,
+                    editedBuyer.Email,
+                    editedBuyer.Phone,
+                    editedBuyer.Address,
+                    editedBuyer.City,
+                    editedBuyer.State,
+                    editedBuyer.PostalCode
                 );
                 
                 await SeedOrderLinesAsync(order);
+
+                switch (faker.Random.Int(0, 2))
+                {
+                    case 0:
+                        order.Reject();
+                        break;
+                }
         
                 _orderRepository.Add(order);
             }
@@ -95,18 +104,20 @@ public class OrderDataSeeder : IDataSeeder
     
     private async Task SeedOrderLinesAsync(Order order)
     {
-        var products = (await _productRepository.FindListAsync(new ProductIncludeUnitSpecification())).ToList();
-        var faker = new Faker();
+        var products = await _productRepository.FindListAsync(new ProductIncludeUnitSpecification());
+        
         for (var i = 0; i < 3; i++)
         {
+            var faker = new Faker();
             var product = products[faker.Random.Int(0, products.Count - 1)];
+            
             order.AddOrderLine(
                 product.Id,
                 product.Name,
                 product.ProductUnitId,
                 product.ProductUnit?.Name,
-                faker.Random.String(6),
-                faker.Random.Int(10),
+                faker.Commerce.Color(),
+                faker.Random.Int(1, 10),
                 product.Price
             );
         }

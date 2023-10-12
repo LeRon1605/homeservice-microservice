@@ -45,7 +45,11 @@ public class ProductReviewDataSeeder : IDataSeeder
                 var faker = new Faker();
                 foreach (var product in products)
                 {
-                    product.AddReview(faker.Commerce.ProductDescription(), faker.Random.Int(1, 10));
+                    for (var i = 0;i < faker.Random.Int(1, 20);i++)
+                    {
+                        product.AddReview(faker.Commerce.ProductDescription(), faker.Random.Int(1, 10));
+                    }
+                    
                     _productRepository.Update(product);
                 }
             

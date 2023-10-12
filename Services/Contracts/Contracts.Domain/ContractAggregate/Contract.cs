@@ -65,8 +65,7 @@ public class Contract : AggregateRoot
         InvoiceDate = invoiceDate;
         EstimatedInstallationDate = estimatedInstallationDate;
         ActualInstallationDate = actualInstallationDate;
-        InstallationAddress = new InstallationAddress(fullInstallationAddress, installationCity, installationState,
-            installationPostalCode);
+        InstallationAddress = new InstallationAddress(fullInstallationAddress, installationCity, installationState, installationPostalCode);
         QuotedAt = DateTime.UtcNow;
         SoldAt = null;
         Status = status;
@@ -89,6 +88,7 @@ public class Contract : AggregateRoot
         string? installationPostalCode,
         ContractStatus status)
     {
+        Balance = 0;
         CustomerNote = customerNote;
         PurchaseOrderNo = purchaseOrderNo;
         InvoiceNo = invoiceNo;
@@ -214,7 +214,6 @@ public class Contract : AggregateRoot
             paymentMethodId,
             paymentMethodName);
         
-        Balance -= paidAmount;
         Payments.Add(contractPayment);
     }
 

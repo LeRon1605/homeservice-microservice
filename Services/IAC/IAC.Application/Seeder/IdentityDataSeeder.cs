@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Bogus;
 using BuildingBlocks.Application.Seeder;
 using BuildingBlocks.EventBus.Interfaces;
 using IAC.Application.Auth;
@@ -38,7 +39,7 @@ public class IdentityDataSeeder : IDataSeeder
             if (!_roleManager.Roles.Any())
             {
                 await SeedAdminRoleAsync();
-
+                
                 await SeedCustomerRoleAsync();
 
                 await SeedSalePersonRoleAsync();
@@ -48,6 +49,8 @@ public class IdentityDataSeeder : IDataSeeder
 
             if (!_userManager.Users.Any())
             {
+                await Task.Delay(TimeSpan.FromSeconds(30));
+                
                 await SeedDefaultAdminAccountAsync();
                 await SeedCustomerUserAccountAsync();
             }
@@ -62,7 +65,7 @@ public class IdentityDataSeeder : IDataSeeder
 
     private async Task SeedCustomerUserAccountAsync()
     {
-        var user = new ApplicationUser()
+        var defaultUser = new ApplicationUser()
         {
             UserName = "user",
             Email = "user@gmail.com",
@@ -72,11 +75,26 @@ public class IdentityDataSeeder : IDataSeeder
             EmailConfirmed = true
         };
 
-        await _userManager.CreateAsync(user, "User@123");
-        await _userManager.AddToRoleAsync(user, AppRole.Customer);
+        await _userManager.CreateAsync(defaultUser, "User@123");
+        await _userManager.AddToRoleAsync(defaultUser, AppRole.Customer);
 
-        await Task.Delay(TimeSpan.FromSeconds(30));
-        _eventBus.Publish(new UserSignedUpIntegrationEvent(Guid.Parse(user.Id), user.FullName, user.Email, user.PhoneNumber));
+        for (var i = 0; i < 50; i++)
+        {
+            var faker = new Faker();
+            var user = new ApplicationUser()
+            {
+                UserName = faker.Person.UserName,
+                Email = faker.Person.Email,
+                FullName = faker.Person.FullName,
+                PhoneNumber = faker.Person.Phone,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                EmailConfirmed = true
+            };
+            
+            await _userManager.CreateAsync(user, "User@123");
+            await _userManager.AddToRoleAsync(user, AppRole.Customer);
+            _eventBus.Publish(new UserSignedUpIntegrationEvent(Guid.Parse(user.Id), user.FullName, user.Email, user.PhoneNumber));
+        }
     }
 
     private async Task SeedAdminRoleAsync()
