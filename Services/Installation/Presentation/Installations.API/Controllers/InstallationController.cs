@@ -22,4 +22,11 @@ public class InstallationController : ControllerBase
         var result = await _mediator.Send(query);
         return Ok(result);
     }
+    
+    [HttpGet("{installationId:guid}")]
+    public async Task<IActionResult> GetInstallationById(Guid installationId)
+    {
+        var result = await _mediator.Send(new GetInstallationByIdQuery(installationId));
+        return Ok(result);
+    }
 }

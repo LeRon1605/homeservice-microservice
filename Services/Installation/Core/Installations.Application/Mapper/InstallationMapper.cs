@@ -24,5 +24,8 @@ public class InstallationMapper : Profile
                     (i.ActualStartTime != null && i.ActualFinishTime != null) 
                         ? (i.ActualFinishTime.Value - i.ActualStartTime.Value).TotalHours 
                         : 0));
+
+        CreateMap<Installation, InstallationDetailDto>();
+        CreateMap<InstallationItem, InstallationItemDto>();
     }
 }
