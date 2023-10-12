@@ -2,6 +2,8 @@ using BuildingBlocks.Domain.Data;
 using BuildingBlocks.Domain.Specification;
 using Grpc.Core;
 using Shopping.Application.Grpc.Proto;
+using Shopping.Domain.OrderAggregate;
+using Shopping.Domain.OrderAggregate.Specifications;
 using Shopping.Domain.ProductAggregate;
 using Shopping.Domain.ProductAggregate.Specifications;
 using DecimalValue = Shopping.Application.Grpc.Proto.DecimalValue;
@@ -12,18 +14,28 @@ namespace Shopping.Application.Grpc.Services;
 public class ShoppingProductGrpcService : ShoppingGrpcService.ShoppingGrpcServiceBase
 {
     private readonly IReadOnlyRepository<Product> _productRepository;
+    private readonly IReadOnlyRepository<OrderLine> _orderLineRepository;
     
-    public ShoppingProductGrpcService(IReadOnlyRepository<Product> productRepository)
+    public ShoppingProductGrpcService(IReadOnlyRepository<Product> productRepository,
+                                      IReadOnlyRepository<OrderLine> orderLineRepository)
     {
         _productRepository = productRepository;
+        _orderLineRepository = orderLineRepository;
     }
     
     public override async Task<ShoppingProductPagedResponse> GetProducts(ShoppingProductFilterSorting request, ServerCallContext context)
     {
         var specification = GetSpecification(request);
-        
         var (products, total) = await _productRepository.FindWithTotalCountAsync(specification);
-        return MapToShoppingProductPagedResponse(products, total);
+        
+        var response = MapToShoppingProductPagedResponse(products, total);
+
+        foreach (var product in response.Products)
+        {
+            product.NumberOfOrder = await GetProductSoldCount(Guid.Parse(product.Id)); 
+        }
+        
+        return response;
     }
     
     public override async Task<ShoppingProductItemResponse> GetProductById(ShoppingProductByIdRequest request, ServerCallContext context)
@@ -31,7 +43,11 @@ public class ShoppingProductGrpcService : ShoppingGrpcService.ShoppingGrpcServic
         var specification = new ProductByIdSpecification(Guid.Parse(request.Id));
         var product = await _productRepository.FindAsync(specification)
                       ?? throw new RpcException(new Status(StatusCode.NotFound, $"Product ({request.Id}) not found!"));
-        return MapToShoppingProductItemResponse(product);
+        
+        var response = MapToShoppingProductItemResponse(product);
+        response.NumberOfOrder = await GetProductSoldCount(product.Id);
+
+        return response;
     }
 
     public override async Task<ShoppingProductListResponse> GetProductsByIncludedIds(ShoppingProductByIdsRequest request, ServerCallContext context)
@@ -40,6 +56,12 @@ public class ShoppingProductGrpcService : ShoppingGrpcService.ShoppingGrpcServic
         var products = await _productRepository.FindListAsync(specification);
         
         return MapToShoppingProductListResponse(products);
+    }
+
+    private async Task<int> GetProductSoldCount(Guid productId)
+    {
+        var specification = new FinishedOrderLineByProductIdSpecification(productId);
+        return await _orderLineRepository.SumAsync(specification, x => x.Quantity);
     }
 
     private static Specification<Product> GetSpecification(ShoppingProductFilterSorting productFilterSorting)

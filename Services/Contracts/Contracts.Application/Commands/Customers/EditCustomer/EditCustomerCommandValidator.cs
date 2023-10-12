@@ -1,4 +1,4 @@
-using Customers.Domain.Constants;
+using Contracts.Domain.Constants;
 using FluentValidation;
 
 namespace Contracts.Application.Commands.Customers.EditCustomer;

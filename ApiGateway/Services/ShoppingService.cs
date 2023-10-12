@@ -24,7 +24,8 @@ public class ShoppingService : IShoppingService
             AverageRating = response.Rating,
             OriginPrice = Helpers.DecimalValueHelper.ToDecimal(response.OriginPrice),
             DiscountPrice = Helpers.DecimalValueHelper.ToDecimal(response.DiscountPrice),
-            NumberOfRating = response.NumberOfRating
+            NumberOfRating = response.NumberOfRating,
+            NumberOfOrder = response.NumberOfOrder
         };
     } 
 }

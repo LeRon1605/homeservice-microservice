@@ -1,9 +1,11 @@
 using BuildingBlocks.Application.IntegrationEvent;
 using Contracts.Application.IntegrationEvents.EventHandling;
+using Contracts.Application.IntegrationEvents.EventHandling.Materials;
 using Contracts.Application.IntegrationEvents.EventHandling.Orders;
 using Contracts.Application.IntegrationEvents.EventHandling.Products;
 using Contracts.Application.IntegrationEvents.EventHandling.ProductUnits;
 using Contracts.Application.IntegrationEvents.Events;
+using Contracts.Application.IntegrationEvents.Events.Materials;
 using Contracts.Application.IntegrationEvents.Events.Orders;
 using Contracts.Application.IntegrationEvents.Events.Products;
 using Contracts.Application.IntegrationEvents.Events.ProductUnits;
@@ -21,6 +23,10 @@ public static class IntegrationEventHandlerExtension
         services.AddScoped<IIntegrationEventHandler<ProductUnitAddedIntegrationEvent>, ProductUnitAddedIntegrationEventHandler>();
         services.AddScoped<IIntegrationEventHandler<ProductUnitUpdatedIntegrationEvent>, ProductUnitUpdatedIntegrationEventHandler>();
         services.AddScoped<IIntegrationEventHandler<ProductUnitDeletedIntegrationEvent>, ProductUnitDeletedIntegrationEventHandler>();
+        
+        services.AddScoped<IIntegrationEventHandler<MaterialAddedIntegrationEvent>, MaterialAddedIntegrationEventHandler>();
+        services.AddScoped<IIntegrationEventHandler<MaterialDeletedIntegrationEvent>, MaterialDeletedIntegrationEventHandler>();
+        services.AddScoped<IIntegrationEventHandler<MaterialUpdatedIntegrationEvent>, MaterialUpdatedIntegrationEventHandler>();
 
         services.AddScoped<IIntegrationEventHandler<OrderAddedIntegrationEvent>, OrderAddedIntegrationEventHandler>();
 

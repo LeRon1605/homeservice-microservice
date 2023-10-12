@@ -34,6 +34,8 @@ public class Contract : AggregateRoot
     public ContractStatus Status { get; private set; }
     
     public List<ContractLine> Items { get; private set; }
+    public List<ContractPayment> Payments { get; private set; }
+    public List<ContractAction> Actions { get; private set; }
 
     public Contract(
         Guid customerId,
@@ -63,13 +65,14 @@ public class Contract : AggregateRoot
         InvoiceDate = invoiceDate;
         EstimatedInstallationDate = estimatedInstallationDate;
         ActualInstallationDate = actualInstallationDate;
-        InstallationAddress = new InstallationAddress(fullInstallationAddress, installationCity, installationState,
-            installationPostalCode);
+        InstallationAddress = new InstallationAddress(fullInstallationAddress, installationCity, installationState, installationPostalCode);
         QuotedAt = DateTime.UtcNow;
         SoldAt = null;
         Status = status;
 
         Items = new List<ContractLine>();
+        Payments = new List<ContractPayment>();
+        Actions = new List<ContractAction>();
     }
     
     public void UpdateContractInfo(
@@ -85,6 +88,7 @@ public class Contract : AggregateRoot
         string? installationPostalCode,
         ContractStatus status)
     {
+        Balance = 0;
         CustomerNote = customerNote;
         PurchaseOrderNo = purchaseOrderNo;
         InvoiceNo = invoiceNo;
@@ -189,6 +193,86 @@ public class Contract : AggregateRoot
             quantity, 
             cost, 
             sellPrice);
+    }
+
+    public void AddPayment(
+        DateTime datePaid, 
+        decimal paidAmount, 
+        decimal? surcharge, 
+        string? reference, 
+        string? comments,
+        Guid? paymentMethodId,
+        string? paymentMethodName)
+    {
+        var contractPayment = new ContractPayment(
+            Id, 
+            datePaid, 
+            paidAmount, 
+            surcharge, 
+            reference, 
+            comments,
+            paymentMethodId,
+            paymentMethodName);
+        
+        Payments.Add(contractPayment);
+    }
+
+    public void UpdatePayment(
+        Guid id, 
+        DateTime datePaid, 
+        decimal paidAmount, 
+        decimal? surcharge, 
+        string? reference, 
+        string? comments,
+        Guid? paymentMethodId,
+        string? paymentMethodName)
+    {
+        var payment = Payments.FirstOrDefault(x => x.Id == id);
+        if (payment == null)
+        {
+            throw new ContractPaymentNotFoundException(id);
+        }
+        
+        payment.Update(datePaid, paidAmount, surcharge, reference, comments, paymentMethodId, paymentMethodName);
+    }
+
+    public void RemovePayment(Guid id)
+    {
+        var payment = Payments.FirstOrDefault(x => x.Id == id);
+        if (payment == null)
+        {
+            throw new ContractPaymentNotFoundException(id);
+        }
+        
+        Payments.Remove(payment);
+    }
+    
+    public void AddAction(string name, DateTime date, string? comment, Guid actionByEmployeeId)
+    {
+        var contractAction = new ContractAction(Id, name, date, actionByEmployeeId, comment);
+        Actions.Add(contractAction);
+    }
+
+    public void UpdateAction(Guid id, string name, DateTime date, Guid actionByEmployeeId, string? comment)
+    {
+        var action = Actions.FirstOrDefault(x => x.Id == id);
+        if (action == null)
+        {
+            throw new ContractActionNotFoundException(id);
+        }
+        
+        action.Update(name, date, actionByEmployeeId, comment);
+    }
+
+    public void RemoveAction(Guid id)
+    {
+        var action = Actions.FirstOrDefault(x => x.Id == id);
+        if (action == null)
+        {
+            throw new ContractActionNotFoundException(id);
+        }
+
+        Actions.Remove(action);
     }
 
     private Contract()

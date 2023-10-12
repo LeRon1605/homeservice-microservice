@@ -1,6 +1,8 @@
 using AutoMapper;
 using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
+using BuildingBlocks.EventBus.Interfaces;
+using Contracts.Application.IntegrationEvents.Events.Materials;
 using Microsoft.Extensions.Logging;
 using Products.Application.Commands.ProductCommands.AddProduct;
 using Products.Application.Dtos;
@@ -18,19 +20,22 @@ public class AddMaterialCommandHandler : ICommandHandler<AddMaterialCommand, Get
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<AddProductCommandHandler> _logger;
     private readonly IMapper _mapper;
+    private readonly IEventBus _eventBus;
 
     public AddMaterialCommandHandler(
         IRepository<Material> repository,
         IMaterialDomainService materialDomainService,
         IUnitOfWork unitOfWork,
         ILogger<AddProductCommandHandler> logger,
-        IMapper mapper)
+        IMapper mapper,
+        IEventBus eventBus)
     {
         _materialRepository = repository;
         _materialDomainService = materialDomainService;
         _unitOfWork = unitOfWork;
         _logger = logger;
         _mapper = mapper;
+        _eventBus = eventBus;
     }
 
     public async Task<GetMaterialDto> Handle(AddMaterialCommand request, CancellationToken cancellationToken)
@@ -46,6 +51,8 @@ public class AddMaterialCommandHandler : ICommandHandler<AddMaterialCommand, Get
         _materialRepository.Add(material);
 
         await _unitOfWork.SaveChangesAsync();
+        
+        _eventBus.Publish(new MaterialAddedIntegrationEvent(material.Id, material.Name, material.IsObsolete));
 
         _logger.LogTrace("Material {materialId} is successfully added", material.Id);
 

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shopping.Domain.OrderAggregate;
 using Shopping.Domain.ProductAggregate;
+using Shopping.Domain.ProductUnitAggregate;
 
 namespace Shopping.Infrastructure.EfCore.Configuration;
 
@@ -24,12 +25,17 @@ public class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
         builder.Property(x => x.UnitName)
             .IsRequired(false);
 
+        builder.HasOne<ProductUnit>()
+            .WithMany()
+            .HasForeignKey(x => x.ProductUnitId)
+            .IsRequired(false);
+
         builder.HasOne<Product>()
             .WithMany()
             .HasForeignKey(x => x.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne<Order>()
+        builder.HasOne<Order>(x => x.Order)
             .WithMany(x => x.OrderLines)
             .HasForeignKey(x => x.OrderId)
             .OnDelete(DeleteBehavior.Cascade);

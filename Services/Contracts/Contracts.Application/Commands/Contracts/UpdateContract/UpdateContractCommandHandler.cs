@@ -9,6 +9,9 @@ using Contracts.Domain.ContractAggregate.Exceptions;
 using Contracts.Domain.ContractAggregate.Specifications;
 using Contracts.Domain.CustomerAggregate;
 using Contracts.Domain.CustomerAggregate.Exceptions;
+using Contracts.Domain.PaymentMethodAggregate;
+using Contracts.Domain.PaymentMethodAggregate.Exceptions;
+using Contracts.Domain.PaymentMethodAggregate.Specifications;
 using Contracts.Domain.ProductAggregate;
 using Contracts.Domain.ProductAggregate.Exceptions;
 using Contracts.Domain.ProductAggregate.Specifications;
@@ -28,6 +31,7 @@ public class UpdateContractCommandHandler : ICommandHandler<UpdateContractComman
     private readonly IReadOnlyRepository<Product> _productRepository;
     private readonly IReadOnlyRepository<ProductUnit> _productUnitRepository;
     private readonly IReadOnlyRepository<Tax> _taxRepository;
+    private readonly IReadOnlyRepository<PaymentMethod> _paymentMethodRepository;
     private readonly IRepository<Customer> _customerRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<UpdateContractCommandHandler> _logger;
@@ -37,6 +41,7 @@ public class UpdateContractCommandHandler : ICommandHandler<UpdateContractComman
         IRepository<Contract> contractRepository,
         IReadOnlyRepository<Product> productRepository,
         IReadOnlyRepository<ProductUnit> productUnitRepository,
+        IReadOnlyRepository<PaymentMethod> paymentMethodRepository,
         IRepository<Customer> customerRepository,
         IReadOnlyRepository<Tax> taxRepository,
         IUnitOfWork unitOfWork,
@@ -45,6 +50,7 @@ public class UpdateContractCommandHandler : ICommandHandler<UpdateContractComman
     {
         _contractRepository = contractRepository;
         _productRepository = productRepository;
+        _paymentMethodRepository = paymentMethodRepository;
         _productUnitRepository = productUnitRepository;
         _customerRepository = customerRepository;
         _taxRepository = taxRepository;
@@ -79,7 +85,10 @@ public class UpdateContractCommandHandler : ICommandHandler<UpdateContractComman
         UpdateSupervisor(contract, request.SupervisorId);
         UpdateCustomerServiceRep(contract, request.CustomerServiceRepId);
         await UpdateItemsAsync(contract, request.Items);
+        await UpdateContractPaymentsAsync(contract, request.Payments);
+        await UpdateContractActionsAsync(contract, request.Actions);
         
+        _contractRepository.Update(contract);
         await _unitOfWork.SaveChangesAsync();
         
         _logger.LogInformation("Updated contract {ContractId}", contract.Id);
@@ -127,6 +136,11 @@ public class UpdateContractCommandHandler : ICommandHandler<UpdateContractComman
 
     private async Task UpdateItemsAsync(Contract contract, IList<ContractLineUpdateDto> items)
     {
+        if (!items.Any())
+        {
+            throw new ContractLineEmptyException();
+        }
+        
         var updatedLines = items.Where(x => x.Id.HasValue).ToArray();
         var deletedLines = contract.Items.ExceptBy(updatedLines.Select(x => x.Id), x => x.Id).ToArray();
         var newLines = items.Where(x => !x.Id.HasValue).ToArray();
@@ -187,6 +201,53 @@ public class UpdateContractCommandHandler : ICommandHandler<UpdateContractComman
         }
     }
     
+    private async Task UpdateContractPaymentsAsync(Contract contract, IList<ContractPaymentUpdateDto>? items)
+    {
+        if (items == null || !items.Any())
+        {
+            return;
+        }
+        
+        var newPayments = items.Where(x => !x.Id.HasValue).ToArray();
+        var updatedPayments = items.Where(x => x.Id.HasValue && !x.IsDelete.GetValueOrDefault(false)).ToArray();
+        var deletedPayments = items.Where(x => x.Id.HasValue && x.IsDelete.GetValueOrDefault(false)).ToArray();
+        
+        foreach (var item in deletedPayments)
+        {
+            contract.RemovePayment(item.Id!.Value);
+        }
+        
+        var paymentMethodIds = items.Where(x => x.PaymentMethodId.HasValue).Select(x => x.PaymentMethodId!.Value).ToArray();
+        var paymentMethods = await _paymentMethodRepository.FindListAsync(new PaymentMethodsByIncludedIdsSpecification(paymentMethodIds));
+        
+        foreach (var item in updatedPayments)
+        {
+            contract.UpdatePayment(
+                item.Id!.Value,
+                item.DatePaid,
+                item.PaidAmount,
+                item.Surcharge,
+                item.Reference,
+                item.Comments,
+                item.PaymentMethodId,
+                GetPaymentMethodNameById(item.PaymentMethodId, paymentMethods)
+            );
+        }
+
+        foreach (var payment in newPayments)
+        {
+            contract.AddPayment(
+                payment.DatePaid,
+                payment.PaidAmount,
+                payment.Surcharge,
+                payment.Reference,
+                payment.Comments,
+                payment.PaymentMethodId,
+                GetPaymentMethodNameById(payment.PaymentMethodId, paymentMethods)
+            );   
+        }
+    }
+    
     private void CheckDuplicateContractLine(IEnumerable<Guid> ids)
     {
         var dict = new Dictionary<Guid, bool>();
@@ -237,5 +298,61 @@ public class UpdateContractCommandHandler : ICommandHandler<UpdateContractComman
         }
 
         return null;
+    }
+    
+    private string? GetPaymentMethodNameById(Guid? paymentMethodId, IEnumerable<PaymentMethod> paymentMethods)
+    {
+        if (paymentMethodId.HasValue)
+        {
+            var paymentMethod = paymentMethods.FirstOrDefault(x => x.Id == paymentMethodId);
+            if (paymentMethod == null)
+            {
+                throw new PaymentMethodNotFoundException(paymentMethodId.Value);
+            }
+
+            return paymentMethod.Name;
+        }
+
+        return null;
+    }
+    
+    private async Task UpdateContractActionsAsync(Contract contract, IList<ContractActionUpdateDto>? items)
+    {
+        if (items == null || !items.Any())
+        {
+            return;
+        }
+        
+        var newActions = items.Where(x => !x.Id.HasValue).ToArray();
+        var updatedActions = items.Where(x => x.Id.HasValue && !x.IsDelete.GetValueOrDefault(false)).ToArray();
+        var deletedActions = items.Where(x => x.Id.HasValue && x.IsDelete.GetValueOrDefault(false)).ToArray();
+        
+        foreach (var item in deletedActions)
+        {
+            contract.RemoveAction(item.Id!.Value);
+        }
+        
+        // Todo: Validate employee
+        
+        foreach (var item in updatedActions)
+        {
+            contract.UpdateAction(
+                item.Id!.Value,
+                item.Name,
+                item.Date,
+                item.ActionByEmployeeId,
+                item.Comment
+            );
+        }
+        
+        foreach (var item in newActions)
+        {
+            contract.AddAction(
+                item.Name,
+                item.Date,
+                item.Comment,
+                item.ActionByEmployeeId
+            );    
+        }
     }
 }

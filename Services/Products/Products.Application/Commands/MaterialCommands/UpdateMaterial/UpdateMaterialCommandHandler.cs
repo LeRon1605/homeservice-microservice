@@ -1,6 +1,8 @@
 using AutoMapper;
 using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
+using BuildingBlocks.EventBus.Interfaces;
+using Contracts.Application.IntegrationEvents.Events.Materials;
 using Microsoft.Extensions.Logging;
 using Products.Application.Dtos;
 using Products.Domain.MaterialAggregate;
@@ -18,19 +20,22 @@ public class UpdateMaterialCommandHandler : ICommandHandler<UpdateMaterialComman
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<UpdateMaterialCommandHandler> _logger;
     private readonly IMapper _mapper;
+    private readonly IEventBus _eventBus;
 
     public UpdateMaterialCommandHandler(
         IRepository<Material> repository,
         IMaterialDomainService materialDomainService,
         IUnitOfWork unitOfWork,
         ILogger<UpdateMaterialCommandHandler> logger,
-        IMapper mapper)
+        IMapper mapper,
+        IEventBus eventBus)
     {
         _materialRepository = repository;
         _materialDomainService = materialDomainService;
         _unitOfWork = unitOfWork;
         _logger = logger;
         _mapper = mapper;
+        _eventBus = eventBus;
     }
     
     public async Task<GetMaterialDto> Handle(UpdateMaterialCommand request, CancellationToken cancellationToken)
@@ -54,6 +59,8 @@ public class UpdateMaterialCommandHandler : ICommandHandler<UpdateMaterialComman
 
         _materialRepository.Update(material);
         await _unitOfWork.SaveChangesAsync();
+        
+        _eventBus.Publish(new MaterialUpdatedIntegrationEvent(material.Id, material.Name, material.IsObsolete));
         
         _logger.LogInformation("Updated material with id: {materialId}", request.Id);
 

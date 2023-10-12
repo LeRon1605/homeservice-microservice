@@ -84,6 +84,62 @@ namespace Contracts.Infrastructure.EfCore.Migrations
                     b.ToTable("Contract");
                 });
 
+            modelBuilder.Entity("Contracts.Domain.ContractAggregate.ContractAction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ActionByEmployeeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ContractId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedByUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeletedByUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastModifiedByUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContractId");
+
+                    b.ToTable("ContractAction");
+                });
+
             modelBuilder.Entity("Contracts.Domain.ContractAggregate.ContractLine", b =>
                 {
                     b.Property<Guid>("Id")
@@ -139,6 +195,76 @@ namespace Contracts.Infrastructure.EfCore.Migrations
                     b.ToTable("ContractLine");
                 });
 
+            modelBuilder.Entity("Contracts.Domain.ContractAggregate.ContractPayment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Comments")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ContractId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedByUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DatePaid")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeletedByUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastModifiedByUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("PaidAmount")
+                        .HasPrecision(20, 2)
+                        .HasColumnType("decimal(20,2)");
+
+                    b.Property<Guid?>("PaymentMethodId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PaymentMethodName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reference")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Surcharge")
+                        .HasPrecision(20, 2)
+                        .HasColumnType("decimal(20,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContractId");
+
+                    b.HasIndex("PaymentMethodId");
+
+                    b.ToTable("ContractPayment");
+                });
+
             modelBuilder.Entity("Contracts.Domain.CustomerAggregate.Customer", b =>
                 {
                     b.Property<Guid>("Id")
@@ -162,6 +288,40 @@ namespace Contracts.Infrastructure.EfCore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Customer");
+                });
+
+            modelBuilder.Entity("Contracts.Domain.MaterialAggregate.Material", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsObsolete")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Material");
+                });
+
+            modelBuilder.Entity("Contracts.Domain.PaymentMethodAggregate.PaymentMethod", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PaymentMethod");
                 });
 
             modelBuilder.Entity("Contracts.Domain.PendingOrdersAggregate.PendingOrder", b =>
@@ -274,6 +434,15 @@ namespace Contracts.Infrastructure.EfCore.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Contracts.Domain.ContractAggregate.ContractAction", b =>
+                {
+                    b.HasOne("Contracts.Domain.ContractAggregate.Contract", null)
+                        .WithMany("Actions")
+                        .HasForeignKey("ContractId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Contracts.Domain.ContractAggregate.ContractLine", b =>
                 {
                     b.HasOne("Contracts.Domain.ContractAggregate.Contract", null)
@@ -298,6 +467,19 @@ namespace Contracts.Infrastructure.EfCore.Migrations
                         .HasForeignKey("UnitId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Contracts.Domain.ContractAggregate.ContractPayment", b =>
+                {
+                    b.HasOne("Contracts.Domain.ContractAggregate.Contract", null)
+                        .WithMany("Payments")
+                        .HasForeignKey("ContractId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Contracts.Domain.PaymentMethodAggregate.PaymentMethod", null)
+                        .WithMany()
+                        .HasForeignKey("PaymentMethodId");
                 });
 
             modelBuilder.Entity("Contracts.Domain.CustomerAggregate.Customer", b =>
@@ -400,7 +582,11 @@ namespace Contracts.Infrastructure.EfCore.Migrations
 
             modelBuilder.Entity("Contracts.Domain.ContractAggregate.Contract", b =>
                 {
+                    b.Navigation("Actions");
+
                     b.Navigation("Items");
+
+                    b.Navigation("Payments");
                 });
 #pragma warning restore 612, 618
         }

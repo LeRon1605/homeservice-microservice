@@ -8,15 +8,19 @@ public class OrderLine : Entity
     public Guid OrderId { get; private set; }
     public Guid ProductId { get; private set; }
     public string ProductName { get; private set; }
+    public Guid? ProductUnitId { get; private set; }
     public string? UnitName { get; private set; }
     public string? Color { get; private set; }
     public int Quantity { get; private set; }
     public decimal Cost { get; private set; }
+    
+    public Order Order { get; private set; } = null!;
 
     public OrderLine(
         Guid productId, 
         string productName,
         Guid orderId,
+        Guid? productUnitId,
         string? unitName,
         string? color, 
         int quantity,
@@ -25,6 +29,7 @@ public class OrderLine : Entity
         ProductId = Guard.Against.NullOrEmpty(productId, nameof(ProductId));
         ProductName = Guard.Against.NullOrEmpty(productName, nameof(ProductName));
         OrderId = Guard.Against.Null(orderId);
+        ProductUnitId = productUnitId;
         UnitName = unitName;
         Color = color;
         Quantity = Guard.Against.NegativeOrZero(quantity, nameof(Quantity));

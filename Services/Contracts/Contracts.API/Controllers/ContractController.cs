@@ -2,7 +2,10 @@ using BuildingBlocks.Application.Dtos;
 using Contracts.Application.Commands.Contracts.AddContract;
 using Contracts.Application.Commands.Contracts.UpdateContract;
 using Contracts.Application.Dtos.Contracts;
+using Contracts.Application.Dtos.PaymentMethods;
 using Contracts.Application.Queries.Contracts;
+using Contracts.Application.Queries.Contracts.GetActionsOfContract;
+using Contracts.Application.Queries.Contracts.GetPaymentsOfContract;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,10 +54,25 @@ public class ContractController : ControllerBase
     }
 
     [HttpGet("customer/{customerId:guid}")]
-    public async Task<IActionResult> GetContracts(Guid customerId,
-        [FromQuery] ContractOfCustomerFilterDto contractOfCustomerFilterDto)
+    public async Task<IActionResult> GetContracts(Guid customerId, [FromQuery] ContractOfCustomerFilterDto dto)
     {
-        var contracts = await _mediator.Send(new ContractsOfCustomerQuery(customerId, contractOfCustomerFilterDto));
+        var contracts = await _mediator.Send(new ContractsOfCustomerQuery(customerId, dto));
         return Ok(contracts);
+    }
+    
+    [HttpGet("{id:guid}/payments")]
+    [ProducesResponseType(typeof(PagedResult<PaymentMethodDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetPaymentsOfContract(Guid id, [FromQuery] PaymentsOfContractFilterDto dto)
+    {
+        var payments = await _mediator.Send(new GetPaymentsOfContractQuery(id, dto));
+        return Ok(payments);
+    }
+    
+    [HttpGet("{id:guid}/actions")]
+    [ProducesResponseType(typeof(PagedResult<ContractActionDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetActionsOfContract(Guid id, [FromQuery] ActionsOfContractFilterDto dto)
+    {
+        var actions = await _mediator.Send(new GetActionsOfContractQuery(id, dto));
+        return Ok(actions);
     }
 }

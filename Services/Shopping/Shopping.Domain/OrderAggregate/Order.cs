@@ -65,6 +65,7 @@ public class Order : AggregateRoot
     public void AddOrderLine(
         Guid productId,
         string productName,
+        Guid? productUnitId,
         string? unitName,
         string? color,
         int quantity,
@@ -80,7 +81,7 @@ public class Order : AggregateRoot
             }
         }
 
-        var orderLine = new OrderLine(productId, productName, Id, unitName, color, quantity, cost);
+        var orderLine = new OrderLine(productId, productName, Id, productUnitId, unitName, color, quantity, cost);
         _orderLines.Add(orderLine);
     }
 

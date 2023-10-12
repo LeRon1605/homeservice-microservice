@@ -96,6 +96,9 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("ProductUnitId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
@@ -107,6 +110,8 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                     b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("ProductUnitId");
 
                     b.ToTable("OrderLine");
                 });
@@ -277,7 +282,7 @@ namespace Shopping.Infrastructure.EfCore.Migrations
 
             modelBuilder.Entity("Shopping.Domain.OrderAggregate.OrderLine", b =>
                 {
-                    b.HasOne("Shopping.Domain.OrderAggregate.Order", null)
+                    b.HasOne("Shopping.Domain.OrderAggregate.Order", "Order")
                         .WithMany("OrderLines")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -288,6 +293,12 @@ namespace Shopping.Infrastructure.EfCore.Migrations
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Shopping.Domain.ProductUnitAggregate.ProductUnit", null)
+                        .WithMany()
+                        .HasForeignKey("ProductUnitId");
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Shopping.Domain.ProductAggregate.Product", b =>

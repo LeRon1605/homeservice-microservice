@@ -30,8 +30,16 @@ public class OrderMapper : Profile
 
         //CreateMap<OrderContactInfo, OrderDetailsDto>();
         CreateMap<OrderLine, OrderLineDto>()
-            .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductName))
-            .ForMember(dest => dest.UnitName, opt => opt.MapFrom(src => src.UnitName))
+            .ForMember(dest => dest.Product, opt => opt.MapFrom(src => new ProductOrderLineDto()
+            {
+                Id = src.ProductId,
+                Name = src.ProductName
+            }))
+            .ForMember(dest => dest.ProductUnit, opt => opt.MapFrom(src => new ProductUnitOrderLineDto()
+            {
+                Id = src.ProductUnitId,
+                Name = src.UnitName
+            }))
             .ForMember(dest => dest.Color, opt => opt.MapFrom(src => src.Color))
             .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
             .ForMember(dest => dest.Cost, opt => opt.MapFrom(src => src.Cost))

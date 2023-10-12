@@ -1,4 +1,5 @@
-﻿using BuildingBlocks.Domain.Data;
+﻿using System.Linq.Expressions;
+using BuildingBlocks.Domain.Data;
 using BuildingBlocks.Domain.Models;
 using BuildingBlocks.Domain.Specification;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +37,14 @@ public class EfCoreReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity>
         return await GetQuery<TEntity>.From(DbSet, specification).CountAsync();
     }
     
+    public async Task<int> SumAsync(ISpecification<TEntity> specification, Expression<Func<TEntity, int>> selector) {
+        return await GetQuery<TEntity>.From(DbSet, specification).SumAsync(selector);
+    }
+    
+    public async Task<decimal> SumAsync(ISpecification<TEntity> specification, Expression<Func<TEntity, decimal>> selector) {
+        return await GetQuery<TEntity>.From(DbSet, specification).SumAsync(selector);
+    }
+    
     public async Task<IList<TEntity>> GetAllAsync()
     {
         return await DbSet.AsNoTracking().ToListAsync();
@@ -60,5 +69,10 @@ public class EfCoreReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity>
     public Task<bool> AnyAsync()
     {
         return DbSet.AsNoTracking().AnyAsync();
+    }
+
+    public Task<bool> AnyAsync(Guid id)
+    {
+        return DbSet.AsNoTracking().AnyAsync(e => e.Id == id);
     }
 }

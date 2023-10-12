@@ -1,14 +1,24 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Shopping.Application.Dtos.Orders;
+﻿namespace Shopping.Application.Dtos.Orders;
 
 public class OrderLineDto
 {
-    [Required] public string ProductName { get; private set; }
-    public string? UnitName { get; private set; }
-    public string? Color { get; private set; }
-    public int Quantity { get; private set; }
-    public decimal Cost { get; private set; }
+    public Guid Id { get; set; }
+    public ProductOrderLineDto Product { get; set; } = null!;
+    public ProductUnitOrderLineDto ProductUnit { get; set; } = null!;
+    public string? Color { get; set; }
+    public int Quantity { get; set; }
+    public decimal Cost { get; set; }
+    public decimal TotalCost { get; set; }
+}
 
-    public decimal TotalCost { get; private set; }
+public class ProductOrderLineDto
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; } = null!;
+}
+
+public class ProductUnitOrderLineDto
+{
+    public Guid? Id { get; set; }
+    public string? Name { get; set; }
 }

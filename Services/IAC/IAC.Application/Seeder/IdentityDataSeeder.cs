@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Bogus;
 using BuildingBlocks.Application.Seeder;
 using BuildingBlocks.EventBus.Interfaces;
 using IAC.Application.Auth;
@@ -28,7 +29,7 @@ public class IdentityDataSeeder : IDataSeeder
         _logger = logger;
         _eventBus = eventBus;
     }
-
+    
     public async Task SeedAsync()
     {
         try
@@ -44,18 +45,18 @@ public class IdentityDataSeeder : IDataSeeder
                 await SeedCustomerRoleAsync();
 
                 await SeedSalePersonRoleAsync();
-
-                await SeedSupervisorRoleAsync();
-
+                
                 await SeedRoleClaimAsync();
             }
 
             if (!_userManager.Users.Any())
             {
+                await Task.Delay(TimeSpan.FromSeconds(30));
+                
                 await SeedDefaultAdminAccountAsync();
                 await SeedCustomerUserAccountAsync();
             }
-
+            
             _logger.LogInformation("Seed identity data successfully!");
         }
         catch (Exception ex)
@@ -66,7 +67,7 @@ public class IdentityDataSeeder : IDataSeeder
 
     private async Task SeedCustomerUserAccountAsync()
     {
-        var user = new ApplicationUser()
+        var defaultUser = new ApplicationUser()
         {
             UserName = "user",
             Email = "user@gmail.com",
@@ -76,12 +77,26 @@ public class IdentityDataSeeder : IDataSeeder
             EmailConfirmed = true
         };
 
-        await _userManager.CreateAsync(user, "User@123");
-        await _userManager.AddToRoleAsync(user, AppRole.Customer);
+        await _userManager.CreateAsync(defaultUser, "User@123");
+        await _userManager.AddToRoleAsync(defaultUser, AppRole.Customer);
 
-        await Task.Delay(TimeSpan.FromSeconds(30));
-        _eventBus.Publish(new UserSignedUpIntegrationEvent(Guid.Parse(user.Id), user.FullName, user.Email,
-            user.PhoneNumber));
+        for (var i = 0; i < 50; i++)
+        {
+            var faker = new Faker();
+            var user = new ApplicationUser()
+            {
+                UserName = faker.Person.UserName,
+                Email = faker.Person.Email,
+                FullName = faker.Person.FullName,
+                PhoneNumber = faker.Person.Phone,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                EmailConfirmed = true
+            };
+            
+            await _userManager.CreateAsync(user, "User@123");
+            await _userManager.AddToRoleAsync(user, AppRole.Customer);
+            _eventBus.Publish(new UserSignedUpIntegrationEvent(Guid.Parse(user.Id), user.FullName, user.Email, user.PhoneNumber));
+        }
     }
 
     private async Task SeedAdminRoleAsync()
@@ -136,13 +151,13 @@ public class IdentityDataSeeder : IDataSeeder
         var result = await _roleManager.CreateAsync(salePersonRole);
         if (!result.Succeeded)
         {
-            _logger.LogWarning("Seeding sale person role failed!");
+            _logger.LogWarning("Seeding sale person role failed!");       
         }
 
         _eventBus.Publish(new RoleCreatedIntegrationEvent(salePersonRole.Id, salePersonRole.Name));
     }
-
-
+    
+    
     private async Task SeedDefaultAdminAccountAsync()
     {
         var user = new ApplicationUser()

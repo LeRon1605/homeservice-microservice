@@ -19,6 +19,9 @@ public class AddContractCommand : ContractCreateDto, ICommand<ContractDetailDto>
         ActualInstallationDate = dto.ActualInstallationDate;
         InstallationAddress = dto.InstallationAddress;
         Items = dto.Items;
+        Payments = dto.Payments;
         Status = dto.Status;
+        Installations = dto.Installations;
+        Actions = dto.Actions;
     }
 }

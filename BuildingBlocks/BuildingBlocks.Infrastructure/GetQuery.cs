@@ -15,6 +15,11 @@ public static class GetQuery<TEntity> where TEntity : Entity
         // Check tracking
         query = specification.IsNoTracking ? query.AsNoTracking() : query.AsTracking();
 
+        if (specification.IsIgnoreSoftDelete)
+        {
+            query = query.IgnoreQueryFilters();
+        }
+        
         // Filtering
         foreach (var filter in specification.Filters)
         {

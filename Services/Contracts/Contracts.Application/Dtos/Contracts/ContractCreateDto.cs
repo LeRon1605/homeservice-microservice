@@ -25,5 +25,9 @@ public class ContractCreateDto
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ContractStatus Status { get; set; }
 
+    [MinLength(1)]
     public List<ContractLineCreateDto> Items { get; set; } = null!;
+    public List<ContractPaymentCreateDto>? Payments { get; set; }
+    public List<ContractActionCreateDto>? Actions { get; set; }
+    public List<InstallationCreateDto>? Installations { get; set; }
 }

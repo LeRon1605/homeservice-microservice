@@ -1,3 +1,4 @@
+using Bogus;
 using BuildingBlocks.Application.Seeder;
 using BuildingBlocks.Domain.Data;
 using Microsoft.Extensions.Logging;
@@ -112,29 +113,52 @@ public class ProductDataSeeder : IDataSeeder
         IReadOnlyList<ProductType> productTypes, 
         IReadOnlyList<ProductGroup> productGroups)
     {
-        var random = new Random();
-
-        for (var i = 0; i < 10; i++)
+        var images = new string[]
         {
+            "https://res.cloudinary.com/dboijruhe/image/upload/v1695951716/HomeService/tbt25tc5hu19mtkk2jlv.png",
+            "https://res.cloudinary.com/dboijruhe/image/upload/v1695951696/HomeService/n88xfzo3rufft2ljknbt.jpg",
+            "https://res.cloudinary.com/dboijruhe/image/upload/v1697075216/HomeService/sfdt5llrc8vvddbnvuyd.png",
+            "https://res.cloudinary.com/dboijruhe/image/upload/v1697075200/HomeService/uwky30nwy0fodnzufayc.png",
+            "https://res.cloudinary.com/dboijruhe/image/upload/v1697075183/HomeService/gxs5wymkwrtulaxixsxa.png"
+        };
+        
+        for (var i = 0; i < 100; i++)
+        {
+            var faker = new Faker();
+            var random = new Random();
+            
             var product = await Product.InitAsync(
-                $"PROD-{i}",
-                $"Product - {i}",
+                $"PO - {i}",
+                faker.Commerce.ProductName(),
                 productTypes[random.Next(0, productTypes.Count)].Id,
                 productGroups[random.Next(0, productTypes.Count)].Id,
-                string.Empty,
+                faker.Commerce.ProductDescription(),
                 random.Next(0, 1) == 0,
-                productUnits[random.Next(0, productTypes.Count)].Id,
-                300,
-                productUnits[random.Next(0, productTypes.Count)].Id,
-                500,
+                productUnits[random.Next(0, productTypes.Count - 1)].Id,
+                decimal.Parse(faker.Commerce.Price()),
+                productUnits[random.Next(0, productTypes.Count - 1)].Id,
+                decimal.Parse(faker.Commerce.Price()),
                 Array.Empty<string>(),
-                new [] { "Red", "Green" }, 
+                new [] { 
+                    System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(faker.Commerce.Color()),
+                    System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(faker.Commerce.Color()),
+                    System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(faker.Commerce.Color())
+                }, 
                 _productRepository
             );
-            
-            product.AddImage("https://res.cloudinary.com/dboijruhe/image/upload/v1695951716/HomeService/tbt25tc5hu19mtkk2jlv.png");
-            product.AddImage("https://res.cloudinary.com/dboijruhe/image/upload/v1695951696/HomeService/n88xfzo3rufft2ljknbt.jpg");
-            
+
+            try
+            {
+                for (var j = 0; j < 2; j++)
+                {
+                    product.AddImage(images[random.Next(0, images.Length - 1)]);
+                }
+            }
+            catch 
+            {
+                // ignored
+            }
+
             _productRepository.Add(product);
         }
     }

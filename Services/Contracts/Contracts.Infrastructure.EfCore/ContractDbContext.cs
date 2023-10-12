@@ -19,5 +19,7 @@ public class ContractDbContext : AppDbContextBase
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ContractDbContext).Assembly);
+        
+        base.OnModelCreating(modelBuilder);
     }
 }

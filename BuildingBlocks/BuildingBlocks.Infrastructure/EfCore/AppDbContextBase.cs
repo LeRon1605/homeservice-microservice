@@ -79,12 +79,15 @@ public abstract class AppDbContextBase : DbContext
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entry.Entity.CreatedBy = _currentUser.Id;
+                    entry.Entity.CreatedByUserId = _currentUser.Id;
+                    entry.Entity.CreatedBy = _currentUser.FullName;
                     entry.Entity.CreatedAt = DateTime.Now;
+                    entry.Entity.IsDeleted = false;
                     break;
 
                 case EntityState.Modified:
-                    entry.Entity.LastModifiedBy = _currentUser.Id;
+                    entry.Entity.LastModifiedByUserId = _currentUser.Id;
+                    entry.Entity.LastModifiedBy = _currentUser.FullName;
                     entry.Entity.LastModifiedAt = DateTime.Now;
                     break;
 
@@ -92,7 +95,8 @@ public abstract class AppDbContextBase : DbContext
                     entry.State = EntityState.Modified;
                     entry.Entity.LastModifiedAt = DateTime.Now;
                     entry.Entity.IsDeleted = true;
-                    entry.Entity.DeletedBy = _currentUser.Id;
+                    entry.Entity.DeletedByUserId = _currentUser.Id;
+                    entry.Entity.DeletedBy = _currentUser.FullName;
                     break;
             }
         }
