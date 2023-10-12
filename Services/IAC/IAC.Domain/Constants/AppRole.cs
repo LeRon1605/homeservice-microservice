@@ -6,4 +6,5 @@ public static class AppRole
     public const string SalePerson = "Sales person";
     public const string Installer = "Installer";
     public const string Customer = "Customer";
+    public const string Supervisor = "Supervisor";
 }

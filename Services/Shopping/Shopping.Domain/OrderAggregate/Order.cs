@@ -17,21 +17,22 @@ public class Order : AggregateRoot
 
     public Order(
         Guid buyerId,
-        string contactName, 
-        string? email, 
-        string phone, 
-        string? address, 
-        string? city, 
-        string? state, 
+        string contactName,
+        string? email,
+        string phone,
+        string? address,
+        string? city,
+        string? state,
         string? postalCode)
     {
         BuyerId = buyerId;
-        ContactInfo = new OrderContactInfo("Retail customer", contactName, email, phone, address, city, state, postalCode);
+        ContactInfo =
+            new OrderContactInfo("Retail customer", contactName, email, phone, address, city, state, postalCode);
         PlacedDate = DateTime.UtcNow;
         Status = OrderStatus.Pending;
 
         _orderLines = new List<OrderLine>();
-        
+
         AddDomainEvent(new OrderAddedDomainEvent(this));
     }
 
@@ -62,11 +63,11 @@ public class Order : AggregateRoot
     }
 
     public void AddOrderLine(
-        Guid productId, 
+        Guid productId,
         string productName,
         Guid? productUnitId,
         string? unitName,
-        string? color, 
+        string? color,
         int quantity,
         decimal cost)
     {
@@ -77,7 +78,7 @@ public class Order : AggregateRoot
             if (isExisting)
             {
                 throw new ProductAlreadyAddedToOrderException(productId, color);
-            }   
+            }
         }
 
         var orderLine = new OrderLine(productId, productName, Id, productUnitId, unitName, color, quantity, cost);
@@ -86,6 +87,5 @@ public class Order : AggregateRoot
 
     private Order()
     {
-        
     }
 }

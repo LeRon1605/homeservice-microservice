@@ -25,7 +25,7 @@ public static class IntegrationEventHandlerExtension
         services.AddScoped<IIntegrationEventHandler<ProductUnitDeletedIntegrationEvent>, ProductUnitDeletedIntegrationEventHandler>();
         
         services.AddScoped<IIntegrationEventHandler<UserSignedUpIntegrationEvent>, UserSignedUpIntegrationEventHandler>();
-
+    
         services.AddScoped<IIntegrationEventHandler<OrderFinishedIntegrationEvent>, OrderFinishedIntegrationEventHandler>();
         return services;
     }
