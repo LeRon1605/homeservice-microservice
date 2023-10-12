@@ -4,8 +4,10 @@ public class InstallationEventDto
 {
     public Guid ContractLineId { get; set; }
     public Guid ProductId { get; set; }
+    public string ProductName { get; set; } = null!;
     public string? Color { get; set; }
     
+    public DateTime? InstallDate { get; init; }
     public DateTime? EstimatedStartTime { get; set; }
     public DateTime? EstimatedFinishTime { get; set; }
     public DateTime? ActualStartTime { get; set; }

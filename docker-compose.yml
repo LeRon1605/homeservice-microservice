@@ -169,6 +169,9 @@
       - Routes__3__DownstreamHostAndPorts__0__Host=contracts.api
       - Routes__3__DownstreamHostAndPorts__0__Port=80
       - SwaggerEndPoints__3__Config__0__Url=http://contracts.api/swagger/v1/swagger.json
+#      - Routes__4__DownstreamHostAndPorts__0__Host=installation.api
+#      - Routes__4__DownstreamHostAndPorts__0__Port=80
+#      - SwaggerEndPoints__4__Config__0__Url=http://installation.api/swagger/v1/swagger.json
       - GrpcUrls__Identity=http://iac.api:3000
       - GrpcUrls__Product=http://products.api:3000
       - GrpcUrls__Shopping=http://shopping.api:3000

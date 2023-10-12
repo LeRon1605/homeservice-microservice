@@ -16,15 +16,21 @@ namespace Installations.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    No = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     ContractId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ContractNo = table.Column<int>(type: "int", nullable: false),
                     ContractLineId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProductColor = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     InstallerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SalespersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    SupervisorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CustomerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     InstallationComment = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: true),
                     FloorType = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
                     InstallationMetres = table.Column<double>(type: "float(18)", precision: 18, scale: 2, nullable: false),
+                    InstallDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EstimatedStartTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EstimatedFinishTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ActualStartTime = table.Column<DateTime>(type: "datetime2", nullable: true),

@@ -31,22 +31,31 @@ public class ContractCreatedIntegrationEventHandler : IIntegrationEventHandler<C
             await _mediator.Send(new AddInstallationCommand
             {
                 ContractId = @event.ContractId,
+                ContractNo = @event.ContractNo,
+                ProductId = installation.ProductId,
+                ProductName = installation.ProductName,
+                ProductColor = installation.Color,
                 ContractLineId = installation.ContractLineId,
+                
                 CustomerId = @event.CustomerId,
-                SalespersonId = @event.SalespersonId,
-                SupervisorId = @event.SupervisorId,
+                CustomerName = @event.CustomerName, 
                 InstallerId = installation.InstallerId,
+                
                 FullAddress = @event.InstallationAddress?.FullAddress,
                 City = @event.InstallationAddress?.City,
                 State = @event.InstallationAddress?.State,
                 PostalCode = @event.InstallationAddress?.PostalCode,
+                
+                InstallDate = installation.InstallDate,
                 EstimatedStartTime = installation.EstimatedStartTime,
                 EstimatedFinishTime = installation.EstimatedFinishTime,
                 ActualStartTime = installation.ActualStartTime,
                 ActualFinishTime = installation.ActualFinishTime,
+                
                 InstallationComment = installation.InstallationComment,
                 FloorType = installation.FloorType,
                 InstallationMetres = installation.InstallationMetres,
+                
                 InstallationItems = _mapper.Map<List<InstallationItemCreateDto>>(installation.Items),
                 InstallationAddress = _mapper.Map<InstallationAddressDto>(@event.InstallationAddress)
             });

@@ -90,15 +90,15 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
         
         var installations = _mapper.Map<List<InstallationEventDto>>(request.Installations);
         // Each installation differs by its product and color, so I use them to find the corresponding contract line id
-        MapContractLineIdToInstallations(installations, contract.Items);
+        MapContractLinesToInstallations(installations, contract.Items);
         
         _eventBus.Publish(new ContractCreatedIntegrationEvent
         {
             ContractId = contract.Id,
+            ContractNo = contract.No,
             InstallationAddress = _mapper.Map<InstallationAddressEventDto>(request.InstallationAddress),
             CustomerId = contract.CustomerId,
-            SalespersonId = contract.SalePersonId,
-            SupervisorId = contract.SupervisorId,
+            CustomerName = (await _customerRepository.GetByIdAsync(contract.CustomerId))!.Name,
             Installations = installations
         });
         
@@ -249,24 +249,24 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
         return null;
     }
 
-    private void MapContractLineIdToInstallations(IList<InstallationEventDto> installations, IList<ContractLine> contractLines)
+    private void MapContractLinesToInstallations(IList<InstallationEventDto> installations, IList<ContractLine> contractLines)
     {
         foreach (var installation in installations)
         {
             installation.ContractLineId = contractLines.First(x => x.ProductId == installation.ProductId && x.Color == installation.Color).Id;
+            installation.ProductName = contractLines.First(x => x.ProductId == installation.ProductId).ProductName;
         }
     }
 
-    // Set material name and unit name for each installation item
+    // Set materials name and units name for each installation
     private async Task SetInstallationItemsNameAndUnit(IList<InstallationCreateDto>? installations)
     {
         if (installations == null || !installations.Any())
-        {
             return;
-        }
         
         foreach (var installation in installations)
         {
+            // Set material name and unit name for each installation item
             var materialIds = installation.Items.Select(x => x.MaterialId).ToList();
             var materials = await _materialRepository.FindListAsync(new MaterialByIncludeIdsSpecification(materialIds)); 
             if (materials.Count != materialIds.Count)

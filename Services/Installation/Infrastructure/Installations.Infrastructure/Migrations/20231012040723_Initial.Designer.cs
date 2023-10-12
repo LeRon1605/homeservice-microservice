@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Installations.Infrastructure.Migrations
 {
     [DbContext(typeof(InstallationDbContext))]
-    [Migration("20231011180123_Initial")]
+    [Migration("20231012040723_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -43,8 +43,15 @@ namespace Installations.Infrastructure.Migrations
                     b.Property<Guid>("ContractLineId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("ContractNo")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("EstimatedFinishTime")
                         .HasColumnType("datetime2");
@@ -55,6 +62,9 @@ namespace Installations.Infrastructure.Migrations
                     b.Property<string>("FloorType")
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
+
+                    b.Property<DateTime?>("InstallDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("InstallationComment")
                         .HasMaxLength(2048)
@@ -67,15 +77,25 @@ namespace Installations.Infrastructure.Migrations
                     b.Property<Guid>("InstallerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("SalespersonId")
+                    b.Property<int>("No")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("No"));
+
+                    b.Property<string>("ProductColor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("SupervisorId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 

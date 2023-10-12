@@ -2,6 +2,7 @@ using Installations.Domain.Constants;
 using Installations.Domain.InstallationAggregate;
 using Installations.Domain.InstallationAggregate.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Installations.Infrastructure.Configurations;
@@ -10,6 +11,10 @@ public class InstallationConfiguration : IEntityTypeConfiguration<Installation>
 {
     public void Configure(EntityTypeBuilder<Installation> builder)
     {
+        builder.Property(x => x.No)
+            .ValueGeneratedOnAdd()
+            .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
+        
         builder.Property(i => i.FloorType).HasMaxLength(StringLength.FloorType);
         
         builder.Property(i => i.InstallationComment).HasMaxLength(StringLength.Comment);

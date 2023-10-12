@@ -6,9 +6,10 @@ namespace Installations.Application.IntegrationEvents.Events.Contracts;
 public record ContractCreatedIntegrationEvent : IntegrationEvent
 {
     public Guid ContractId {get; init; } 
+    public int ContractNo { get; init; }
+    
     public Guid CustomerId { get; init; }
-    public Guid? SalespersonId { get; init; }
-    public Guid? SupervisorId { get; init; }
+    public string CustomerName { get; init; } = null!;
     
     public InstallationAddressEventDto? InstallationAddress { get; init; }
     
