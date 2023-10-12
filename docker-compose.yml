@@ -6,7 +6,7 @@
       dockerfile: Services/Products/Products.API/Dockerfile
     ports:
       - "5005:80"
-    environment: 
+    environment:
       - Serilog__SeqServerUrl=http://seq:5341
       - EventBus__HostName=rabbitmq
       - EventBus__Port=5672
@@ -30,31 +30,31 @@
       - rabbitmq
       - seq
       - redis
-      
+  
   iac.api:
     image: iac.api
     build:
       context: .
       dockerfile: Services/IAC/IAC.API/Dockerfile
     ports:
-        - "5003:80"
+      - "5003:80"
     environment:
-        - EventBus__HostName=rabbitmq
-        - EventBus__Port=5672
-        - EventBus__UserName=admin
-        - EventBus__Password=admin
-        - EventBus__SubscriptionClientName=IdentityService
-        - EventBus__RetryCount=5
-        - Serilog__SeqServerUrl=http://seq:5341
-        - ASPNETCORE_ENVIRONMENT=Development
-        - ASPNETCORE_URLS=http://+:80
-        - ConnectionStrings__Default=Server=db,1433;Database=HomeCare.IacDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
-        - ConnectionStrings__Redis=redis
-        - Kestrel__Endpoints__Http__Url=http://+:80
-        - Kestrel__Endpoints__gRPC__Url=http://+:3000
-        - JWTSettings__AccessTokenExpiryInMinutes=30
+      - EventBus__HostName=rabbitmq
+      - EventBus__Port=5672
+      - EventBus__UserName=admin
+      - EventBus__Password=admin
+      - EventBus__SubscriptionClientName=IdentityService
+      - EventBus__RetryCount=5
+      - Serilog__SeqServerUrl=http://seq:5341
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__Default=Server=db,1433;Database=HomeCare.IacDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
+      - ConnectionStrings__Redis=redis
+      - Kestrel__Endpoints__Http__Url=http://+:80
+      - Kestrel__Endpoints__gRPC__Url=http://+:3000
+      - JWTSettings__AccessTokenExpiryInMinutes=30
     restart: always
-    depends_on: 
+    depends_on:
       - db
       - rabbitmq
       - seq
@@ -88,7 +88,7 @@
       - rabbitmq
       - seq
       - redis
-        
+  
   contracts.api:
     image: contracts.api
     build:
@@ -115,7 +115,36 @@
       - rabbitmq
       - seq
       - redis
-      
+  
+  employee.api:
+    image: employee.api
+    build:
+      context: .
+      dockerfile: Services/Employees/Presentation/Employees.API/Dockerfile
+    ports:
+      - "5008:80"
+    environment:
+      - EventBus__HostName=rabbitmq
+      - EventBus__Port=5672
+      - EventBus__UserName=admin
+      - EventBus__Password=admin
+      - EventBus__SubscriptionClientName=EmployeeService
+      - EventBus__RetryCount=5
+      - Serilog__SeqServerUrl=http://seq:5341
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__Default=Server=db,1433;Database=HomeCare.EmployeeDb;User=sa;Password=Admin123;Encrypt=False;TrustServerCertificate=False;
+      - ConnectionStrings__Redis=redis
+      - GrpcUrls__Identity=http://iac.api:3000
+      - Kestrel__Endpoints__Http__Url=http://+:80
+      - Kestrel__Endpoints__gRPC__Url=http://+:3000
+    restart: always
+    depends_on:
+      - db
+      - rabbitmq
+      - seq
+      - redis
+  
   apigateway:
     image: apigateway
     build:
@@ -140,6 +169,9 @@
       - Routes__3__DownstreamHostAndPorts__0__Host=contracts.api
       - Routes__3__DownstreamHostAndPorts__0__Port=80
       - SwaggerEndPoints__3__Config__0__Url=http://contracts.api/swagger/v1/swagger.json
+      - Routes__4__DownstreamHostAndPorts__0__Port=80
+      - Routes__4__DownstreamHostAndPorts__0__Host=employee.api
+      - SwaggerEndPoints__4__Config__0__Url=http://employee.api/swagger/v1/swagger.json
       - GrpcUrls__Identity=http://iac.api:3000
       - GrpcUrls__Product=http://products.api:3000
       - GrpcUrls__Shopping=http://shopping.api:3000
@@ -154,7 +186,7 @@
     restart: always
     volumes:
       - homecaredata:/var/opt/mssql
-      
+  
   seq:
     image: datalust/seq:latest
     ports:
@@ -165,7 +197,7 @@
     restart: always
     volumes:
       - seqdata:/data
-      
+  
   rabbitmq:
     image: rabbitmq:3-management
     ports:
@@ -177,7 +209,7 @@
     restart: always
     volumes:
       - homecaremq:/var/lib/rabbitmq
-    
+  
   redis:
     image: redis
     ports:
@@ -185,9 +217,9 @@
     restart: always
     volumes:
       - redisdata:/data
-      
+
 volumes:
-    homecaredata:
-    seqdata:
-    homecaremq:
-    redisdata:
+  homecaredata:
+  seqdata:
+  homecaremq:
+  redisdata:

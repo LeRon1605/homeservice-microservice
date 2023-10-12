@@ -28,7 +28,7 @@ public class IdentityDataSeeder : IDataSeeder
         _logger = logger;
         _eventBus = eventBus;
     }
-    
+
     public async Task SeedAsync()
     {
         try
@@ -39,10 +39,14 @@ public class IdentityDataSeeder : IDataSeeder
             {
                 await SeedAdminRoleAsync();
 
+                await SeedInstallerRoleAsync();
+
                 await SeedCustomerRoleAsync();
 
                 await SeedSalePersonRoleAsync();
-                
+
+                await SeedSupervisorRoleAsync();
+
                 await SeedRoleClaimAsync();
             }
 
@@ -51,7 +55,7 @@ public class IdentityDataSeeder : IDataSeeder
                 await SeedDefaultAdminAccountAsync();
                 await SeedCustomerUserAccountAsync();
             }
-            
+
             _logger.LogInformation("Seed identity data successfully!");
         }
         catch (Exception ex)
@@ -76,7 +80,8 @@ public class IdentityDataSeeder : IDataSeeder
         await _userManager.AddToRoleAsync(user, AppRole.Customer);
 
         await Task.Delay(TimeSpan.FromSeconds(30));
-        _eventBus.Publish(new UserSignedUpIntegrationEvent(Guid.Parse(user.Id), user.FullName, user.Email, user.PhoneNumber));
+        _eventBus.Publish(new UserSignedUpIntegrationEvent(Guid.Parse(user.Id), user.FullName, user.Email,
+            user.PhoneNumber));
     }
 
     private async Task SeedAdminRoleAsync()
@@ -87,6 +92,32 @@ public class IdentityDataSeeder : IDataSeeder
         {
             _logger.LogWarning("Seeding admin role failed!");
         }
+
+        _eventBus.Publish(new RoleCreatedIntegrationEvent(adminRole.Id, adminRole.Name));
+    }
+
+    private async Task SeedInstallerRoleAsync()
+    {
+        var installerRole = new ApplicationRole(AppRole.Installer);
+        var result = await _roleManager.CreateAsync(installerRole);
+        if (!result.Succeeded)
+        {
+            _logger.LogWarning("Seeding installer role failed!");
+        }
+
+        _eventBus.Publish(new RoleCreatedIntegrationEvent(installerRole.Id, installerRole.Name));
+    }
+
+    private async Task SeedSupervisorRoleAsync()
+    {
+        var supervisorRole = new ApplicationRole(AppRole.Supervisor);
+        var result = await _roleManager.CreateAsync(supervisorRole);
+        if (!result.Succeeded)
+        {
+            _logger.LogWarning("Seeding supervisor role failed!");
+        }
+
+        _eventBus.Publish(new RoleCreatedIntegrationEvent(supervisorRole.Id, supervisorRole.Name));
     }
 
     private async Task SeedCustomerRoleAsync()
@@ -105,11 +136,13 @@ public class IdentityDataSeeder : IDataSeeder
         var result = await _roleManager.CreateAsync(salePersonRole);
         if (!result.Succeeded)
         {
-            _logger.LogWarning("Seeding sale person role failed!");       
+            _logger.LogWarning("Seeding sale person role failed!");
         }
+
+        _eventBus.Publish(new RoleCreatedIntegrationEvent(salePersonRole.Id, salePersonRole.Name));
     }
-    
-    
+
+
     private async Task SeedDefaultAdminAccountAsync()
     {
         var user = new ApplicationUser()
