@@ -9,6 +9,7 @@ using Contracts.Application.Queries.Contracts.GetPaymentsOfContract;
 using Contracts.Domain.ContractAggregate;
 using Contracts.Domain.ContractAggregate.Specifications;
 using Contracts.Domain.CustomerAggregate;
+using Contracts.Domain.MaterialAggregate;
 using Contracts.Domain.PaymentMethodAggregate;
 using Contracts.Domain.ProductAggregate;
 using Contracts.Domain.ProductUnitAggregate;
@@ -23,6 +24,7 @@ public class ContractDataSeeder : IDataSeeder
     private readonly IReadOnlyRepository<Contract> _contractRepository;
     private readonly IReadOnlyRepository<Customer> _customerRepository;
     private readonly IReadOnlyRepository<Product> _productRepository;
+    private readonly IReadOnlyRepository<Material> _materialRepository;
     private readonly IRepository<Tax> _taxRepository;
     private readonly IRepository<PaymentMethod> _paymentMethodRepository;
     private readonly IReadOnlyRepository<PaymentMethod> _paymentMethodReadOnlyRepository;
@@ -39,6 +41,7 @@ public class ContractDataSeeder : IDataSeeder
         IReadOnlyRepository<Contract> contractRepository, 
         IReadOnlyRepository<Customer> customerRepository,
         IReadOnlyRepository<Product> productRepository,
+        IReadOnlyRepository<Material> materialRepository,
         ILogger<ContractDataSeeder> logger,
         IReadOnlyRepository<ProductUnit> productUnitRepository,
         IReadOnlyRepository<PaymentMethod> paymentMethodReadOnlyRepository,
@@ -48,6 +51,7 @@ public class ContractDataSeeder : IDataSeeder
         _taxRepository = taxRepository;
         _paymentMethodRepository = paymentMethodRepository;
         _productRepository = productRepository;
+        _materialRepository = materialRepository;
         _mediator = mediator;
         _contractRepository = contractRepository;
         _customerRepository = customerRepository;
@@ -80,6 +84,7 @@ public class ContractDataSeeder : IDataSeeder
             
             var products = await _productRepository.GetAllAsync();
             var productUnits = await _productUnitRepository.GetAllAsync();
+            var materials = await _materialRepository.GetAllAsync();
             var customers = await _customerRepository.GetAllAsync();
             var paymentMethods = await _paymentMethodReadOnlyRepository.GetAllAsync();
             
@@ -87,7 +92,7 @@ public class ContractDataSeeder : IDataSeeder
             {
                 try
                 {
-                    var command = new AddContractCommand(GetContractCreateDto(productUnits, products, customers, paymentMethods));
+                    var command = new AddContractCommand(GetContractCreateDto(productUnits, products, materials, customers, paymentMethods));
                     await _mediator.Send(command);
                 }
                 catch(Exception e)
@@ -117,6 +122,7 @@ public class ContractDataSeeder : IDataSeeder
     private ContractCreateDto GetContractCreateDto(
         IList<ProductUnit> productUnits,
         IList<Product> products,
+        IList<Material> materials,
         IList<Customer> customers,
         IList<PaymentMethod> paymentMethods)
     {
@@ -143,6 +149,7 @@ public class ContractDataSeeder : IDataSeeder
                 State = faker.Address.State()
             },
             Items = new List<ContractLineCreateDto>(),
+            Installations = new List<InstallationCreateDto>(),
             Payments = new List<ContractPaymentCreateDto>(),
             Actions = new List<ContractActionCreateDto>(),
             Status = faker.PickRandom<ContractStatus>()
@@ -152,6 +159,7 @@ public class ContractDataSeeder : IDataSeeder
         {
             var product = products[faker.Random.Int(0, products.Count - 1)];
             var productUnit = productUnits[faker.Random.Int(0, productUnits.Count - 1)];
+            var material = materials[faker.Random.Int(0, materials.Count - 1)];
             
             contractCreateDto.Items.Add(new ContractLineCreateDto()
             {
@@ -161,6 +169,36 @@ public class ContractDataSeeder : IDataSeeder
                 SellPrice = faker.Random.Decimal(100, 1000),
                 Color = product.Colors[0],
                 UnitId = productUnit.Id
+            });
+            
+            contractCreateDto.Installations.Add(new InstallationCreateDto
+            {
+                ProductId = product.Id,
+                ProductName = product.Name,
+                Color = product.Colors[0],
+                InstallDate = faker.Date.Soon(40),
+                EstimatedStartTime = faker.Date.Soon(40).AddHours(faker.Random.Int(8, 12)),
+                EstimatedFinishTime = faker.Date.Soon(40).AddHours(faker.Random.Int(12, 17)),
+                ActualStartTime = faker.Date.Soon(40).AddHours(faker.Random.Int(8, 12)),
+                ActualFinishTime = faker.Date.Soon(40).AddHours(faker.Random.Int(12, 17)),
+                InstallationComment = faker.Lorem.Sentence(),
+                FloorType = faker.Random.ListItem(new List<string> {"Concrete", "Wood", "Tile"}),
+                // Todo: Get all installer ids
+                InstallerId = faker.Random.Guid(),
+                InstallationMetres = faker.Random.Double(10, 100),
+                Items = new List<InstallationItemCreateDto>
+                {
+                    new()
+                    {
+                        MaterialId = material.Id,
+                        MaterialName = material.Name,
+                        Quantity = faker.Random.Int(1, 10),
+                        UnitId = productUnit.Id,
+                        UnitName = productUnit.Name,
+                        Cost = faker.Random.Decimal(10, 100),
+                        SellPrice = faker.Random.Decimal(100, 1000)
+                    } 
+                }
             });
         }
         

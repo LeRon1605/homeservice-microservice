@@ -72,11 +72,21 @@ public class Installation : AggregateRoot
         FloorType = floorType;
         InstallationMetres = installationMetres;
         
-        InstallDate = installDate;
-        EstimatedStartTime = estimatedStartTime;
-        EstimatedFinishTime = estimatedFinishTime;
-        ActualStartTime = actualStartTime;
-        ActualFinishTime = actualFinishTime;
+        if (installDate is not null)
+        {
+            InstallDate = installDate;
+            if (estimatedStartTime != null && estimatedFinishTime != null)
+            {
+                EstimatedStartTime = installDate.Value.Date + estimatedStartTime.Value.TimeOfDay;
+                EstimatedFinishTime = installDate.Value.Date + estimatedFinishTime.Value.TimeOfDay;
+            }
+            
+            if (actualStartTime != null && actualFinishTime != null)
+            {
+                ActualStartTime = installDate.Value.Date + actualStartTime.Value.TimeOfDay;
+                ActualFinishTime = installDate.Value.Date + actualFinishTime.Value.TimeOfDay;
+            }
+        }
         
         Status = InstallationStatus.Pending;
         InstallationAddress = new InstallationAddress(fullAddress, city, state, postalCode);

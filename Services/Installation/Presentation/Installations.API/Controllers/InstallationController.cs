@@ -1,3 +1,4 @@
+using Installations.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,4 +15,11 @@ public class InstallationController : ControllerBase
         _mediator = mediator;
     }
     
+    [HttpGet("contracts/{contractId:guid}")]
+    public async Task<IActionResult> GetInstallationsByContractId(Guid contractId, [FromQuery] GetInstallationsByContractIdQuery query)
+    {
+        query.ContractId = contractId;
+        var result = await _mediator.Send(query);
+        return Ok(result);
+    }
 }
