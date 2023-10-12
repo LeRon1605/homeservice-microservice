@@ -2,6 +2,7 @@ using Bogus;
 using BuildingBlocks.Application.Seeder;
 using BuildingBlocks.Domain.Data;
 using Microsoft.Extensions.Logging;
+using Polly;
 using Shopping.Domain.ProductAggregate;
 using Shopping.Domain.ProductAggregate.Specifications;
 
@@ -28,39 +29,52 @@ public class ProductReviewDataSeeder : IDataSeeder
     
     public async Task SeedAsync()
     {
-        if (!await _productReviewRepository.AnyAsync())
+        if (await _productReviewRepository.AnyAsync())
         {
+            return;
+        }
+        
+        var policy = Policy.Handle<Exception>()
+            .WaitAndRetry(10, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+                (ex, time) =>
+                {
+                    _logger.LogWarning(ex, "Couldn't seed product review table after {TimeOut}s", $"{time.TotalSeconds:n1}");
+                }
+            );
+
+        policy.Execute(() =>
+        {
+            if (!_productRepository.AnyAsync().Result)
+            {
+                throw new Exception("Product data not seeded yet!");
+            }
+        });
+            
+        try
+        {
+            _logger.LogInformation("Begin seeding product reviews...");
+            
             var specification = new ProductFilterSpecification(string.Empty, 1, 10);
             var products = await _productRepository.FindListAsync(specification);
-
-            if (!products.Any())
-            {
-                return;
-            }
             
-            try
+            foreach (var product in products)
             {
-                _logger.LogInformation("Begin seeding product reviews...");
-                
                 var faker = new Faker();
-                foreach (var product in products)
+                for (var i = 0;i < faker.Random.Int(1, 20);i++)
                 {
-                    for (var i = 0;i < faker.Random.Int(1, 20);i++)
-                    {
-                        product.AddReview(faker.Commerce.ProductDescription(), faker.Random.Int(1, 10));
-                    }
-                    
-                    _productRepository.Update(product);
+                    product.AddReview(faker.Commerce.ProductDescription(), faker.Random.Int(1, 10));
                 }
-            
-                await _unitOfWork.SaveChangesAsync();
                 
-                _logger.LogInformation("Seed product reviews successfully!");
+                _productRepository.Update(product);
             }
-            catch
-            {
-                _logger.LogError("Seed product reviews failed!");
-            }
+            
+            await _unitOfWork.SaveChangesAsync();
+                
+            _logger.LogInformation("Seed product reviews successfully!");
+        }
+        catch
+        {
+            _logger.LogError("Seed product reviews failed!");
         }
     }
 }

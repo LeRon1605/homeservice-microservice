@@ -1,4 +1,6 @@
-﻿services:
+﻿version: '3.4'
+
+services:
   products.api:
     image: products.api
     build:
@@ -26,10 +28,14 @@
       - Kestrel__Endpoints__gRPC__Url=http://+:3000
     restart: always
     depends_on:
-      - db
-      - rabbitmq
-      - seq
-      - redis
+      db:
+        condition: service_started
+      seq:
+        condition: service_started
+      redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
       
   iac.api:
     image: iac.api
@@ -54,11 +60,15 @@
         - Kestrel__Endpoints__gRPC__Url=http://+:3000
         - JWTSettings__AccessTokenExpiryInMinutes=30
     restart: always
-    depends_on: 
-      - db
-      - rabbitmq
-      - seq
-      - redis
+    depends_on:
+      db:
+        condition: service_started
+      seq:
+        condition: service_started
+      redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
   
   shopping.api:
     image: shopping.api
@@ -84,10 +94,14 @@
       - Kestrel__Endpoints__gRPC__Url=http://+:3000
     restart: always
     depends_on:
-      - db
-      - rabbitmq
-      - seq
-      - redis
+      db:
+        condition: service_started
+      seq:
+        condition: service_started
+      redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
         
   contracts.api:
     image: contracts.api
@@ -111,10 +125,14 @@
       - GrpcUrls__Identity=http://iac.api:3000
     restart: always
     depends_on:
-      - db
-      - rabbitmq
-      - seq
-      - redis
+      db:
+        condition: service_started
+      seq:
+        condition: service_started
+      redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
   
   employee.api:
     image: employee.api
@@ -140,10 +158,14 @@
       - Kestrel__Endpoints__gRPC__Url=http://+:3000
     restart: always
     depends_on:
-      - db
-      - rabbitmq
-      - seq
-      - redis
+      db:
+        condition: service_started
+      seq:
+        condition: service_started
+      redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
   
       
   installation.api:
@@ -170,10 +192,14 @@
       - Kestrel__Endpoints__gRPC__Url=http://+:3000
     restart: always
     depends_on:
-      - db
-      - rabbitmq
-      - seq
-      - redis
+      db:
+        condition: service_started
+      seq:
+        condition: service_started
+      redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
         
   apigateway:
     image: apigateway
@@ -244,6 +270,11 @@
     restart: always
     volumes:
       - homecaremq:/var/lib/rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 30s
+      retries: 3
     
   redis:
     image: redis

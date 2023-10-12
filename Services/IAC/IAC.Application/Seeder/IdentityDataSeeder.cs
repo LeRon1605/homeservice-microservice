@@ -51,8 +51,6 @@ public class IdentityDataSeeder : IDataSeeder
 
             if (!_userManager.Users.Any())
             {
-                await Task.Delay(TimeSpan.FromSeconds(30));
-                
                 await SeedDefaultAdminAccountAsync();
                 await SeedCustomerUserAccountAsync();
             }

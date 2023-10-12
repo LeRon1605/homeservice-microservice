@@ -3,6 +3,7 @@ using BuildingBlocks.Application.Seeder;
 using BuildingBlocks.Domain.Data;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Polly;
 using Shopping.Application.Commands.Buyers.EditBuyer;
 using Shopping.Application.Commands.Orders.SubmitOrder;
 using Shopping.Domain.BuyerAggregate;
@@ -45,17 +46,34 @@ public class OrderDataSeeder : IDataSeeder
             return;
         }
         
-        try
+        var policy = Policy.Handle<Exception>()
+            .WaitAndRetry(10, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+                (ex, time) =>
+                {
+                    _logger.LogWarning(ex, "Couldn't seed order table after {TimeOut}s", $"{time.TotalSeconds:n1}");
+                }
+            );
+        
+        policy.Execute(() =>
         {
-            _logger.LogTrace("Begin seeding orders...");
-            
-            var buyers = await _buyerRepository.GetAllAsync();
-            
-            for (var i = 0; i < 50; i++)
+            if (!_buyerRepository.AnyAsync().Result)
             {
-                var faker = new Faker();
-                
-                var buyer = buyers[faker.Random.Int(0, buyers.Count - 1)];
+                throw new Exception("Buyer data not seeded yet!");
+            }
+        });
+
+        await SeedBuyersAsync();
+        await SeedOrdersAsync();
+    }
+
+    private async Task SeedBuyersAsync()
+    {
+        var buyers = await _buyerRepository.GetAllAsync();
+        foreach (var buyer in buyers)
+        {
+            var faker = new Faker();
+            try
+            {
                 var editBuyerCommand = new EditBuyerCommand(
                     buyer.FullName, 
                     buyer.Email, 
@@ -68,20 +86,41 @@ public class OrderDataSeeder : IDataSeeder
                 {
                     Id = buyer.Id
                 };
-                var editedBuyer = await _mediator.Send(editBuyerCommand);
-                
+             
+                await _mediator.Send(editBuyerCommand);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Edit buyer failed: {Messsage}", e.Message);
+            }
+        }
+    }
+
+    private async Task SeedOrdersAsync()
+    {
+        _logger.LogTrace("Begin seeding orders...");
+        
+        var buyers = await _buyerRepository.GetAllAsync();
+        var products = await _productRepository.FindListAsync(new ProductIncludeUnitSpecification());
+
+        for (var i = 0; i < 50; i++)
+        {
+            try
+            {
+                var faker = new Faker();
+                var buyer = buyers[faker.Random.Int(0, buyers.Count - 1)];
                 var order = new Order(
                     buyer.Id,
-                    editedBuyer.FullName,
-                    editedBuyer.Email,
-                    editedBuyer.Phone,
-                    editedBuyer.Address,
-                    editedBuyer.City,
-                    editedBuyer.State,
-                    editedBuyer.PostalCode
+                    buyer.FullName,
+                    buyer.Email,
+                    buyer.Phone,
+                    buyer.Address.FullAddress,
+                    buyer.Address.City,
+                    buyer.Address.State,
+                    buyer.Address.PostalCode
                 );
-                
-                await SeedOrderLinesAsync(order);
+
+                SeedOrderLines(order, products);
 
                 switch (faker.Random.Int(0, 2))
                 {
@@ -89,23 +128,21 @@ public class OrderDataSeeder : IDataSeeder
                         order.Reject();
                         break;
                 }
-        
+
                 _orderRepository.Add(order);
+                await _unitOfWork.SaveChangesAsync();
+
+                _logger.LogTrace("Seed orders successfully!");
             }
-            await _unitOfWork.SaveChangesAsync();
-        
-            _logger.LogTrace("Seed orders successfully!");
-        }
-        catch (Exception e)
-        {
-            _logger.LogTrace("Seed orders failed!");
+            catch (Exception e)
+            {
+                _logger.LogTrace("Seed orders failed: {Message}", e.Message);
+            }
         }
     }
     
-    private async Task SeedOrderLinesAsync(Order order)
+    private void SeedOrderLines(Order order, IList<Product> products)
     {
-        var products = await _productRepository.FindListAsync(new ProductIncludeUnitSpecification());
-        
         for (var i = 0; i < 3; i++)
         {
             var faker = new Faker();

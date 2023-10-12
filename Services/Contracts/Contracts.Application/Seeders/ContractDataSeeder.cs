@@ -16,6 +16,7 @@ using Contracts.Domain.ProductUnitAggregate;
 using Contracts.Domain.TaxAggregate;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Polly;
 
 namespace Contracts.Application.Seeders;
 
@@ -78,45 +79,79 @@ public class ContractDataSeeder : IDataSeeder
 
     private async Task SeedContractsAsync()
     {
-        if (!await _contractRepository.AnyAsync() && await _productRepository.AnyAsync())
+        if (await _contractRepository.AnyAsync())
         {
-            _logger.LogInformation("Begin seeding contracts data...");
-            
-            var products = await _productRepository.GetAllAsync();
-            var productUnits = await _productUnitRepository.GetAllAsync();
-            var materials = await _materialRepository.GetAllAsync();
-            var customers = await _customerRepository.GetAllAsync();
-            var paymentMethods = await _paymentMethodReadOnlyRepository.GetAllAsync();
-            
-            for (var i = 0; i < 50; i++)
+            return;
+        }
+        
+        var policy = Policy.Handle<Exception>()
+            .WaitAndRetry(10, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+                (ex, time) =>
+                {
+                    _logger.LogWarning(ex, "Couldn't seed contract table after {TimeOut}s", $"{time.TotalSeconds:n1}");
+                }
+            );
+        
+        policy.Execute(() =>
+        {
+            if (!_customerRepository.AnyAsync().Result)
             {
-                try
-                {
-                    var command = new AddContractCommand(GetContractCreateDto(productUnits, products, materials, customers, paymentMethods));
-                    await _mediator.Send(command);
-                }
-                catch(Exception e)
-                {
-                    _logger.LogError("Seeding a contract failed: {Message}", e.Message);
-                }
+                throw new Exception("Buyer data not seeded yet!");
+            }
+            
+            if (!_productRepository.AnyAsync().Result)
+            {
+                throw new Exception("Product data not seeded yet!");
+            }
+            
+            if (!_productUnitRepository.AnyAsync().Result)
+            {
+                throw new Exception("Product unit data not seeded yet!");
             }
 
-            var contracts = await _contractRepository.GetAllAsync();
-            for (var i = 0; i < 10; i++)
+            if (!_materialRepository.AnyAsync().Result)
             {
-                try
-                {
-                    var contractUpdateDto = await GetContractUpdateDto(contracts[i], productUnits, products, customers);
-                    var command = new UpdateContractCommand(contracts[i].Id, contractUpdateDto);
-                    await _mediator.Send(command);
-                }
-                catch(Exception e)
-                {
-                    _logger.LogError("Seeding a deleted contract failed: {Message}", e.Message);
-                }
+                throw new Exception("Material data not seeded yet!");
             }
-            _logger.LogInformation("Finished seeding contracts data...");
+        });
+        
+        _logger.LogInformation("Begin seeding contracts data...");
+        
+        var products = await _productRepository.GetAllAsync();
+        var productUnits = await _productUnitRepository.GetAllAsync();
+        var materials = await _materialRepository.GetAllAsync();
+        var customers = await _customerRepository.GetAllAsync();
+        var paymentMethods = await _paymentMethodReadOnlyRepository.GetAllAsync();
+        
+        for (var i = 0; i < 50; i++)
+        {
+            try
+            {
+                var command = new AddContractCommand(GetContractCreateDto(productUnits, products, materials, customers, paymentMethods));
+                await _mediator.Send(command);
+            }
+            catch(Exception e)
+            {
+                _logger.LogError("Seeding a contract failed: {Message}", e.Message);
+            }
         }
+
+        var contracts = await _contractRepository.GetAllAsync();
+        for (var i = 0; i < 10; i++)
+        {
+            try
+            {
+                var contractUpdateDto = await GetContractUpdateDto(contracts[i], productUnits, products, customers);
+                var command = new UpdateContractCommand(contracts[i].Id, contractUpdateDto);
+                await _mediator.Send(command);
+            }
+            catch(Exception e)
+            {
+                _logger.LogError("Seeding a deleted contract failed: {Message}", e.Message);
+            }
+        }
+        
+        _logger.LogInformation("Finished seeding contracts data...");
     }
 
     private ContractCreateDto GetContractCreateDto(
