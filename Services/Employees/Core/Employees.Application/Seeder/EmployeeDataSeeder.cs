@@ -5,6 +5,7 @@ using Bogus;
 using Employees.Domain.EmployeeAggregate.Enums;
 using Employees.Domain.RoleAggregate;
 using Microsoft.Extensions.Logging;
+using Polly;
 
 namespace Employees.Application.Seeder;
 
@@ -31,15 +32,29 @@ public class EmployeeDataSeeder : IDataSeeder
             _logger.LogInformation("No need to seed employee data!");
             return;
         }
+        
+        var policy = Policy.Handle<Exception>()
+            .WaitAndRetry(10, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+                (ex, time) =>
+                {
+                    _logger.LogWarning(ex, "Couldn't seed employee table after {TimeOut}s", $"{time.TotalSeconds:n1}");
+                }
+            );
+        
+        policy.Execute(() =>
+        {
+            if (!_roleRepository.AnyAsync().Result)
+            {
+                throw new Exception("Role data not seeded yet!");
+            }
+        });
 
-        await Task.Delay(TimeSpan.FromSeconds(30));
         try
         {
             var faker = new Faker();
             var roles = await _roleRepository.GetAllAsync();
 
-
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < 50; i++)
             {
                 var role = roles[faker.Random.Int(0, roles.Count - 1)];
                 var employee = new Employee(
@@ -59,7 +74,7 @@ public class EmployeeDataSeeder : IDataSeeder
         }
         catch (Exception e)
         {
-            _logger.LogTrace("Seed employee data failed!");
+            _logger.LogError("Seed employee data failed: {Message}", e.Message);
         }
     }
 }
