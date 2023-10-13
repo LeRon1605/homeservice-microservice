@@ -22,6 +22,7 @@ public class AuthenticateService : IAuthenticateService
 {
     private readonly IUserRepository _userRepository;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly ITokenService _tokenService;
     private readonly IRoleService _roleService;
     private readonly IMapper _mapper;
@@ -33,6 +34,7 @@ public class AuthenticateService : IAuthenticateService
     public AuthenticateService(
         IUserRepository userRepository,
         ITokenService tokenService,
+        RoleManager<ApplicationRole> roleManager,
         UserManager<ApplicationUser> userManager,
         IMapper mapper,
         IUnitOfWork unitOfWork, 
@@ -43,6 +45,7 @@ public class AuthenticateService : IAuthenticateService
     {
         _userRepository = userRepository;
         _tokenService = tokenService;
+        _roleManager = roleManager;
         _userManager = userManager;
         _mapper = mapper;
         _unitOfWork = unitOfWork;
@@ -129,13 +132,9 @@ public class AuthenticateService : IAuthenticateService
 
     public async Task<TokenDto> LoginAsync(LoginDto logInDto, LoginPortal loginPortal)
     {
-        var user = await _userRepository.GetByPhoneNumberAsync(logInDto.Identifier) 
-                   ?? await _userRepository.GetByEmailAsync(logInDto.Identifier);
+        var user = await FindUserByPortalAsync(logInDto, loginPortal);
         
         if (user == null)
-            throw new UserNotFoundException(logInDto.Identifier);
-
-        if (!await CanUserAccessPortal(user, loginPortal))
             throw new UserNotFoundException(logInDto.Identifier);
         
         var isValid = await _userManager.CheckPasswordAsync(user, logInDto.Password);
@@ -168,16 +167,32 @@ public class AuthenticateService : IAuthenticateService
         userDto.Roles = roles;
         return userDto;
     }
-    
-    private async Task<bool> CanUserAccessPortal(ApplicationUser user, LoginPortal loginPortal)
+
+    private async Task<ApplicationUser?> FindUserByPortalAsync(LoginDto logInDto, LoginPortal loginPortal)
     {
-        var roleName = (await _userManager.GetRolesAsync(user)).First();
-        return loginPortal switch
+        var roleIds = await FindRoleByPortalAsync(loginPortal);
+        return await _userRepository.GetByIdentifierAndRoleAsync(logInDto.Identifier, roleIds.ToArray());
+    }
+    
+    private async Task<List<string>> FindRoleByPortalAsync(LoginPortal loginPortal)
+    {
+        var roleNames = loginPortal switch
         {
-            LoginPortal.BackOffice => roleName == AppRole.Admin || roleName == AppRole.SalePerson,
-            LoginPortal.Installation => roleName == AppRole.Installer,
-            LoginPortal.Customer => roleName == AppRole.Customer,
-            _ => false
+            LoginPortal.BackOffice => new string[] { AppRole.Admin, AppRole.SalePerson},
+            LoginPortal.Installation => new string[] { AppRole.Installer },
+            LoginPortal.Customer => new string[] { AppRole.Customer }
         };
+
+        var roleIds = new List<string>();
+        foreach (var name in roleNames)
+        {
+            var role = await _roleManager.FindByNameAsync(name);
+            if (role != null)
+            {
+                roleIds.Add(role.Id);
+            }
+        }
+
+        return roleIds;
     }
 }

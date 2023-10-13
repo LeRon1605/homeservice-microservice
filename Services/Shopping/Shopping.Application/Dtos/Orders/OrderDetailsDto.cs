@@ -5,6 +5,7 @@ namespace Shopping.Application.Dtos.Orders;
 
 public class OrderDetailsDto
 {
+    public Guid BuyerId { get; set; }
     public string CustomerName { get; set; } = null!;
     public string ContactName { get; set; } = null!;
     public string? Email { get; set; }

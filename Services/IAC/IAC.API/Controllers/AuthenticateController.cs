@@ -36,6 +36,7 @@ public class AuthenticateController : ControllerBase
 	}
 	
 	[HttpPost("customer/log-in")]
+	[ProducesResponseType(typeof(TokenDto), StatusCodes.Status200OK)]
 	public async Task<IActionResult> CustomerLogin([FromBody] LoginDto logInDto)
 	{
 		var result = await _authenticateService.LoginAsync(logInDto, LoginPortal.Customer);

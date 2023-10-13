@@ -7,11 +7,13 @@ namespace IAC.Infrastructure.EfCore.Repositories;
 
 public class UserRepository : IUserRepository
 {
+    private readonly IacDbContext _dbContext;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public UserRepository(UserManager<ApplicationUser> userManager)
+    public UserRepository(UserManager<ApplicationUser> userManager, IacDbContext dbContext)
     {
         _userManager = userManager;
+        _dbContext = dbContext;
     }
     public async Task<bool> IsPhoneExist(string phoneNumber)
     {
@@ -36,5 +38,13 @@ public class UserRepository : IUserRepository
     public async Task<ApplicationUser?> GetByRefreshTokenAsync(string refreshToken)
     {
         return await _userManager.Users.FirstOrDefaultAsync(x => x.RefreshTokens.Any(y => y.Token == refreshToken));
+    }
+
+    public async Task<ApplicationUser?> GetByIdentifierAndRoleAsync(string identifier, string[] roleIds)
+    {
+        var userInRoleQueryable = _dbContext.UserRoles.Where(x => roleIds.Contains(x.RoleId));
+        return await _dbContext.Users
+            .Where(x => x.PhoneNumber == identifier || x.NormalizedEmail == identifier.ToUpper())
+            .FirstOrDefaultAsync(x => userInRoleQueryable.Any(userInRole => userInRole.UserId == x.Id));
     }
 }
