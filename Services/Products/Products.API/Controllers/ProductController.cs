@@ -6,6 +6,9 @@ using Products.Application.Commands.ProductCommands.DeleteProduct;
 using Products.Application.Commands.ProductCommands.UpdateProduct;
 using Products.Application.Commands.ProductCommands.UploadProductImage;
 using Products.Application.Dtos;
+using Products.Application.Dtos.Materials;
+using Products.Application.Dtos.Products;
+using Products.Application.Queries.MaterialQuery.GetMaterialByProduct;
 using Products.Application.Queries.ProductQuery.GetProductById;
 using Products.Application.Queries.ProductQuery.GetProductsWithPagination;
 
@@ -45,6 +48,7 @@ public class ProductController : ControllerBase
     } 
     
     [HttpPut("{id:guid}")]
+    [ProducesResponseType(typeof(GetProductDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateProductAsync(Guid id, ProductUpdateDto productUpdateDto)
     {
         var product = await _mediator.Send(new UpdateProductCommand(id, productUpdateDto));
@@ -64,5 +68,13 @@ public class ProductController : ControllerBase
     {
         var result = await _mediator.Send(new UploadProductImageCommand(file));
         return Ok(result);
+    }
+
+    [HttpGet("{id:guid}/materials")]
+    [ProducesResponseType(typeof(PagedResult<GetMaterialDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetMaterialsByProductAsync(Guid id, [FromQuery] MaterialFilterAndPagingByProductDto dto)
+    {
+        var materials = await _mediator.Send(new GetMaterialByProductQuery(id, dto));
+        return Ok(materials);
     }
 }

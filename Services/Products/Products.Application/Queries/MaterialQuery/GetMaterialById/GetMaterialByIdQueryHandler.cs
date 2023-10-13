@@ -2,6 +2,7 @@ using AutoMapper;
 using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
 using Products.Application.Dtos;
+using Products.Application.Dtos.Materials;
 using Products.Domain.MaterialAggregate;
 using Products.Domain.MaterialAggregate.Exceptions;
 using Products.Domain.MaterialAggregate.Specifications;

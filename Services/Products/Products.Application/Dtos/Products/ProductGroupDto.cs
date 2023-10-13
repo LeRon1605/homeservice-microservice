@@ -1,6 +1,6 @@
-namespace Products.Application.Dtos;
+namespace Products.Application.Dtos.Products;
 
-public class ProductTypeDto
+public class ProductGroupDto
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;

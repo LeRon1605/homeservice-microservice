@@ -1,9 +1,11 @@
+using BuildingBlocks.Application.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Products.Application.Commands.MaterialCommands.AddMaterial;
 using Products.Application.Commands.MaterialCommands.DeleteMaterial;
 using Products.Application.Commands.MaterialCommands.UpdateMaterial;
 using Products.Application.Dtos;
+using Products.Application.Dtos.Materials;
 using Products.Application.Queries.MaterialQuery.GetMaterialById;
 using Products.Application.Queries.MaterialQuery.GetMaterialWithPagination;
 
@@ -21,6 +23,7 @@ public class MaterialController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(typeof(PagedResult<GetMaterialDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetMaterials([FromQuery] MaterialFilterAndPagingDto materialFilterAndPagingDto)
     {
         var materials = await _mediator.Send(new GetMaterialsWithPaginationQuery(materialFilterAndPagingDto));

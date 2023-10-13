@@ -1,4 +1,4 @@
-﻿namespace Products.Application.Dtos;
+﻿namespace Products.Application.Dtos.Products;
 
 public class ProductImageDto
 {

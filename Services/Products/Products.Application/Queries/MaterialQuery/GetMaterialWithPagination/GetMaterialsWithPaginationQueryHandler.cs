@@ -3,6 +3,7 @@ using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Application.Dtos;
 using BuildingBlocks.Domain.Data;
 using Products.Application.Dtos;
+using Products.Application.Dtos.Materials;
 using Products.Domain.MaterialAggregate;
 using Products.Domain.MaterialAggregate.Specifications;
 

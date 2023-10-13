@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Products.Application.Dtos;
+namespace Products.Application.Dtos.Products;
 
-public class ProductCreateDto
+public class ProductUpdateDto
 {
     [Required] 
     public string ProductCode { get; set; } = null!;
@@ -15,6 +15,7 @@ public class ProductCreateDto
     
     [Required] 
     public Guid GroupId { get; set; }
+    
     public Guid BuyUnitId { get; set; }
     public Guid SellUnitId { get; set; }
     public decimal? BuyPrice { get; set; }
@@ -24,7 +25,6 @@ public class ProductCreateDto
     
     public bool IsObsolete { get; set; }
     public string? Description { get; set; }
-    
     public string[] Urls { get;  set; } = null!;
     public IEnumerable<string>? Colors { get; set; }
 }

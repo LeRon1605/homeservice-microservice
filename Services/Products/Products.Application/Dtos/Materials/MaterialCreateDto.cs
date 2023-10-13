@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Products.Application.Dtos;
+namespace Products.Application.Dtos.Materials;
 
 public class MaterialCreateDto
 {

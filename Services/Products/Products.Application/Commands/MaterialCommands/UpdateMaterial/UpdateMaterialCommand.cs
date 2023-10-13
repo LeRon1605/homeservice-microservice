@@ -1,5 +1,6 @@
 using BuildingBlocks.Application.CQRS;
 using Products.Application.Dtos;
+using Products.Application.Dtos.Materials;
 
 namespace Products.Application.Commands.MaterialCommands.UpdateMaterial;
 

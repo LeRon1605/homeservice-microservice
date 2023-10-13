@@ -1,7 +1,7 @@
 using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
 using BuildingBlocks.EventBus.Interfaces;
-using Contracts.Application.IntegrationEvents.Events.Materials;
+using Products.Application.IntegrationEvents.Events;
 using Products.Domain.MaterialAggregate;
 using Products.Domain.MaterialAggregate.Exceptions;
 

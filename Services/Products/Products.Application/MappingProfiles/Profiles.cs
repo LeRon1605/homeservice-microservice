@@ -1,5 +1,7 @@
 using AutoMapper;
 using Products.Application.Dtos;
+using Products.Application.Dtos.Materials;
+using Products.Application.Dtos.Products;
 using Products.Domain.MaterialAggregate;
 using Products.Domain.ProductAggregate;
 using Products.Domain.ProductGroupAggregate;

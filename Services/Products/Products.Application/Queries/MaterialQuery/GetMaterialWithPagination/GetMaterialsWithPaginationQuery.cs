@@ -1,6 +1,7 @@
 ﻿using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Application.Dtos;
 using Products.Application.Dtos;
+using Products.Application.Dtos.Materials;
 
 namespace Products.Application.Queries.MaterialQuery.GetMaterialWithPagination;
 
@@ -15,8 +16,7 @@ public class GetMaterialsWithPaginationQuery : PagingParameters ,IQuery<PagedRes
         Search = materialFilterAndPagingDto.Search;
         PageIndex = materialFilterAndPagingDto.PageIndex;
         PageSize = materialFilterAndPagingDto.PageSize;
-        IsObsolete = materialFilterAndPagingDto.IsObsolete;
+        IsObsolete = materialFilterAndPagingDto.IsObsolete; 
         TypeId = materialFilterAndPagingDto.TypeId;
-        
     }
 }

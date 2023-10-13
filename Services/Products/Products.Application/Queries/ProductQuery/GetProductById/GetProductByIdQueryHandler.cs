@@ -2,6 +2,7 @@
 using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
 using Products.Application.Dtos;
+using Products.Application.Dtos.Products;
 using Products.Domain.ProductAggregate;
 using Products.Domain.ProductAggregate.Exceptions;
 using Products.Domain.ProductAggregate.Specifications;

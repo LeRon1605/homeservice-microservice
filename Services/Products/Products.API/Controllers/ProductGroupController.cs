@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Products.Application.Dtos;
+using Products.Application.Dtos.Products;
 using Products.Application.Queries.ProductQuery.GetAllProductGroup;
 
 namespace Products.API.Controllers;

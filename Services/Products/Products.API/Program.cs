@@ -14,6 +14,7 @@ using Products.Application.Dtos;
 using Products.Application.MappingProfiles;
 using BuildingBlocks.Presentation.Swagger;
 using Products.API.Extensions;
+using Products.Application.Dtos.Products;
 using Products.Application.Grpc.Services;
 using Products.Infrastructure.EfCore.Data;
 using Serilog;

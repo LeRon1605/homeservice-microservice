@@ -1,4 +1,6 @@
-namespace Products.Application.Dtos;
+using Products.Application.Dtos.Products;
+
+namespace Products.Application.Dtos.Materials;
 
 public class GetMaterialDto
 {

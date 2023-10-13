@@ -1,6 +1,7 @@
 using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Application.Dtos;
 using Products.Application.Dtos;
+using Products.Application.Dtos.Products;
 
 namespace Products.Application.Queries.ProductQuery.GetProductsWithPagination;
 

@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.Application.CQRS;
 using Products.Application.Dtos;
+using Products.Application.Dtos.Products;
 
 namespace Products.Application.Commands.ProductCommands.UpdateProduct;
 

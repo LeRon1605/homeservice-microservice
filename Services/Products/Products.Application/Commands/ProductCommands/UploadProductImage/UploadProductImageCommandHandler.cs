@@ -1,6 +1,7 @@
 using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Application.ImageUploader;
 using Products.Application.Dtos;
+using Products.Application.Dtos.Products;
 using Products.Domain.ProductAggregate.Exceptions;
 
 namespace Products.Application.Commands.ProductCommands.UploadProductImage;

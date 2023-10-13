@@ -2,6 +2,7 @@ using AutoMapper;
 using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
 using Products.Application.Dtos;
+using Products.Application.Dtos.Products;
 using Products.Domain.ProductUnitAggregate;
 
 namespace Products.Application.Queries.ProductQuery.GetAllProductUnit;

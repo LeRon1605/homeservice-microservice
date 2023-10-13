@@ -1,6 +1,6 @@
 ﻿using BuildingBlocks.Application.Dtos;
 
-namespace Products.Application.Dtos;
+namespace Products.Application.Dtos.Materials;
 
 public class MaterialFilterAndPagingDto : PagingParameters
 {
