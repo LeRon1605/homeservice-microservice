@@ -3,6 +3,7 @@ using BuildingBlocks.EventBus.Interfaces;
 using Microsoft.Extensions.Logging;
 using Shopping.Application.IntegrationEvents.Events;
 using Shopping.Domain.OrderAggregate;
+using Shopping.Domain.OrderAggregate.Events;
 
 namespace Shopping.Application.DomainEventHandlers;
 

@@ -19,5 +19,7 @@ public class InstallationDbContext : AppDbContextBase
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(InstallationDbContext).Assembly);
+        
+        base.OnModelCreating(modelBuilder);
     }
 }

@@ -3,7 +3,7 @@ using BuildingBlocks.Domain.Models;
 
 namespace Contracts.Domain.MaterialAggregate;
 
-public class Material : AggregateRoot
+public class Material : AuditableAggregateRoot
 {
     public string Name { get; private set; } = null!;
     public bool IsObsolete { get; private set; }

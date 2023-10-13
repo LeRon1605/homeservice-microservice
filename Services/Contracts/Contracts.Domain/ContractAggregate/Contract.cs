@@ -5,7 +5,7 @@ using Contracts.Domain.CustomerAggregate;
 
 namespace Contracts.Domain.ContractAggregate;
 
-public class Contract : AggregateRoot
+public class Contract : AuditableAggregateRoot
 {
     public int No { get; private set; }
     

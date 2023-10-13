@@ -3,7 +3,7 @@ using BuildingBlocks.Domain.Models;
 
 namespace Shopping.Domain.OrderAggregate;
 
-public class OrderLine : Entity
+public class OrderLine : AuditableEntity
 {
     public Guid OrderId { get; private set; }
     public Guid ProductId { get; private set; }

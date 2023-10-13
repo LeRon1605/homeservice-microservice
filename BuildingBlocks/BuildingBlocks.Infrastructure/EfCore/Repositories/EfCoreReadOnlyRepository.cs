@@ -1,8 +1,10 @@
 ﻿using System.Linq.Expressions;
 using BuildingBlocks.Domain.Data;
 using BuildingBlocks.Domain.Models;
+using BuildingBlocks.Domain.Models.Interfaces;
 using BuildingBlocks.Domain.Specification;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 
 namespace BuildingBlocks.Infrastructure.EfCore.Repositories;
 
@@ -47,7 +49,7 @@ public class EfCoreReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity>
     
     public async Task<IList<TEntity>> GetAllAsync()
     {
-        return await DbSet.AsNoTracking().ToListAsync();
+        return await DbSet.AsNoTracking().OrderBy(GetDefaultSorting()).ToListAsync();
     }
 
     public async Task<(IList<TEntity>, int)> FindWithTotalCountAsync(ISpecification<TEntity> spec)
@@ -74,5 +76,15 @@ public class EfCoreReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity>
     public Task<bool> AnyAsync(Guid id)
     {
         return DbSet.AsNoTracking().AnyAsync(e => e.Id == id);
+    }
+    
+    private static string GetDefaultSorting()
+    {
+        if (typeof(TEntity).IsAssignableTo(typeof(IAuditableEntity)))
+        {
+            return $"{nameof(IAuditableEntity.CreatedAt)} desc";
+        }
+
+        return string.Empty;
     }
 }

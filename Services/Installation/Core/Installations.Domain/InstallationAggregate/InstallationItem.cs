@@ -2,7 +2,7 @@ using BuildingBlocks.Domain.Models;
 
 namespace Installations.Domain.InstallationAggregate;
 
-public class InstallationItem : Entity
+public class InstallationItem : AuditableEntity
 {
     public Guid InstallationId { get; private set; } 
     

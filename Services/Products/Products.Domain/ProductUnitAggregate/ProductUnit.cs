@@ -4,7 +4,7 @@ using Products.Domain.ProductAggregate.Events;
 
 namespace Products.Domain.ProductUnitAggregate;
 
-public class ProductUnit : AggregateRoot
+public class ProductUnit : AuditableAggregateRoot
 {
     public string Name { get; private set; }
 

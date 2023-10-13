@@ -19,5 +19,7 @@ public class OrderDbContext : AppDbContextBase
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(OrderDbContext).Assembly);
+        
+        base.OnModelCreating(modelBuilder);
     }
 }

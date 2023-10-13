@@ -4,7 +4,7 @@ using Shopping.Domain.BuyerAggregate.ValueObjects;
 
 namespace Shopping.Domain.BuyerAggregate;
 
-public class Buyer : AggregateRoot
+public class Buyer : AuditableAggregateRoot
 {
     public string FullName { get; private set; }
     public string? Email { get; private set; }

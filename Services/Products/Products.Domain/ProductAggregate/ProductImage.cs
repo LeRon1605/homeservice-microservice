@@ -3,7 +3,7 @@ using BuildingBlocks.Domain.Models;
 
 namespace Products.Domain.ProductAggregate;
 
-public class ProductImage : Entity
+public class ProductImage : AuditableEntity
 {
     public string Url { get; private set; }
     public Guid ProductId { get; private set; }

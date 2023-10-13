@@ -3,7 +3,7 @@ using BuildingBlocks.Domain.Models;
 
 namespace Products.Domain.ProductGroupAggregate;
 
-public class ProductGroup : AggregateRoot
+public class ProductGroup : AuditableAggregateRoot
 {
     public string Name { get; private set; }
 

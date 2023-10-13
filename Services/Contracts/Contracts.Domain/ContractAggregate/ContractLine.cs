@@ -3,7 +3,7 @@ using BuildingBlocks.Domain.Models;
 
 namespace Contracts.Domain.ContractAggregate;
 
-public class ContractLine : Entity
+public class ContractLine : AuditableEntity
 {
     public Guid ContractId { get; private set; }
     

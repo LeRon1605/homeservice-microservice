@@ -10,6 +10,7 @@ public class ContractPaymentDto
     
     public Guid ContractId { get; set; }
     
+    public Guid? PaymentMethodId { get; set; }
     public string? PaymentMethodName { get; set; }
     
     public bool IsDeleted { get; set; }

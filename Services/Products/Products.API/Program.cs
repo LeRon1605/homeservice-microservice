@@ -19,9 +19,9 @@ using Products.Infrastructure.EfCore.Data;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-Log.Logger = ApplicationLoggerFactory.CreateSerilogLogger(builder.Configuration, "ProductService");
+// Log.Logger = ApplicationLoggerFactory.CreateSerilogLogger(builder.Configuration, "ProductService");
 
-builder.Host.UseSerilog();
+// builder.Host.UseSerilog();
 
 builder.Services.AddControllers();
 builder.Services.AddSwagger("ProductService")

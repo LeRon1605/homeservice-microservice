@@ -162,7 +162,7 @@ public class ContractDataSeeder : IDataSeeder
         IList<PaymentMethod> paymentMethods)
     {
         var faker = new Faker();
-        var customer = customers[faker.Random.Int(0, customers.Count - 1)];
+        var customer = customers[faker.Random.Int(0, (int)(customers.Count * 0.25))];
                     
         var contractCreateDto = new ContractCreateDto()
         {
@@ -272,7 +272,7 @@ public class ContractDataSeeder : IDataSeeder
     {
         var faker = new Faker();
         var payments = await _contractPaymentRepository.FindListAsync(new PaymentOfContractSpecification(string.Empty, 10, 1, contract.Id,true));
-        var customer = customers[faker.Random.Int(0, customers.Count - 1)];
+        var customer = customers[faker.Random.Int(0, (int)(customers.Count * 0.25))];
         
         var contractUpdateDto = new ContractUpdateDto()
         {
@@ -312,20 +312,6 @@ public class ContractDataSeeder : IDataSeeder
                 SellPrice = faker.Random.Decimal(100, 1000),
                 Color = product.Colors[0],
                 UnitId = productUnit.Id
-            });
-        }
-
-        var paymentMethods = await _paymentMethodReadOnlyRepository.GetAllAsync();
-        for (var j = 0; j < 25; j++)
-        {
-            contractUpdateDto.Payments.Add(new ContractPaymentUpdateDto()
-            {
-                PaidAmount = decimal.Parse(faker.Commerce.Price()),
-                Reference = faker.Commerce.ProductDescription(),
-                Comments = faker.Commerce.ProductDescription(),
-                Surcharge = decimal.Parse(faker.Commerce.Price()),
-                PaymentMethodId = paymentMethods[faker.Random.Int(0, paymentMethods.Count - 1)].Id,
-                DatePaid = faker.Date.Past()
             });
         }
         

@@ -10,10 +10,6 @@ namespace Products.Infrastructure.EfCore.Data;
 
 public class ProductDbContext : AppDbContextBase
 {
-
-    public DbSet<Product> Products { get; set; } = default!;
-    public DbSet<Material> Materials { get; set; } = default!;
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProductDbContext).Assembly);

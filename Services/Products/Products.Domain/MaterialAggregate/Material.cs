@@ -5,7 +5,7 @@ using Products.Domain.ProductUnitAggregate;
 
 namespace Products.Domain.MaterialAggregate;
 
-public class Material : AggregateRoot
+public class Material : AuditableAggregateRoot
 {
     public string MaterialCode { get; private set; } = null!;
     public string Name { get; private set; } = null!;

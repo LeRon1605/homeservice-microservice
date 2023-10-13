@@ -3,7 +3,7 @@ using Contracts.Domain.PendingOrdersAggregate.Events;
 
 namespace Contracts.Domain.PendingOrdersAggregate;
 
-public class PendingOrder : AggregateRoot
+public class PendingOrder : AuditableAggregateRoot
 {
     public Guid BuyerId { get; private set; }
     public OrderContactInfo ContactInfo { get; private set; }

@@ -10,7 +10,7 @@ using Products.Domain.ProductUnitAggregate;
 
 namespace Products.Domain.ProductAggregate;
 
-public class Product : AggregateRoot
+public class Product : AuditableAggregateRoot
 {
     public string ProductCode { get; private set; }
     public string Name { get; private set; }

@@ -4,7 +4,7 @@ using Shopping.Domain.OrderAggregate.Exceptions;
 
 namespace Shopping.Domain.OrderAggregate;
 
-public class Order : AggregateRoot
+public class Order : AuditableAggregateRoot
 {
     public int OrderNo { get; private set; }
     public Guid BuyerId { get; private set; }

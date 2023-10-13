@@ -1,6 +1,6 @@
 ﻿using BuildingBlocks.Domain.Event;
 
-namespace Shopping.Domain.OrderAggregate;
+namespace Shopping.Domain.OrderAggregate.Events;
 
 public class OrderRejectDomainEvent : IDomainEvent
 {

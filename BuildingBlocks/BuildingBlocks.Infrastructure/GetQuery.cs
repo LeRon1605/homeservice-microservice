@@ -1,6 +1,7 @@
 using BuildingBlocks.Domain.Models;
 using BuildingBlocks.Domain.Specification;
 using System.Linq.Dynamic.Core;
+using BuildingBlocks.Domain.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace BuildingBlocks.Infrastructure;
@@ -51,10 +52,26 @@ public static class GetQuery<TEntity> where TEntity : Entity
 
         // Ordering
         if (specification.OrderByField != null)
+        {
             query = specification.IsDescending
-                        ? query.OrderBy(specification.OrderByField + " desc")
-                        : query.OrderBy(specification.OrderByField);
+                ? query.OrderBy(specification.OrderByField + $" desc, {GetDefaultSorting()}")
+                : query.OrderBy(specification.OrderByField + $", {GetDefaultSorting()}");
+        }
+        else if (typeof(TEntity).IsAssignableTo(typeof(IAuditableEntity)))
+        {
+            query = query.OrderBy(GetDefaultSorting());    
+        }
 
         return query;
+    }
+
+    private static string GetDefaultSorting()
+    {
+        if (typeof(TEntity).IsAssignableTo(typeof(IAuditableEntity)))
+        {
+            return $"{nameof(IAuditableEntity.CreatedAt)} desc";
+        }
+
+        return string.Empty;
     }
 }

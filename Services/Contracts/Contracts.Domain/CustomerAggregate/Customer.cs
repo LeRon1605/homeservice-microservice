@@ -4,7 +4,7 @@ using Contracts.Domain.CustomerAggregate.Events;
 
 namespace Contracts.Domain.CustomerAggregate;
 
- public class Customer : AggregateRoot
+ public class Customer : AuditableAggregateRoot
  {
      public string Name { get; private set; }
      public string ContactName { get; private set; }

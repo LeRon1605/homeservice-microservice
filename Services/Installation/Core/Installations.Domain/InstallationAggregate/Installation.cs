@@ -3,7 +3,7 @@ using Installations.Domain.InstallationAggregate.Enums;
 
 namespace Installations.Domain.InstallationAggregate;
 
-public class Installation : AggregateRoot
+public class Installation : AuditableAggregateRoot
 {
     public int No { get; private set; }
     public Guid ContractId { get; private set; }

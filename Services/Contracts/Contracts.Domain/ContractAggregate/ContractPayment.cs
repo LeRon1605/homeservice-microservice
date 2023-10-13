@@ -3,7 +3,7 @@ using BuildingBlocks.Domain.Models;
 
 namespace Contracts.Domain.ContractAggregate;
 
-public class ContractPayment : AuditableEntity
+public class ContractPayment : FullAuditableAggregateRoot
 {
     public DateTime DatePaid { get; private set; }
     public decimal PaidAmount { get; private set; }

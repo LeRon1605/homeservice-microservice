@@ -3,7 +3,7 @@ using BuildingBlocks.Domain.Models;
 
 namespace Contracts.Domain.PaymentMethodAggregate;
 
-public class PaymentMethod : AggregateRoot
+public class PaymentMethod : AuditableAggregateRoot
 {
     public string Name { get; set; }
     

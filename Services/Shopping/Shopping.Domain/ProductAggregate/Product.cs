@@ -4,7 +4,7 @@ using Shopping.Domain.ProductUnitAggregate;
 
 namespace Shopping.Domain.ProductAggregate;
 
-public class Product : AggregateRoot
+public class Product : AuditableAggregateRoot
 {
     public string Name { get; private set; }
     public decimal Price { get; private set; }

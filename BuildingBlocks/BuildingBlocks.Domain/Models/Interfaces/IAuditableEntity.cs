@@ -13,10 +13,4 @@ public interface IAuditableEntity : IEntity
     public string? LastModifiedByUserId { get; set; }
     
     public string? LastModifiedBy { get; set; }
-    
-    public bool IsDeleted { get; set; }
-    
-    public string? DeletedByUserId { get; set; }
-    
-    public string? DeletedBy { get; set; }
 }

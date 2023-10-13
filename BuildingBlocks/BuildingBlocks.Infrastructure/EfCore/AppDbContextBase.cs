@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using BuildingBlocks.Application.Identity;
 using BuildingBlocks.Domain.Models;
+using BuildingBlocks.Domain.Models.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -29,12 +30,12 @@ public abstract class AppDbContextBase : DbContext
         
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
-            if (typeof(AuditableEntity).IsAssignableFrom(entityType.ClrType))
+            if (typeof(IHasSoftDeleteEntity).IsAssignableFrom(entityType.ClrType))
             {
                 var parameter = Expression.Parameter(entityType.ClrType, "p");
                 var deletedCheck =
                     Expression.Lambda(
-                        Expression.Equal(Expression.Property(parameter, nameof(AuditableEntity.IsDeleted)), 
+                        Expression.Equal(Expression.Property(parameter, nameof(IHasSoftDeleteEntity.IsDeleted)), 
                         Expression.Constant(false)),
                         parameter);
                 modelBuilder.Entity(entityType.ClrType).HasQueryFilter(deletedCheck);
@@ -74,7 +75,7 @@ public abstract class AppDbContextBase : DbContext
 
     private void ProcessAuditEntityState()
     {
-        foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
+        foreach (var entry in ChangeTracker.Entries<IAuditableEntity>())
         {
             switch (entry.State)
             {
@@ -82,7 +83,6 @@ public abstract class AppDbContextBase : DbContext
                     entry.Entity.CreatedByUserId = _currentUser.Id;
                     entry.Entity.CreatedBy = _currentUser.FullName;
                     entry.Entity.CreatedAt = DateTime.Now;
-                    entry.Entity.IsDeleted = false;
                     break;
 
                 case EntityState.Modified:
@@ -90,14 +90,24 @@ public abstract class AppDbContextBase : DbContext
                     entry.Entity.LastModifiedBy = _currentUser.FullName;
                     entry.Entity.LastModifiedAt = DateTime.Now;
                     break;
+            }
+        }
 
+        foreach (var entry in ChangeTracker.Entries<IHasSoftDeleteEntity>())
+        {
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    entry.Entity.IsDeleted = false;
+                    break;
+                
                 case EntityState.Deleted:
                     entry.State = EntityState.Modified;
-                    entry.Entity.LastModifiedAt = DateTime.Now;
+                    entry.Entity.DeletedAt = DateTime.Now;
                     entry.Entity.IsDeleted = true;
                     entry.Entity.DeletedByUserId = _currentUser.Id;
                     entry.Entity.DeletedBy = _currentUser.FullName;
-                    break;
+                    break;    
             }
         }
     }

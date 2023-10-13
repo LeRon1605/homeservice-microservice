@@ -3,7 +3,7 @@ using BuildingBlocks.Domain.Models;
 
 namespace Shopping.Domain.ProductAggregate;
 
-public class ProductReview : Entity
+public class ProductReview : AuditableEntity
 {
     public string Description { get; private set; }
     

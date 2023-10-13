@@ -3,7 +3,7 @@ using BuildingBlocks.Domain.Models;
 
 namespace Contracts.Domain.TaxAggregate;
 
-public class Tax : AggregateRoot
+public class Tax : AuditableAggregateRoot
 {
     public string Name { get; set; }
 
