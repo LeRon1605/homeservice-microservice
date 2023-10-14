@@ -23,5 +23,6 @@ public class AddContractCommand : ContractCreateDto, ICommand<ContractDetailDto>
         Status = dto.Status;
         Installations = dto.Installations;
         Actions = dto.Actions;
+        SoldAt = dto.SoldAt;
     }
 }

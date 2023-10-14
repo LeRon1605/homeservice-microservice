@@ -79,7 +79,7 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
             request.SupervisorId, request.CustomerServiceRepId, request.PurchaseOrderNo, request.InvoiceNo,
             request.InvoiceDate, request.EstimatedInstallationDate, request.ActualInstallationDate,
             request.InstallationAddress.FullAddress, request.InstallationAddress.City,
-            request.InstallationAddress.State, request.InstallationAddress.PostalCode, request.Status);
+            request.InstallationAddress.State, request.InstallationAddress.PostalCode, request.SoldAt, request.Status);
 
         await AddContractLineAsync(contract, request);
         await AddPaymentsAsync(contract, request);

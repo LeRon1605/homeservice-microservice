@@ -52,6 +52,7 @@ public class Contract : AuditableAggregateRoot
         string? installationCity,
         string? installationState,
         string? installationPostalCode,
+        DateTime? soldAt,
         ContractStatus status)
     {
         Balance = 0;
@@ -67,7 +68,7 @@ public class Contract : AuditableAggregateRoot
         ActualInstallationDate = actualInstallationDate;
         InstallationAddress = new InstallationAddress(fullInstallationAddress, installationCity, installationState, installationPostalCode);
         QuotedAt = DateTime.UtcNow;
-        SoldAt = null;
+        SoldAt = soldAt;
         Status = status;
 
         Items = new List<ContractLine>();

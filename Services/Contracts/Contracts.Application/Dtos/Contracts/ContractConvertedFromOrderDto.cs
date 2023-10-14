@@ -23,6 +23,8 @@ public class ContractConvertedFromOrderDto
     
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ContractStatus Status { get; set; }
+    
+    public DateTime? SoldAt { get; set; }
 
     [MinLength(1)]
     public List<ContractLineCreateDto> Items { get; set; } = null!;
