@@ -15,6 +15,7 @@ public class ContractLine : AuditableEntity
     
     public Guid? TaxId { get; private set; }
     public string? TaxName { get; private set; }
+    public double? TaxValue { get; private set; }
     
     public string? Color { get; private set; }
     public int Quantity { get; private set; }
@@ -29,6 +30,7 @@ public class ContractLine : AuditableEntity
         string unitName,
         Guid? taxId,
         string? taxName,
+        double? taxValue,
         string? color, 
         int quantity,
         decimal cost,
@@ -41,6 +43,7 @@ public class ContractLine : AuditableEntity
         UnitName = unitName;
         TaxId = taxId;
         TaxName = taxName;
+        TaxValue = taxValue;
         Color = color;
         Quantity = Guard.Against.NegativeOrZero(quantity, nameof(Quantity));
         Cost = Guard.Against.Negative(cost, nameof(Cost));
@@ -54,6 +57,7 @@ public class ContractLine : AuditableEntity
         string unitName,
         Guid? taxId,
         string? taxName,
+        double? taxValue,
         string? color, 
         int quantity,
         decimal cost,
@@ -65,6 +69,7 @@ public class ContractLine : AuditableEntity
         UnitName = unitName;
         TaxId = taxId;
         TaxName = taxName;
+        TaxValue = taxValue;
         Color = color;
         Quantity = Guard.Against.NegativeOrZero(quantity, nameof(Quantity));
         Cost = Guard.Against.Negative(cost, nameof(Cost));

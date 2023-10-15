@@ -14,6 +14,7 @@ public class ContractLineDto
     
     public Guid? TaxId { get; set; }
     public string? TaxName { get; set; }
+    public double? TaxValue { get; set; }
     
     public string? Color { get; set; }
     public int Quantity { get; set; }

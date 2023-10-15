@@ -341,10 +341,10 @@ public class ContractDataSeeder : IDataSeeder
 
             var taxes = new List<Tax>()
             {
-                new("5%"),
-                new("10%"),
-                new("15%"),
-                new("20%")
+                new("5%", 0.05),
+                new("10%", 0.1),
+                new("15%", 0.15),
+                new("20%", 0.2)
             };
 
             foreach (var tax in taxes)

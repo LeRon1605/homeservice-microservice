@@ -1,5 +1,6 @@
 ﻿using Contracts.Application.Dtos.Taxes;
 using Contracts.Application.Queries.Taxes.GetAllTaxes;
+using Contracts.Application.Queries.Taxes.GetTaxById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,5 +23,13 @@ public class TaxesController : ControllerBase
     {
         var result = await _mediator.Send(new GetAllTaxesQuery());
         return Ok(result);
+    }
+    
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(TaxDto), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetTaxByIdAsync(Guid id)
+    {
+        var tax = await _mediator.Send(new GetTaxByIdQuery(id));
+        return Ok(tax);
     }
 }

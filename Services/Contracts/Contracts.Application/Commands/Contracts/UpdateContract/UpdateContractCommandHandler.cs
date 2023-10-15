@@ -174,6 +174,7 @@ public class UpdateContractCommandHandler : ICommandHandler<UpdateContractComman
                 productUnit.Name,
                 item.TaxId,
                 GetTaxNameById(item.TaxId, taxes),
+                GetTaxValueById(item.TaxId, taxes),
                 item.Color,
                 item.Quantity,
                 item.Cost,
@@ -193,6 +194,7 @@ public class UpdateContractCommandHandler : ICommandHandler<UpdateContractComman
                 productUnit.Name,
                 item.TaxId,
                 GetTaxNameById(item.TaxId, taxes),
+                GetTaxValueById(item.TaxId, taxes),
                 item.Color,
                 item.Quantity,
                 item.Cost,
@@ -295,6 +297,22 @@ public class UpdateContractCommandHandler : ICommandHandler<UpdateContractComman
             }
 
             return tax.Name;
+        }
+
+        return null;
+    }
+    
+    private double? GetTaxValueById(Guid? taxId, IEnumerable<Tax> taxes)
+    {
+        if (taxId.HasValue)
+        {
+            var tax = taxes.FirstOrDefault(x => x.Id == taxId);
+            if (tax == null)
+            {
+                throw new TaxNotFoundException(taxId.Value);
+            }
+
+            return tax.Value;
         }
 
         return null;
