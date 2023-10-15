@@ -3,6 +3,7 @@ using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
 using BuildingBlocks.EventBus.Interfaces;
 using Contracts.Application.Dtos.Contracts;
+using Contracts.Application.Dtos.Contracts.ContractCreate;
 using Contracts.Application.IntegrationEvents.Events.Contracts;
 using Contracts.Application.IntegrationEvents.Events.Contracts.EventDtos;
 using Contracts.Domain.ContractAggregate;
@@ -286,20 +287,16 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
             // Set material name and unit name for each installation item
             var materialIds = installation.Items.Select(x => x.MaterialId).ToList();
             var materials = await _materialRepository.FindListAsync(new MaterialByIncludeIdsSpecification(materialIds)); 
-            if (materials.Count != materialIds.Count)
-            {
-                var notFoundMaterialIds = materialIds.Except(materials.Select(x => x.Id));
+            var notFoundMaterialIds = materialIds.Except(materials.Select(x => x.Id)).ToList();
+            if (notFoundMaterialIds.Any())
                 throw new MaterialNotFoundException(notFoundMaterialIds.First());
-            }
             installation.Items.ForEach(i => i.MaterialName = materials.First(x => x.Id == i.MaterialId).Name);
             
             var unitIds = installation.Items.Select(x => x.UnitId).ToList();
             var units = await _productUnitRepository.FindListAsync(new ProductUnitByIncludedIdsSpecification(unitIds));
-            if (units.Count != unitIds.Count)
-            {
-                var notFoundUnitIds = unitIds.Except(units.Select(x => x.Id));
+            var notFoundUnitIds = unitIds.Except(units.Select(x => x.Id)).ToList();
+            if (notFoundUnitIds.Any())
                 throw new ProductUnitNotFoundException(notFoundUnitIds.First());
-            }
             installation.Items.ForEach(i => i.UnitName = units.First(x => x.Id == i.UnitId).Name);
         }
     }

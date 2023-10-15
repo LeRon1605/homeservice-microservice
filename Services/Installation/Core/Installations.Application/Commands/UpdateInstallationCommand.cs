@@ -3,17 +3,15 @@ using Installations.Application.Dtos;
 
 namespace Installations.Application.Commands;
 
-public class AddInstallationCommand : ICommand
+public class UpdateInstallationCommand : ICommand
 {
-    public Guid ContractId { get; init; }
-    public int ContractNo { get; init; }
+    public Guid InstallationId { get; init; }
     public Guid ContractLineId { get; init; }
+    
     public Guid ProductId { get; init; }
     public string ProductName { get; init; } = null!;
     public string? ProductColor { get; init; }
     
-    public Guid CustomerId { get; init; }
-    public string CustomerName { get; init; } = null!;
     public Guid InstallerId { get; set; }
     
     public DateTime? InstallDate { get; init; }
@@ -28,5 +26,5 @@ public class AddInstallationCommand : ICommand
     
     public InstallationAddressDto? InstallationAddress { get; init; }
     
-    public List<InstallationItemCreateDto> InstallationItems { get; init; } = new();    
+    public List<InstallationItemUpdateDto> InstallationItems { get; init; } = new();    
 }

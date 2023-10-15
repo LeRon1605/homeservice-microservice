@@ -10,6 +10,7 @@ public class InstallationMapper : Profile
     public InstallationMapper()
     {
         CreateMap<InstallationItemEventDto, InstallationItemCreateDto>();
+        CreateMap<InstallationItemEventDto, InstallationItemUpdateDto>();
         CreateMap<InstallationAddressEventDto, InstallationAddressDto>();
 
         CreateMap<Installation, InstallationDto>()

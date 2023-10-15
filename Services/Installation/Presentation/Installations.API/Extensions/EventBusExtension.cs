@@ -11,5 +11,6 @@ public static class EventBusExtension
         var eventBus = app.Services.GetRequiredService<IEventBus>();
 
         eventBus.Subscribe<ContractCreatedIntegrationEvent, IIntegrationEventHandler<ContractCreatedIntegrationEvent>>();
+        eventBus.Subscribe<ContractInstallationsUpdatedIntegrationEvent, IIntegrationEventHandler<ContractInstallationsUpdatedIntegrationEvent>>();
     }
 }

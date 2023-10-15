@@ -5,9 +5,9 @@ namespace Installations.Domain.InstallationAggregate.Specifications;
 public class InstallationsByContractIdSpecification : Specification<Installation>
 {
     public InstallationsByContractIdSpecification(Guid contractId, 
-                                                  string? search, 
-                                                  int pageSize, 
-                                                  int pageIndex)
+                                                  string? search = null, 
+                                                  int pageSize = 0, 
+                                                  int pageIndex = 0)
     {
         AddFilter(i => i.ContractId == contractId);
         

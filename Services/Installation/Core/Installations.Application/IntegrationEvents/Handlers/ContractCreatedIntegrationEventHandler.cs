@@ -41,11 +41,6 @@ public class ContractCreatedIntegrationEventHandler : IIntegrationEventHandler<C
                 CustomerName = @event.CustomerName, 
                 InstallerId = installation.InstallerId,
                 
-                FullAddress = @event.InstallationAddress?.FullAddress,
-                City = @event.InstallationAddress?.City,
-                State = @event.InstallationAddress?.State,
-                PostalCode = @event.InstallationAddress?.PostalCode,
-                
                 InstallDate = installation.InstallDate,
                 EstimatedStartTime = installation.EstimatedStartTime,
                 EstimatedFinishTime = installation.EstimatedFinishTime,

@@ -18,7 +18,4 @@
       <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.EventBus\BuildingBlocks.EventBus.csproj" />
       <ProjectReference Include="..\Contracts.Domain\Contracts.Domain.csproj" />
     </ItemGroup>
-
-
-
 </Project>

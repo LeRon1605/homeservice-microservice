@@ -5,6 +5,8 @@ using Contracts.Application.Commands.Contracts.AddContract;
 using Contracts.Application.Commands.Contracts.UpdateContract;
 using Contracts.Application.Commands.Customers.AddCustomer;
 using Contracts.Application.Dtos.Contracts;
+using Contracts.Application.Dtos.Contracts.ContractCreate;
+using Contracts.Application.Dtos.Contracts.ContractUpdate;
 using Contracts.Application.Queries.Contracts.GetPaymentsOfContract;
 using Contracts.Domain.ContractAggregate;
 using Contracts.Domain.ContractAggregate.Specifications;

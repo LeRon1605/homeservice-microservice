@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Contracts.Application.Dtos.Contracts.ContractCreate;
 using Contracts.Domain.ContractAggregate;
 
 namespace Contracts.Application.Dtos.Contracts;

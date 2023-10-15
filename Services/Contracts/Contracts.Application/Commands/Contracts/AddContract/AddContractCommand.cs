@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.Application.CQRS;
 using Contracts.Application.Dtos.Contracts;
+using Contracts.Application.Dtos.Contracts.ContractCreate;
 
 namespace Contracts.Application.Commands.Contracts.AddContract;
 

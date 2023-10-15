@@ -1,8 +1,8 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
-namespace Contracts.Application.Dtos.Contracts;
+namespace Contracts.Application.Dtos.Contracts.ContractUpdate;
 
-public class InstallationItemCreateDto
+public class InstallationItemUpdateDto
 {
     public Guid MaterialId { get; set; }
     [JsonIgnore]

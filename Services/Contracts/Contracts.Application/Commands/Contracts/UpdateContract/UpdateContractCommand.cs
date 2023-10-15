@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.Application.CQRS;
 using Contracts.Application.Dtos.Contracts;
+using Contracts.Application.Dtos.Contracts.ContractUpdate;
 
 namespace Contracts.Application.Commands.Contracts.UpdateContract;
 
@@ -20,6 +21,7 @@ public class UpdateContractCommand : ContractUpdateDto, ICommand<ContractDetailD
         InvoiceDate = dto.InvoiceDate;
         EstimatedInstallationDate = dto.EstimatedInstallationDate;
         ActualInstallationDate = dto.ActualInstallationDate;
+        Installations = dto.Installations;
         InstallationAddress = dto.InstallationAddress;
         Items = dto.Items;
         Payments = dto.Payments;

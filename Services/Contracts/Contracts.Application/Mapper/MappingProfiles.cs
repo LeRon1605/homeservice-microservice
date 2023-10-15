@@ -1,5 +1,7 @@
 using AutoMapper;
 using Contracts.Application.Dtos.Contracts;
+using Contracts.Application.Dtos.Contracts.ContractCreate;
+using Contracts.Application.Dtos.Contracts.ContractUpdate;
 using Contracts.Application.Dtos.Customers;
 using Contracts.Application.Dtos.PaymentMethods;
 using Contracts.Application.Dtos.Taxes;
@@ -47,5 +49,8 @@ public class MappingProfiles : Profile
         CreateMap<InstallationAddressDto, InstallationAddressEventDto>();
         CreateMap<InstallationItemCreateDto, InstallationItemEventDto>();
         CreateMap<InstallationCreateDto, InstallationEventDto>();
+
+        CreateMap<InstallationUpdateDto, InstallationUpdatedEventDto>();
+        CreateMap<InstallationItemUpdateDto, InstallationItemEventDto>();
     } 
 }

@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using Contracts.Domain.ContractAggregate;
 
-namespace Contracts.Application.Dtos.Contracts;
+namespace Contracts.Application.Dtos.Contracts.ContractCreate;
 
 public class ContractCreateDto
 {

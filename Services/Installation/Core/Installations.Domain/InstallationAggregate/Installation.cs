@@ -21,7 +21,7 @@ public class Installation : AuditableAggregateRoot
     public string? FloorType { get; set; }
     public double InstallationMetres { get; set; }
     
-    public DateTime? InstallDate { get; init; }
+    public DateTime? InstallDate { get; private set; }
     public DateTime? EstimatedStartTime { get; private set; }
     public DateTime? EstimatedFinishTime { get; private set; }
     public DateTime? ActualStartTime { get; private set; }
@@ -96,5 +96,71 @@ public class Installation : AuditableAggregateRoot
     {
         var item = new InstallationItem(Id, materialId, materialName, quantity, unitId, unitName, cost, sellPrice);
         Items.Add(item);
+    }
+    
+    public void RemoveItems()
+    {
+        Items.Clear();
+    }
+
+    public void Update(Guid contractLineId,
+                       Guid productId,
+                       string productName,
+                       string? productColor,
+                       Guid installerId,
+                       string? installationComment,
+                       string? floorType,
+                       double installationMetres,
+                       DateTime? installDate,
+                       DateTime? estimatedStartTime,
+                       DateTime? estimatedFinishTime,
+                       DateTime? actualStartTime,
+                       DateTime? actualFinishTime,
+                       string? fullAddress = null,
+                       string? city = null,
+                       string? state = null,
+                       string? postalCode = null)
+    {
+        ContractLineId = contractLineId;
+        ProductId = productId;
+        ProductName = productName;
+        ProductColor = productColor;
+        
+        InstallerId = installerId;
+        
+        InstallationComment = installationComment;
+        FloorType = floorType;
+        InstallationMetres = installationMetres;
+        
+        if (installDate is not null)
+        {
+            InstallDate = installDate;
+            if (estimatedStartTime != null && estimatedFinishTime != null)
+            {
+                EstimatedStartTime = installDate.Value.Date + estimatedStartTime.Value.TimeOfDay;
+                EstimatedFinishTime = installDate.Value.Date + estimatedFinishTime.Value.TimeOfDay;
+            }
+            
+            if (actualStartTime != null && actualFinishTime != null)
+            {
+                ActualStartTime = installDate.Value.Date + actualStartTime.Value.TimeOfDay;
+                ActualFinishTime = installDate.Value.Date + actualFinishTime.Value.TimeOfDay;
+            }
+        }
+        
+        InstallationAddress = new InstallationAddress(fullAddress, city, state, postalCode);     
+    }
+    
+    public void UpdateStatus(InstallationStatus status)
+    {
+        Status = status;
+    }
+    
+    public void UpdateAddress(string? fullAddress = null,
+                              string? city = null,
+                              string? state = null,
+                              string? postalCode = null)
+    {
+        InstallationAddress = new InstallationAddress(fullAddress, city, state, postalCode);
     }
 }

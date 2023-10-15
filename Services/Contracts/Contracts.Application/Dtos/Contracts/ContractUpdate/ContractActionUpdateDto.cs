@@ -1,4 +1,4 @@
-﻿namespace Contracts.Application.Dtos.Contracts;
+﻿namespace Contracts.Application.Dtos.Contracts.ContractUpdate;
 
 public class ContractActionUpdateDto
 {

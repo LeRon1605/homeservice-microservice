@@ -2,6 +2,7 @@
 using BuildingBlocks.Domain.Data;
 using Contracts.Application.Commands.Contracts.AddContract;
 using Contracts.Application.Dtos.Contracts;
+using Contracts.Application.Dtos.Contracts.ContractCreate;
 using Contracts.Domain.PendingOrdersAggregate;
 using Contracts.Domain.PendingOrdersAggregate.Exceptions;
 using MediatR;

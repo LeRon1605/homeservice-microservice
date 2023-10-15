@@ -9,6 +9,7 @@ public static class IntegrationEventHandlerExtension
     public static IServiceCollection AddIntegrationEventHandlers(this IServiceCollection services)
     {
         services.AddScoped<IIntegrationEventHandler<ContractCreatedIntegrationEvent>, ContractCreatedIntegrationEventHandler>();
+        services.AddScoped<IIntegrationEventHandler<ContractInstallationsUpdatedIntegrationEvent>, ContractInstallationsUpdatedIntegrationEventHandler>();
         return services;
     }
 }

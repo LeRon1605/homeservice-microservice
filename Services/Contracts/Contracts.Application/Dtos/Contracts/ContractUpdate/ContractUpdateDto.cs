@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using Contracts.Domain.ContractAggregate;
 
-namespace Contracts.Application.Dtos.Contracts;
+namespace Contracts.Application.Dtos.Contracts.ContractUpdate;
 
 public class ContractUpdateDto
 {
@@ -27,4 +27,5 @@ public class ContractUpdateDto
     public List<ContractLineUpdateDto> Items { get; set; } = null!;
     public List<ContractPaymentUpdateDto>? Payments { get; set; }
     public List<ContractActionUpdateDto>? Actions { get; set; }
+    public List<InstallationUpdateDto>? Installations { get; set; }
 }
