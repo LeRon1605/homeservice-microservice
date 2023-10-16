@@ -30,7 +30,16 @@ public class MappingProfiles : Profile
             .ForMember(dest => dest.ContractValue, options => options.MapFrom(src => src.Items.Sum(x => x.Quantity * x.SellPrice)));
         CreateMap<Contract, ContractDetailDto>()
             .ForMember(dest => dest.ContractValue, options => options.MapFrom(src => src.Items.Sum(x => x.Quantity * x.SellPrice)));
-        CreateMap<ContractLine, ContractLineDto>();
+        CreateMap<ContractLine, ContractLineDto>()
+            .ForMember(dest => dest.Product,
+                options => options.MapFrom(src => new ProductInContractLineDto()
+                    { Id = src.ProductId, Name = src.ProductName }))
+            .ForMember(dest => dest.ProductUnit,
+                options => options.MapFrom(src => new ProductUnitInContractLineDto()
+                    { Id = src.UnitId, Name = src.UnitName }))
+            .ForMember(dest => dest.Tax,
+                options => options.MapFrom(src => new TaxInContractLineDto()
+                    { Id = src.TaxId, Name = src.TaxName, Value = src.TaxValue }));
 
         CreateMap<Contract, ContractsOfCustomerDto>()
             .ForMember(dest => dest.ContractNo, opt => opt.MapFrom(src => src.No))
@@ -41,7 +50,11 @@ public class MappingProfiles : Profile
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
         
         CreateMap<Tax, TaxDto>();
-        CreateMap<ContractPayment, ContractPaymentDto>();
+        CreateMap<ContractPayment, ContractPaymentDto>()
+            .ForMember(dest => dest.PaymentMethod,
+                options => options.MapFrom(src => new PaymentMethodInContractPaymentDto()
+                    { Id = src.PaymentMethodId, Name = src.PaymentMethodName }));
+        
         CreateMap<ContractAction, ContractActionDto>();
         
         CreateMap<PaymentMethod, PaymentMethodDto>();

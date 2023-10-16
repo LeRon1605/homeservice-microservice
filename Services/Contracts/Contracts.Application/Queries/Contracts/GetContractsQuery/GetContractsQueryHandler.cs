@@ -6,7 +6,7 @@ using Contracts.Application.Dtos.Contracts;
 using Contracts.Domain.ContractAggregate;
 using Contracts.Domain.ContractAggregate.Specifications;
 
-namespace Contracts.Application.Queries.Contracts;
+namespace Contracts.Application.Queries.Contracts.GetContractsQuery;
 
 public class GetContractsQueryHandler : IQueryHandler<GetContractsQuery, PagedResult<ContractDto>>
 {
@@ -19,7 +19,7 @@ public class GetContractsQueryHandler : IQueryHandler<GetContractsQuery, PagedRe
         _contractRepository = contractRepository;
     }
 
-    public async Task<PagedResult<ContractDto>> Handle(GetContractsQuery request, CancellationToken cancellationToken)
+    public async Task<PagedResult<ContractDto>> Handle(Contracts.GetContractsQuery.GetContractsQuery request, CancellationToken cancellationToken)
     {
         var getContractsSpec = new GetContractsSpecification(search: request.Search, 
                                     pageSize: request.PageSize, pageIndex: request.PageIndex, 

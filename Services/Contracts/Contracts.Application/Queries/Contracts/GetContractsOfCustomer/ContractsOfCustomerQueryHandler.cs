@@ -3,13 +3,11 @@ using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
 using Contracts.Application.Dtos.Contracts;
 using Contracts.Domain.ContractAggregate;
-using Contracts.Domain.ContractAggregate.Exceptions;
 using Contracts.Domain.ContractAggregate.Specifications;
 
-namespace Contracts.Application.Queries.Contracts;
+namespace Contracts.Application.Queries.Contracts.GetContractsOfCustomer;
 
-public class
-    ContractsOfCustomerQueryHandler : IQueryHandler<ContractsOfCustomerQuery, IEnumerable<ContractsOfCustomerDto>>
+public class ContractsOfCustomerQueryHandler : IQueryHandler<ContractsOfCustomerQuery, IEnumerable<ContractsOfCustomerDto>>
 {
     private readonly IReadOnlyRepository<Contract> _contractRepository;
     private readonly IMapper _mapper;

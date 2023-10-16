@@ -1,7 +1,7 @@
 ﻿using BuildingBlocks.Application.CQRS;
 using Contracts.Application.Dtos.Contracts;
 
-namespace Contracts.Application.Queries.Contracts;
+namespace Contracts.Application.Queries.Contracts.GetContractsOfCustomer;
 
 public class ContractsOfCustomerQuery : IQuery<IEnumerable<ContractsOfCustomerDto>>
 {

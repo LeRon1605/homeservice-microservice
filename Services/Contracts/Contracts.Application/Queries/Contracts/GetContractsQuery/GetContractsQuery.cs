@@ -6,7 +6,7 @@ using Contracts.Application.Dtos.Contracts;
 using Contracts.Domain.ContractAggregate;
 using Contracts.Domain.ContractAggregate.Enums;
 
-namespace Contracts.Application.Queries.Contracts;
+namespace Contracts.Application.Queries.Contracts.GetContractsQuery;
 
 public class GetContractsQuery : PagingParameters, IQuery<PagedResult<ContractDto>>
 {

@@ -1,5 +1,4 @@
 using AutoMapper;
-using BuildingBlocks.Application.Cache;
 using BuildingBlocks.Application.CQRS;
 using BuildingBlocks.Domain.Data;
 using Contracts.Application.Dtos.Contracts;
@@ -7,7 +6,7 @@ using Contracts.Domain.ContractAggregate;
 using Contracts.Domain.ContractAggregate.Exceptions;
 using Contracts.Domain.ContractAggregate.Specifications;
 
-namespace Contracts.Application.Queries.Contracts;
+namespace Contracts.Application.Queries.Contracts.GetContractById;
 
 public class GetContractByIdQueryHandler : IQueryHandler<GetContractByIdQuery, ContractDetailDto>
 {
