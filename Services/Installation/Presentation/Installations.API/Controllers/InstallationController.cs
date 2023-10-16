@@ -1,3 +1,5 @@
+using BuildingBlocks.Application.Dtos;
+using Installations.Application.Dtos;
 using Installations.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +15,14 @@ public class InstallationController : ControllerBase
     public InstallationController(IMediator mediator)
     {
         _mediator = mediator;
+    }
+    
+    [HttpGet]
+    [ProducesResponseType(typeof(PagedResult<InstallationDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetInstallations([FromQuery] GetAllInstallationsQuery query)
+    {
+        var result = await _mediator.Send(query);
+        return Ok(result);
     }
     
     [HttpGet("contracts/{contractId:guid}")]

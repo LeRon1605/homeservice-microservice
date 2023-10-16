@@ -1,13 +1,13 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using Installations.Domain.InstallationAggregate.Enums;
 
 namespace Installations.Application.Dtos;
 
-public class InstallationDto
+public class InstallationInContractDto
 {
     public Guid Id { get; set; }
-    public ContractInInstallationDto Contract { get; set; } = null!;
-    public ProductInInstallationDto Product { get; set; } = null!;
+    public int No { get; set; }
+    public string ProductName { get; set; } = null!;
     public DateTime InstallDate { get; set; }
     
     public InstallerDto Installer { get; set; } = null!;
@@ -19,16 +19,4 @@ public class InstallationDto
     
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public InstallationStatus? Status { get; set; }
-}
-
-public class ProductInInstallationDto
-{
-    public Guid Id { get; set; }
-    public string Name { get; set; } = null!;
-}
-
-public class ContractInInstallationDto
-{
-    public Guid Id { get; set; }
-    public int No { get; set; }
 }

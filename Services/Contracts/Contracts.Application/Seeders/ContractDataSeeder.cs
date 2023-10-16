@@ -207,17 +207,19 @@ public class ContractDataSeeder : IDataSeeder
                 Color = product.Colors[0],
                 UnitId = productUnit.Id
             });
-            
+
+            var estimatedStartTime = faker.Date.Soon(40);
+            var estimatedFinishTime = faker.Date.Soon(40);
             contractCreateDto.Installations.Add(new InstallationCreateDto
             {
                 ProductId = product.Id,
                 ProductName = product.Name,
                 Color = product.Colors[0],
                 InstallDate = faker.Date.Soon(40),
-                EstimatedStartTime = faker.Date.Soon(40).AddHours(faker.Random.Int(8, 12)),
-                EstimatedFinishTime = faker.Date.Soon(40).AddHours(faker.Random.Int(12, 17)),
-                ActualStartTime = faker.Date.Soon(40).AddHours(faker.Random.Int(8, 12)),
-                ActualFinishTime = faker.Date.Soon(40).AddHours(faker.Random.Int(12, 17)),
+                EstimatedStartTime = estimatedStartTime,
+                EstimatedFinishTime = estimatedStartTime.AddHours(faker.Random.Int(0, 3)),
+                ActualStartTime = estimatedFinishTime,
+                ActualFinishTime = estimatedFinishTime.AddHours(faker.Random.Int(0, 3)),
                 InstallationComment = faker.Lorem.Sentence(),
                 FloorType = faker.Random.ListItem(new List<string> {"Concrete", "Wood", "Tile"}),
                 // Todo: Get all installer ids

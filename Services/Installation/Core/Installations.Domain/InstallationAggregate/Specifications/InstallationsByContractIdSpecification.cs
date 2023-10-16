@@ -13,9 +13,10 @@ public class InstallationsByContractIdSpecification : Specification<Installation
         
         if (!string.IsNullOrWhiteSpace(search))
         {
-            AddFilter(i => i.ProductName.Contains(search) ||
+            AddFilter(i => 
+                           i.ProductName.Contains(search) ||
                            (i.FloorType != null && i.FloorType.Contains(search)) ||
-                           i.Status.ToString().Contains(search) ||
+                           ((string)(object)i.Status).Contains(search) ||
                            i.No.ToString().Contains(search));
         }
         
