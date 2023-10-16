@@ -9,6 +9,7 @@
 
 
     <ItemGroup>
+        <PackageReference Include="EPPlus" Version="7.0.0-rc1" />
         <PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
     </ItemGroup>
 

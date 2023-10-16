@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shopping.Application.Commands.Orders.ExportOrders;
 using Shopping.Application.Commands.Orders.RejectOrder;
 using Shopping.Application.Commands.Orders.SubmitOrder;
 using Shopping.Application.Dtos.Orders;
@@ -49,5 +50,13 @@ public class OrderController : ControllerBase
     {
         var orderDetails = await _mediator.Send(new OrderDetailQuery(id));
         return Ok(orderDetails);
+    }
+
+    [HttpGet("export")]
+    public async Task<IActionResult> ExportOrdersAsync()
+    {
+        var byteArray = await _mediator.Send(new ExportOrdersCommand());
+        
+        return File(byteArray, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "orders.xlsx");
     }
 }
