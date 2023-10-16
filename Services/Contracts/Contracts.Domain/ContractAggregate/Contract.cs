@@ -186,6 +186,11 @@ public class Contract : AuditableAggregateRoot
             throw new ContractLineNotFoundException(id);
         }
         
+        if (Items.Any(x => x.Id != id && x.ProductId == productId && x.UnitId == unitId && (string.IsNullOrWhiteSpace(color) || x.Color == color)))
+        {
+            throw new ContractLineExistedException(productId, unitId, color);
+        }
+        
         item.Update(
             productId, 
             productName, 
