@@ -49,12 +49,13 @@ public class EmployeeDataSeeder : IDataSeeder
             }
         });
 
+        var roles = await _roleRepository.GetAllAsync();
+        IList<Role> roleEmployees = roles.Where(roleEmployee => roleEmployee.Name != "Admin").ToList();
+
         try
         {
             var faker = new Faker();
-            var roles = await _roleRepository.GetAllAsync();
-
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 49; i++)
             {
                 var role = roles[faker.Random.Int(0, roles.Count - 1)];
                 var employee = new Employee(
@@ -64,8 +65,9 @@ public class EmployeeDataSeeder : IDataSeeder
                     faker.Internet.Email(),
                     role.Id,
                     role.Name,
-                    faker.Random.Int(10, 11).ToString(),
-                    faker.Random.Enum<Status>());
+                    faker.Random.Int(12029302, 939493392).ToString(),
+                    faker.Random.Enum<Status>()
+                    );
                 _employeeRepository.Add(employee);
             }
 
@@ -74,7 +76,7 @@ public class EmployeeDataSeeder : IDataSeeder
         }
         catch (Exception e)
         {
-            _logger.LogError("Seed employee data failed: {Message}", e.Message);
+            _logger.LogTrace("Seed employee data failed!");
         }
     }
 }

@@ -41,6 +41,16 @@ builder.Services
 builder.Services
     .AddScoped<IIntegrationEventHandler<BuyerDeletedIntegrationEvent>, BuyerDeletedIntegrationEventHandler>();
 
+
+builder.Services
+    .AddScoped<IIntegrationEventHandler<EmployeeAddedIntegrationEvent>, EmployeeAddedIntegrationEventHandler>();
+
+builder.Services
+    .AddScoped<IIntegrationEventHandler<EmployeeUpdatedIntegrationEvent>, EmployeeUpdatedIntegrationEventHandler>();
+
+builder.Services
+    .AddScoped<IIntegrationEventHandler<EmployeeDeactivatedIntegrationEvent>, EmployeeDeactivatedIntegrationEventHandler>();
+
 builder.Host.UseSerilog();
 
 var app = builder.Build();
@@ -51,6 +61,9 @@ var eventBus = app.Services.GetRequiredService<IEventBus>();
 
 eventBus.Subscribe<BuyerInfoChangedIntegrationEvent, IIntegrationEventHandler<BuyerInfoChangedIntegrationEvent>>();
 eventBus.Subscribe<BuyerDeletedIntegrationEvent, IIntegrationEventHandler<BuyerDeletedIntegrationEvent>>();
+eventBus.Subscribe<EmployeeAddedIntegrationEvent, IIntegrationEventHandler<EmployeeAddedIntegrationEvent>>();
+eventBus.Subscribe<EmployeeUpdatedIntegrationEvent, IIntegrationEventHandler<EmployeeUpdatedIntegrationEvent>>();
+eventBus.Subscribe<EmployeeDeactivatedIntegrationEvent, IIntegrationEventHandler<EmployeeDeactivatedIntegrationEvent>>();
 
 app.UseSwagger();
 app.UseSwaggerUI();

@@ -4,10 +4,9 @@ namespace Employees.Domain.RoleAggregate;
 
 public class Role : AggregateRoot
 {
-    public string Id { get; init; }
     public string Name { get; set; }
 
-    public Role(string id, string name)
+    public Role(Guid id, string name)
     {
         Id = id;
         Name = name;

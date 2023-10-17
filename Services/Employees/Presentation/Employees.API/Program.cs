@@ -5,6 +5,7 @@ using BuildingBlocks.Presentation.EfCore;
 using BuildingBlocks.Presentation.EventBus;
 using BuildingBlocks.Presentation.ExceptionHandlers;
 using BuildingBlocks.Presentation.Extension;
+using BuildingBlocks.Presentation.MailSender;
 using BuildingBlocks.Presentation.Swagger;
 using Employees.API.Extensions;
 using Employees.Application.Mapper;
@@ -26,6 +27,7 @@ builder.Services.AddSwagger("EmployeeService")
     .AddHomeServiceAuthentication(builder.Configuration)
     .AddCurrentUser()
     .AddDataSeeder()
+    .AddEmailSetting(builder.Configuration)
     .AddGrpc();
 // Add services to the container.
 

@@ -54,10 +54,11 @@ public class AuthenticateService : IAuthenticateService
         _currentUser = currentUser;
         _roleService = roleService;
     }
+
     public async Task SignUpAsync(SignUpDto signUpDto)
     {
         var isUserExist = await _userRepository.IsPhoneExist(signUpDto.PhoneNumber)
-            && await _userRepository.IsEmailExist(signUpDto.Email);
+                          && await _userRepository.IsEmailExist(signUpDto.Email);
         if (isUserExist)
             throw new UserExistException("User is already exist");
         var user = new ApplicationUser
@@ -79,10 +80,11 @@ public class AuthenticateService : IAuthenticateService
             var addRoleResult = await _userManager.AddToRoleAsync(user, AppRole.Customer);
             if (!addRoleResult.Succeeded)
                 throw new RoleNotFoundException(nameof(ApplicationRole.Name), AppRole.Customer);
-            
-            var eventMessage = new UserSignedUpIntegrationEvent(Guid.Parse(user.Id), signUpDto.FullName, signUpDto.Email, signUpDto.PhoneNumber);
-            
-            try 
+
+            var eventMessage = new UserSignedUpIntegrationEvent(Guid.Parse(user.Id), signUpDto.FullName,
+                signUpDto.Email, signUpDto.PhoneNumber);
+
+            try
             {
                 _eventBus.Publish(eventMessage);
             }
@@ -91,7 +93,7 @@ public class AuthenticateService : IAuthenticateService
                 _logger.LogError(e, "Error Publishing integration event: {IntegrationEventId}", eventMessage.Id);
                 throw;
             }
-            
+
             await _unitOfWork.CommitTransactionAsync();
         }
         catch
@@ -104,28 +106,28 @@ public class AuthenticateService : IAuthenticateService
     public async Task<TokenDto> RefreshTokenAsync(RefreshTokenDto refreshTokenDto)
     {
         await _tokenService.ValidateRefreshTokenAsync(refreshTokenDto.RefreshToken);
-        
+
         var user = await _userRepository.GetByRefreshTokenAsync(refreshTokenDto.RefreshToken)
                    ?? throw new RefreshTokenNotFoundException();
-        
+
         var tokenDto = new TokenDto
         {
             AccessToken = await _tokenService.GenerateAccessTokenAsync(user.Id),
             RefreshToken = _tokenService.GenerateRefreshToken(),
             User = await GetUserInfoAsync(user),
         };
-        
+
         await _tokenService.RevokeRefreshTokenAsync(refreshTokenDto.RefreshToken);
-        
+
         await _tokenService.AddRefreshTokenAsync(user.Id, tokenDto.RefreshToken);
-        
+
         return tokenDto;
     }
 
     public async Task<UserDto> GetCurrentUserInfoAsync()
     {
         var user = await _userManager.FindByIdAsync(_currentUser.Id!)
-                              ?? throw new UserNotFoundException(_currentUser.Id!);
+                   ?? throw new UserNotFoundException(_currentUser.Id!);
 
         return await GetUserInfoAsync(user);
     }
@@ -136,7 +138,10 @@ public class AuthenticateService : IAuthenticateService
         
         if (user == null)
             throw new UserNotFoundException(logInDto.Identifier);
-        
+
+        if (user.Status == Status.Inactive)
+            throw new UserDeactivatedException();
+
         var isValid = await _userManager.CheckPasswordAsync(user, logInDto.Password);
         if (!isValid)
             throw new InvalidPasswordException();

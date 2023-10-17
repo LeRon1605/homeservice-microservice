@@ -4,10 +4,10 @@ namespace IAC.Application.IntegrationEvents.Events;
 
 public record RoleCreatedIntegrationEvent: IntegrationEvent
 {
-    public string RoleId { get; set; }
+    public Guid RoleId { get; set; }
     public string RoleName { get; set; }
 
-    public RoleCreatedIntegrationEvent(string roleId,string roleName)
+    public RoleCreatedIntegrationEvent(Guid roleId,string roleName)
     {
         RoleName = roleName;
         RoleId = roleId;

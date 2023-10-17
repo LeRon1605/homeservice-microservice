@@ -33,13 +33,14 @@ public class CreateEmployeeCommandHandler : ICommandHandler<CreateEmployeeComman
     {
         var role = await _roleRepository.FindAsync(new RoleByIdSpecification(request.RoleId));
         if (role == null)
-            throw new RoleNotFoundException(Guid.Parse(request.RoleId));
+            throw new RoleNotFoundException(request.RoleId);
 
         var employee = await Employee.InitAsync(request.EmployeeCode, request.FullName, request.Position, request.Email,
             request.Phone, request.RoleId, role.Name, request.Status, _employeeRepository);
 
         _employeeRepository.Add(employee);
         await _unitOfWork.SaveChangesAsync();
+
 
         _logger.LogInformation("Employee with name: {Name} added successfully", employee.FullName);
 

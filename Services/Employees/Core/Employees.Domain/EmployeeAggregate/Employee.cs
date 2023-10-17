@@ -3,6 +3,7 @@ using BuildingBlocks.Domain.Data;
 using BuildingBlocks.Domain.Models;
 using Employees.Domain.EmployeeAggregate.Enums;
 using Employees.Domain.EmployeeAggregate.Specifications;
+using Employees.Domain.Events;
 using Employees.Domain.Exceptions;
 using Employees.Domain.RoleAggregate;
 
@@ -15,7 +16,7 @@ public class Employee : AggregateRoot
     public string Position { get; private set; }
     public string Email { get; private set; }
     public string? Phone { get; private set; }
-    public string RoleId { get; private set; }
+    public Guid RoleId { get; private set; }
     public Role Role { get; private set; }
     public Status Status { get; private set; }
 
@@ -23,7 +24,7 @@ public class Employee : AggregateRoot
     {
     }
 
-    public Employee(int employeeCode, string fullName, string position, string email, string roleId, string roleName,
+    public Employee(int employeeCode, string fullName, string position, string email, Guid roleId, string roleName,
         string? phone, Status status)
     {
         EmployeeCode = employeeCode;
@@ -33,14 +34,14 @@ public class Employee : AggregateRoot
         Phone = phone;
         RoleId = roleId;
         Status = status;
+        AddDomainEvent(new EmployeeAddedDomainEvent(this));
     }
-
 
     public static async Task<Employee> InitAsync(int employeeCode, string fullName,
         string position,
         string email,
         string? phone,
-        string roleId,
+        Guid roleId,
         string roleName,
         Status status,
         IRepository<Employee> employRepository)
@@ -55,19 +56,26 @@ public class Employee : AggregateRoot
         string position,
         string email,
         string? phone,
-        string roleId,
+        Guid roleId,
         string roleName,
         IRepository<Employee> employRepository)
     {
         await SetCodeAsync(employeeCode, employRepository);
-        await SetEmailsync(email, employRepository);
+        await SetEmailAsync(email, employRepository);
         FullName = fullName;
         Position = position;
         Phone = phone;
         RoleId = roleId;
         Role.Name = roleName;
+        AddDomainEvent(new EmployeeUpdatedDomainEvent(this));
     }
-
+    
+    public void Deactivate()
+    {
+        Status = Status.Inactive;
+        AddDomainEvent(new EmployeeDeactivatedDomainEvent(this));
+    }
+    
     private async Task SetCodeAsync(int employeeCode, IRepository<Employee> employeeRepository)
     {
         if (EmployeeCode != employeeCode)
@@ -77,7 +85,7 @@ public class Employee : AggregateRoot
         }
     }
 
-    private async Task SetEmailsync(string email, IRepository<Employee> employeeRepository)
+    private async Task SetEmailAsync(string email, IRepository<Employee> employeeRepository)
     {
         if (Email != email)
         {
@@ -100,4 +108,6 @@ public class Employee : AggregateRoot
         if (isExistingEmployeeCode)
             throw new DuplicateEmployeeEmailException(email);
     }
+
+
 }

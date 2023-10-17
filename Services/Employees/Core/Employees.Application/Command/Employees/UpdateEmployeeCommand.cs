@@ -14,7 +14,7 @@ public class UpdateEmployeeCommand : ICommand<GetEmployeesDto>
     public string Position { get; private set; }
     public string Email { get; private set; }
     public string? Phone { get; private set; }
-    public string RoleId { get; private set; }
+    public Guid RoleId { get; private set; }
 
     public UpdateEmployeeCommand(Guid id, UpdateEmployeeDto updateEmployeeDto)
     {

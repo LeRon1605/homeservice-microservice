@@ -11,5 +11,5 @@ public class UpdateEmployeeDto
     [Required] public string Position { get; set; }
     [Required] public string Email { get; set; }
     public string? Phone { get; set; }
-    [Required] public string RoleId { get; set; }
+    [Required] public Guid RoleId { get; set; }
 }

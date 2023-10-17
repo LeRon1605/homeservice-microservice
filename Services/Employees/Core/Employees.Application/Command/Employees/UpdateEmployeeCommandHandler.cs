@@ -34,15 +34,17 @@ public class UpdateEmployeeCommandHandler : ICommandHandler<UpdateEmployeeComman
     {
         var role = await _roleRepository.FindAsync(new RoleByIdSpecification(request.RoleId));
         if (role == null)
-            throw new RoleNotFoundException(Guid.Parse(request.RoleId));
+            throw new RoleNotFoundException(request.RoleId);
 
         var employee = await _employeeRepository.FindAsync(new EmployeeByIdSpecification(request.Id));
         if (employee == null)
             throw new EmployeeNotFoundException(request.Id);
 
-        await employee.UpdateAsync(request.EmployeeCode, request.FullName, request.Position, request.Email,
-            request.Phone,
-            request.RoleId, role.Name, _employeeRepository);
+        await employee.UpdateAsync(request.EmployeeCode, request.FullName,
+            request.Position, request.Email,
+            request.Phone, request.RoleId,
+            role.Name, _employeeRepository);
+        
         _employeeRepository.Update(employee);
         await _unitOfWork.SaveChangesAsync();
         return _mapper.Map<GetEmployeesDto>(employee);

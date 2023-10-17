@@ -4,7 +4,7 @@ namespace Employees.Domain.RoleAggregate.Specifications;
 
 public class RoleByIdSpecification : Specification<Role>
 {
-    public RoleByIdSpecification(string id)
+    public RoleByIdSpecification(Guid id)
     {
         AddFilter(x=>x.Id == id);
     }

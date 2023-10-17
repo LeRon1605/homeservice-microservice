@@ -4,10 +4,10 @@ namespace Employees.Application.IntegrationEvents.Events.Role;
 
 public record RoleCreatedIntegrationEvent : IntegrationEvent
 {
-    public string RoleId { get; set; }
+    public Guid RoleId { get; set; }
     public string RoleName { get; set; }
 
-    public RoleCreatedIntegrationEvent(string roleId, string roleName)
+    public RoleCreatedIntegrationEvent(Guid roleId, string roleName)
     {
         RoleId = roleId;
         RoleName = roleName;

@@ -42,4 +42,11 @@ public class EmployeeController : ControllerBase
         var employee = await _mediator.Send(new UpdateEmployeeCommand(id, updateEmployeeDto));
         return Ok(employee);
     }
+    
+    [HttpPost("{id:guid}/deactivate")]
+    public async Task<IActionResult> DeactivateEmployee(Guid id)
+    {
+        var employee = await _mediator.Send(new DeactivateEmployeeCommand(id));
+        return Ok(employee);
+    }
 }

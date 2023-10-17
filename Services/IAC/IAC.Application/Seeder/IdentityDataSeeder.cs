@@ -6,6 +6,7 @@ using IAC.Application.Auth;
 using IAC.Application.IntegrationEvents.Events;
 using IAC.Domain.Constants;
 using IAC.Domain.Entities;
+using IAC.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
@@ -51,6 +52,8 @@ public class IdentityDataSeeder : IDataSeeder
 
             if (!_userManager.Users.Any())
             {
+                await Task.Delay(TimeSpan.FromSeconds(30));
+                
                 await SeedDefaultAdminAccountAsync();
                 await SeedCustomerUserAccountAsync();
             }
@@ -71,6 +74,7 @@ public class IdentityDataSeeder : IDataSeeder
             Email = "user@gmail.com",
             FullName = "User",
             PhoneNumber = "0123456788",
+            Status = Status.Active,
             SecurityStamp = Guid.NewGuid().ToString(),
             EmailConfirmed = true
         };
@@ -87,13 +91,15 @@ public class IdentityDataSeeder : IDataSeeder
                 Email = faker.Person.Email,
                 FullName = faker.Person.FullName,
                 PhoneNumber = faker.Person.Phone,
+                Status = faker.PickRandom<Status>(),
                 SecurityStamp = Guid.NewGuid().ToString(),
                 EmailConfirmed = true
             };
-            
+
             await _userManager.CreateAsync(user, "User@123");
             await _userManager.AddToRoleAsync(user, AppRole.Customer);
-            _eventBus.Publish(new UserSignedUpIntegrationEvent(Guid.Parse(user.Id), user.FullName, user.Email, user.PhoneNumber));
+            _eventBus.Publish(new UserSignedUpIntegrationEvent(Guid.Parse(user.Id), user.FullName, user.Email,
+                user.PhoneNumber));
         }
     }
 
@@ -106,7 +112,7 @@ public class IdentityDataSeeder : IDataSeeder
             _logger.LogWarning("Seeding admin role failed!");
         }
 
-        _eventBus.Publish(new RoleCreatedIntegrationEvent(adminRole.Id, adminRole.Name));
+        _eventBus.Publish(new RoleCreatedIntegrationEvent(Guid.Parse(adminRole.Id), adminRole.Name));
     }
 
     private async Task SeedInstallerRoleAsync()
@@ -118,7 +124,7 @@ public class IdentityDataSeeder : IDataSeeder
             _logger.LogWarning("Seeding installer role failed!");
         }
 
-        _eventBus.Publish(new RoleCreatedIntegrationEvent(installerRole.Id, installerRole.Name));
+        _eventBus.Publish(new RoleCreatedIntegrationEvent(Guid.Parse(installerRole.Id), installerRole.Name));
     }
 
     private async Task SeedSupervisorRoleAsync()
@@ -130,7 +136,7 @@ public class IdentityDataSeeder : IDataSeeder
             _logger.LogWarning("Seeding supervisor role failed!");
         }
 
-        _eventBus.Publish(new RoleCreatedIntegrationEvent(supervisorRole.Id, supervisorRole.Name));
+        _eventBus.Publish(new RoleCreatedIntegrationEvent(Guid.Parse(supervisorRole.Id), supervisorRole.Name));
     }
 
     private async Task SeedCustomerRoleAsync()
@@ -152,7 +158,7 @@ public class IdentityDataSeeder : IDataSeeder
             _logger.LogWarning("Seeding sale person role failed!");       
         }
 
-        _eventBus.Publish(new RoleCreatedIntegrationEvent(salePersonRole.Id, salePersonRole.Name));
+        _eventBus.Publish(new RoleCreatedIntegrationEvent(Guid.Parse(salePersonRole.Id), salePersonRole.Name));
     }
     
     
@@ -164,6 +170,7 @@ public class IdentityDataSeeder : IDataSeeder
             Email = "admin@gmail.com",
             FullName = "Admin",
             PhoneNumber = "0123456789",
+            Status = Status.Active,
             SecurityStamp = Guid.NewGuid().ToString(),
             EmailConfirmed = true
         };

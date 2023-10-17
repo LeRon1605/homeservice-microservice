@@ -12,7 +12,7 @@ public class CreateEmployeeCommand : ICommand<GetEmployeesDto>
     [Required] public string Position { get; private set; }
     [Required] public string Email { get; private set; }
     [Required] public string? Phone { get; private set; }
-    [Required] public string RoleId { get; private set; }
+    [Required] public Guid RoleId { get; private set; }
     [Required] public Status Status { get; private set; }
 
     public CreateEmployeeCommand(CreateEmployeeDto createEmployeeDto)
