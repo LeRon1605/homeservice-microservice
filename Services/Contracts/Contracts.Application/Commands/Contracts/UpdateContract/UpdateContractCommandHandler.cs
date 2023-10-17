@@ -97,8 +97,8 @@ public class UpdateContractCommandHandler : ICommandHandler<UpdateContractComman
         UpdateSupervisor(contract, request.SupervisorId);
         UpdateCustomerServiceRep(contract, request.CustomerServiceRepId);
         await UpdateItemsAsync(contract, request.Items);
-        await UpdateContractPaymentsAsync(contract, request.Payments);
-        await UpdateContractActionsAsync(contract, request.Actions);
+        // await UpdateContractPaymentsAsync(contract, request.Payments);
+        // await UpdateContractActionsAsync(contract, request.Actions);
         
         _contractRepository.Update(contract);
         await _unitOfWork.SaveChangesAsync();
@@ -221,52 +221,52 @@ public class UpdateContractCommandHandler : ICommandHandler<UpdateContractComman
         }
     }
     
-    private async Task UpdateContractPaymentsAsync(Contract contract, IList<ContractPaymentUpdateDto>? items)
-    {
-        if (items == null || !items.Any())
-        {
-            return;
-        }
-        
-        var newPayments = items.Where(x => !x.Id.HasValue).ToArray();
-        var updatedPayments = items.Where(x => x.Id.HasValue && !x.IsDelete.GetValueOrDefault(false)).ToArray();
-        var deletedPayments = items.Where(x => x.Id.HasValue && x.IsDelete.GetValueOrDefault(false)).ToArray();
-        
-        foreach (var item in deletedPayments)
-        {
-            contract.RemovePayment(item.Id!.Value);
-        }
-        
-        var paymentMethodIds = items.Where(x => x.PaymentMethodId.HasValue).Select(x => x.PaymentMethodId!.Value).ToArray();
-        var paymentMethods = await _paymentMethodRepository.FindListAsync(new PaymentMethodsByIncludedIdsSpecification(paymentMethodIds));
-        
-        foreach (var item in updatedPayments)
-        {
-            contract.UpdatePayment(
-                item.Id!.Value,
-                item.DatePaid,
-                item.PaidAmount,
-                item.Surcharge,
-                item.Reference,
-                item.Comments,
-                item.PaymentMethodId,
-                GetPaymentMethodNameById(item.PaymentMethodId, paymentMethods)
-            );
-        }
-
-        foreach (var payment in newPayments)
-        {
-            contract.AddPayment(
-                payment.DatePaid,
-                payment.PaidAmount,
-                payment.Surcharge,
-                payment.Reference,
-                payment.Comments,
-                payment.PaymentMethodId,
-                GetPaymentMethodNameById(payment.PaymentMethodId, paymentMethods)
-            );   
-        }
-    }
+    // private async Task UpdateContractPaymentsAsync(Contract contract, IList<ContractPaymentUpdateDto>? items)
+    // {
+    //     if (items == null || !items.Any())
+    //     {
+    //         return;
+    //     }
+    //     
+    //     var newPayments = items.Where(x => !x.Id.HasValue).ToArray();
+    //     var updatedPayments = items.Where(x => x.Id.HasValue && !x.IsDelete.GetValueOrDefault(false)).ToArray();
+    //     var deletedPayments = items.Where(x => x.Id.HasValue && x.IsDelete.GetValueOrDefault(false)).ToArray();
+    //     
+    //     foreach (var item in deletedPayments)
+    //     {
+    //         contract.RemovePayment(item.Id!.Value);
+    //     }
+    //     
+    //     var paymentMethodIds = items.Where(x => x.PaymentMethodId.HasValue).Select(x => x.PaymentMethodId!.Value).ToArray();
+    //     var paymentMethods = await _paymentMethodRepository.FindListAsync(new PaymentMethodsByIncludedIdsSpecification(paymentMethodIds));
+    //     
+    //     foreach (var item in updatedPayments)
+    //     {
+    //         contract.UpdatePayment(
+    //             item.Id!.Value,
+    //             item.DatePaid,
+    //             item.PaidAmount,
+    //             item.Surcharge,
+    //             item.Reference,
+    //             item.Comments,
+    //             item.PaymentMethodId,
+    //             GetPaymentMethodNameById(item.PaymentMethodId, paymentMethods)
+    //         );
+    //     }
+    //
+    //     foreach (var payment in newPayments)
+    //     {
+    //         contract.AddPayment(
+    //             payment.DatePaid,
+    //             payment.PaidAmount,
+    //             payment.Surcharge,
+    //             payment.Reference,
+    //             payment.Comments,
+    //             payment.PaymentMethodId,
+    //             GetPaymentMethodNameById(payment.PaymentMethodId, paymentMethods)
+    //         );   
+    //     }
+    // }
     
     private void CheckDuplicateContractLine(IEnumerable<Guid> ids)
     {
@@ -352,45 +352,45 @@ public class UpdateContractCommandHandler : ICommandHandler<UpdateContractComman
         return null;
     }
     
-    private async Task UpdateContractActionsAsync(Contract contract, IList<ContractActionUpdateDto>? items)
-    {
-        if (items == null || !items.Any())
-        {
-            return;
-        }
-        
-        var newActions = items.Where(x => !x.Id.HasValue).ToArray();
-        var updatedActions = items.Where(x => x.Id.HasValue && !x.IsDelete.GetValueOrDefault(false)).ToArray();
-        var deletedActions = items.Where(x => x.Id.HasValue && x.IsDelete.GetValueOrDefault(false)).ToArray();
-        
-        foreach (var item in deletedActions)
-        {
-            contract.RemoveAction(item.Id!.Value);
-        }
-        
-        // Todo: Validate employee
-        
-        foreach (var item in updatedActions)
-        {
-            contract.UpdateAction(
-                item.Id!.Value,
-                item.Name,
-                item.Date,
-                item.ActionByEmployeeId,
-                item.Comment
-            );
-        }
-        
-        foreach (var item in newActions)
-        {
-            contract.AddAction(
-                item.Name,
-                item.Date,
-                item.Comment,
-                item.ActionByEmployeeId
-            );    
-        }
-    }
+    // private async Task UpdateContractActionsAsync(Contract contract, IList<ContractActionUpdateDto>? items)
+    // {
+    //     if (items == null || !items.Any())
+    //     {
+    //         return;
+    //     }
+    //     
+    //     var newActions = items.Where(x => !x.Id.HasValue).ToArray();
+    //     var updatedActions = items.Where(x => x.Id.HasValue && !x.IsDelete.GetValueOrDefault(false)).ToArray();
+    //     var deletedActions = items.Where(x => x.Id.HasValue && x.IsDelete.GetValueOrDefault(false)).ToArray();
+    //     
+    //     foreach (var item in deletedActions)
+    //     {
+    //         contract.RemoveAction(item.Id!.Value);
+    //     }
+    //     
+    //     // Todo: Validate employee
+    //     
+    //     foreach (var item in updatedActions)
+    //     {
+    //         contract.UpdateAction(
+    //             item.Id!.Value,
+    //             item.Name,
+    //             item.Date,
+    //             item.ActionByEmployeeId,
+    //             item.Comment
+    //         );
+    //     }
+    //     
+    //     foreach (var item in newActions)
+    //     {
+    //         contract.AddAction(
+    //             item.Name,
+    //             item.Date,
+    //             item.Comment,
+    //             item.ActionByEmployeeId
+    //         );    
+    //     }
+    // }
     
     private void MapContractLinesToInstallations(IList<InstallationUpdatedEventDto> installations, IList<ContractLine> contractLines)
     {

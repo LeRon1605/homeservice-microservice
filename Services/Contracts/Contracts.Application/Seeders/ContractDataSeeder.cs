@@ -143,7 +143,7 @@ public class ContractDataSeeder : IDataSeeder
         {
             try
             {
-                var contractUpdateDto = await GetContractUpdateDto(contracts[i], productUnits, products, customers);
+                var contractUpdateDto = await GetContractUpdateDto(productUnits, products, customers);
                 var command = new UpdateContractCommand(contracts[i].Id, contractUpdateDto);
                 await _mediator.Send(command);
             }
@@ -269,13 +269,11 @@ public class ContractDataSeeder : IDataSeeder
     }
 
     private async Task<ContractUpdateDto> GetContractUpdateDto(
-        Contract contract,
         IList<ProductUnit> productUnits,
         IList<Product> products,
         IList<Customer> customers)
     {
         var faker = new Faker();
-        var payments = await _contractPaymentRepository.FindListAsync(new PaymentOfContractSpecification(string.Empty, 10, 1, contract.Id,true));
         var customer = customers[faker.Random.Int(0, (int)(customers.Count * 0.25))];
         
         var contractUpdateDto = new ContractUpdateDto()
@@ -319,20 +317,20 @@ public class ContractDataSeeder : IDataSeeder
             });
         }
         
-        foreach (var payment in payments)
-        {
-            contractUpdateDto.Payments.Add(new ContractPaymentUpdateDto()
-            {
-                Id = payment.Id,
-                Comments = payment.Comments,
-                Reference = payment.Reference,
-                DatePaid = payment.DatePaid,
-                PaidAmount = payment.PaidAmount,
-                PaymentMethodId = payment.PaymentMethodId,
-                Surcharge = payment.Surcharge,
-                IsDelete = faker.Random.Bool()
-            });
-        }
+        // foreach (var payment in payments)
+        // {
+        //     contractUpdateDto.Payments.Add(new ContractPaymentUpdateDto()
+        //     {
+        //         Id = payment.Id,
+        //         Comments = payment.Comments,
+        //         Reference = payment.Reference,
+        //         DatePaid = payment.DatePaid,
+        //         PaidAmount = payment.PaidAmount,
+        //         PaymentMethodId = payment.PaymentMethodId,
+        //         Surcharge = payment.Surcharge,
+        //         IsDelete = faker.Random.Bool()
+        //     });
+        // }
 
         return contractUpdateDto;
     }
