@@ -24,8 +24,8 @@ public class ContractUpdateDto
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ContractStatus Status { get; set; }
     
-    public List<ContractLineUpdateDto> Items { get; set; } = null!;
-    public List<ContractPaymentUpdateDto>? Payments { get; set; }
-    public List<ContractActionUpdateDto>? Actions { get; set; }
-    public List<InstallationUpdateDto>? Installations { get; set; }
+    // public List<ContractLineUpdateDto> Items { get; set; } = null!;
+    // public List<ContractPaymentUpdateDto>? Payments { get; set; }
+    // public List<ContractActionUpdateDto>? Actions { get; set; }
+    // public List<InstallationUpdateDto>? Installations { get; set; }
 }

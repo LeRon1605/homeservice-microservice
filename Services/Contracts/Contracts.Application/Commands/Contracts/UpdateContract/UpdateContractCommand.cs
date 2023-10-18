@@ -21,11 +21,11 @@ public class UpdateContractCommand : ContractUpdateDto, ICommand<ContractDetailD
         InvoiceDate = dto.InvoiceDate;
         EstimatedInstallationDate = dto.EstimatedInstallationDate;
         ActualInstallationDate = dto.ActualInstallationDate;
-        Installations = dto.Installations;
+        // Installations = dto.Installations;
         InstallationAddress = dto.InstallationAddress;
-        Items = dto.Items;
-        Payments = dto.Payments;
+        // Items = dto.Items;
+        // Payments = dto.Payments;
         Status = dto.Status;
-        Actions = dto.Actions;
+        // Actions = dto.Actions;
     }
 }

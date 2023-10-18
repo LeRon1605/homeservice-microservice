@@ -1,11 +1,14 @@
 using BuildingBlocks.Application.Dtos;
 using Contracts.Application.Commands.Contracts.AddActionToContract;
 using Contracts.Application.Commands.Contracts.AddContract;
+using Contracts.Application.Commands.Contracts.AddItemToContract;
 using Contracts.Application.Commands.Contracts.AddPaymentToContract;
 using Contracts.Application.Commands.Contracts.DeleteActionFromContract;
+using Contracts.Application.Commands.Contracts.DeleteItemFromContract;
 using Contracts.Application.Commands.Contracts.DeletePaymentFromContract;
 using Contracts.Application.Commands.Contracts.UpdateContract;
 using Contracts.Application.Commands.Contracts.UpdateContractAction;
+using Contracts.Application.Commands.Contracts.UpdateContractItem;
 using Contracts.Application.Commands.Contracts.UpdateContractPayment;
 using Contracts.Application.Dtos.Contracts;
 using Contracts.Application.Dtos.Contracts.ContractCreate;
@@ -16,6 +19,7 @@ using Contracts.Application.Queries.Contracts.GetActionsOfContract;
 using Contracts.Application.Queries.Contracts.GetContractById;
 using Contracts.Application.Queries.Contracts.GetContractsOfCustomer;
 using Contracts.Application.Queries.Contracts.GetContractsQuery;
+using Contracts.Application.Queries.Contracts.GetItemsOfContract;
 using Contracts.Application.Queries.Contracts.GetPaymentsOfContract;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -80,19 +84,19 @@ public class ContractController : ControllerBase
     }
     
     [HttpPost("{id:guid}/payments")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ContractPaymentDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> AddPaymentOfContract(Guid id, ContractPaymentCreateDto dto)
     {
-        await _mediator.Send(new AddPaymentToContractCommand(id, dto));
-        return NoContent();
+        var contractPayment = await _mediator.Send(new AddPaymentToContractCommand(id, dto));
+        return Ok(contractPayment);
     }
     
     [HttpPut("{id:guid}/payments/{paymentId:guid}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ContractPaymentDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdatePaymentOfContract(Guid id, Guid paymentId, ContractPaymentUpdateDto dto)
     {
-        await _mediator.Send(new UpdateContractPaymentCommand(id, paymentId, dto));
-        return NoContent();
+        var contractPayment = await _mediator.Send(new UpdateContractPaymentCommand(id, paymentId, dto));
+        return Ok(contractPayment);
     }
     
     [HttpDelete("{id:guid}/payments/{paymentId:guid}")]
@@ -112,19 +116,19 @@ public class ContractController : ControllerBase
     }
     
     [HttpPost("{id:guid}/actions")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ContractActionDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> AddActionOfContract(Guid id, ContractActionCreateDto dto)
     {
-        await _mediator.Send(new AddActionToContractCommand(id, dto));
-        return NoContent();
+        var contractAction = await _mediator.Send(new AddActionToContractCommand(id, dto));
+        return Ok(contractAction);
     }
     
     [HttpPut("{id:guid}/actions/{actionId:guid}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ContractActionDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateActionOfContract(Guid id, Guid actionId, ContractActionUpdateDto dto)
     {
-        await _mediator.Send(new UpdateContractActionCommand(id, actionId, dto));
-        return NoContent();
+        var contractAction = await _mediator.Send(new UpdateContractActionCommand(id, actionId, dto));
+        return Ok(contractAction);
     }
     
     [HttpDelete("{id:guid}/actions/{actionId:guid}")]
@@ -132,6 +136,38 @@ public class ContractController : ControllerBase
     public async Task<IActionResult> DeleteActionOfContract(Guid id, Guid actionId)
     {
         await _mediator.Send(new DeleteActionFromContractCommand(id, actionId));
+        return NoContent();
+    }
+    
+    [HttpGet("{id:guid}/items")]
+    [ProducesResponseType(typeof(IEnumerable<ContractLineDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetItemsOfContract(Guid id)
+    {
+        var items = await _mediator.Send(new GetItemsOfContractQuery(id));
+        return Ok(items);
+    }
+    
+    [HttpPost("{id:guid}/items")]
+    [ProducesResponseType(typeof(ContractLineDto), StatusCodes.Status200OK)]
+    public async Task<IActionResult> AddItemToContract(Guid id, ContractLineCreateDto dto)
+    {
+        var item = await _mediator.Send(new AddItemToContractCommand(id, dto));
+        return Ok(item);
+    }
+    
+    [HttpPut("{id:guid}/items/{itemId:guid}")]
+    [ProducesResponseType(typeof(ContractLineDto), StatusCodes.Status200OK)]
+    public async Task<IActionResult> UpdateItemOfContract(Guid id, Guid itemId, ContractLineUpdateDto dto)
+    {
+        var item = await _mediator.Send(new UpdateContractItemCommand(id, itemId, dto));
+        return Ok(item);
+    }
+    
+    [HttpDelete("{id:guid}/items/{itemId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DeleteItemOfContract(Guid id, Guid itemId)
+    {
+        await _mediator.Send(new DeleteItemFromContractCommand(id, itemId));
         return NoContent();
     }
 }

@@ -96,7 +96,7 @@ public class UpdateContractCommandHandler : ICommandHandler<UpdateContractComman
         UpdateSalePerson(contract, request.SalePersonId);
         UpdateSupervisor(contract, request.SupervisorId);
         UpdateCustomerServiceRep(contract, request.CustomerServiceRepId);
-        await UpdateItemsAsync(contract, request.Items);
+        // await UpdateItemsAsync(contract, request.Items);
         // await UpdateContractPaymentsAsync(contract, request.Payments);
         // await UpdateContractActionsAsync(contract, request.Actions);
         
@@ -106,10 +106,10 @@ public class UpdateContractCommandHandler : ICommandHandler<UpdateContractComman
         
         // Todo: update installation when the corresponding contract line is updated?
         
-        if (request.Installations != null && request.Installations.Any())
-        {
-            await SendContractInstallationsUpdatedIntegrationEvent(request, contract);
-        }
+        // if (request.Installations != null && request.Installations.Any())
+        // {
+        //     await SendContractInstallationsUpdatedIntegrationEvent(request, contract);
+        // }
 
         return _mapper.Map<ContractDetailDto>(contract);
     }
@@ -152,74 +152,74 @@ public class UpdateContractCommandHandler : ICommandHandler<UpdateContractComman
         }
     }
 
-    private async Task UpdateItemsAsync(Contract contract, IList<ContractLineUpdateDto> items)
-    {
-        if (!items.Any())
-        {
-            throw new ContractLineEmptyException();
-        }
-        
-        var updatedLines = items.Where(x => x.Id.HasValue).ToArray();
-        var deletedLines = contract.Items.ExceptBy(updatedLines.Select(x => x.Id), x => x.Id).ToArray();
-        var newLines = items.Where(x => !x.Id.HasValue).ToArray();
-        
-        CheckDuplicateContractLine(updatedLines.Select(x => x.Id!.Value));
-        
-        var productIds = items.Select(x => x.ProductId).ToArray();
-        var products = await _productRepository.FindListAsync(new ProductByIncludedIdsSpecification(productIds));
-
-        var productUnitIds = items.Select(x => x.UnitId).ToArray();
-        var productUnits = await _productUnitRepository.FindListAsync(new ProductUnitByIncludedIdsSpecification(productUnitIds));
-
-        var taxIds = items.Where(x => x.TaxId.HasValue).Select(x => x.TaxId!.Value);
-        var taxes = await _taxRepository.FindListAsync(new TaxByIncludedIdsSpecification(taxIds));
-        
-        foreach (var item in deletedLines)
-        {
-            contract.RemoveItem(item.Id);
-        }
-
-        foreach (var item in updatedLines)
-        {
-            var product = GetProductById(item.ProductId, products);
-            var productUnit = GetProductUnitById(item.UnitId, productUnits);
-            
-            contract.UpdateItem(
-                item.Id!.Value, 
-                item.ProductId,
-                product.Name,
-                item.UnitId,
-                productUnit.Name,
-                item.TaxId,
-                GetTaxNameById(item.TaxId, taxes),
-                GetTaxValueById(item.TaxId, taxes),
-                item.Color,
-                item.Quantity,
-                item.Cost,
-                item.SellPrice
-            );
-        }
-        
-        foreach (var item in newLines)
-        {
-            var product = GetProductById(item.ProductId, products);
-            var productUnit = GetProductUnitById(item.UnitId, productUnits);
-            
-            contract.AddContractLine(
-                item.ProductId, 
-                product.Name, 
-                item.UnitId,
-                productUnit.Name,
-                item.TaxId,
-                GetTaxNameById(item.TaxId, taxes),
-                GetTaxValueById(item.TaxId, taxes),
-                item.Color,
-                item.Quantity,
-                item.Cost,
-                item.SellPrice
-            );
-        }
-    }
+    // private async Task UpdateItemsAsync(Contract contract, IList<ContractLineUpdateDto> items)
+    // {
+    //     if (!items.Any())
+    //     {
+    //         throw new ContractLineEmptyException();
+    //     }
+    //     
+    //     var updatedLines = items.Where(x => x.Id.HasValue).ToArray();
+    //     var deletedLines = contract.Items.ExceptBy(updatedLines.Select(x => x.Id), x => x.Id).ToArray();
+    //     var newLines = items.Where(x => !x.Id.HasValue).ToArray();
+    //     
+    //     CheckDuplicateContractLine(updatedLines.Select(x => x.Id!.Value));
+    //     
+    //     var productIds = items.Select(x => x.ProductId).ToArray();
+    //     var products = await _productRepository.FindListAsync(new ProductByIncludedIdsSpecification(productIds));
+    //
+    //     var productUnitIds = items.Select(x => x.UnitId).ToArray();
+    //     var productUnits = await _productUnitRepository.FindListAsync(new ProductUnitByIncludedIdsSpecification(productUnitIds));
+    //
+    //     var taxIds = items.Where(x => x.TaxId.HasValue).Select(x => x.TaxId!.Value);
+    //     var taxes = await _taxRepository.FindListAsync(new TaxByIncludedIdsSpecification(taxIds));
+    //     
+    //     foreach (var item in deletedLines)
+    //     {
+    //         contract.RemoveItem(item.Id);
+    //     }
+    //
+    //     foreach (var item in updatedLines)
+    //     {
+    //         var product = GetProductById(item.ProductId, products);
+    //         var productUnit = GetProductUnitById(item.UnitId, productUnits);
+    //         
+    //         contract.UpdateItem(
+    //             item.Id!.Value, 
+    //             item.ProductId,
+    //             product.Name,
+    //             item.UnitId,
+    //             productUnit.Name,
+    //             item.TaxId,
+    //             GetTaxNameById(item.TaxId, taxes),
+    //             GetTaxValueById(item.TaxId, taxes),
+    //             item.Color,
+    //             item.Quantity,
+    //             item.Cost,
+    //             item.SellPrice
+    //         );
+    //     }
+    //     
+    //     foreach (var item in newLines)
+    //     {
+    //         var product = GetProductById(item.ProductId, products);
+    //         var productUnit = GetProductUnitById(item.UnitId, productUnits);
+    //         
+    //         contract.AddContractLine(
+    //             item.ProductId, 
+    //             product.Name, 
+    //             item.UnitId,
+    //             productUnit.Name,
+    //             item.TaxId,
+    //             GetTaxNameById(item.TaxId, taxes),
+    //             GetTaxValueById(item.TaxId, taxes),
+    //             item.Color,
+    //             item.Quantity,
+    //             item.Cost,
+    //             item.SellPrice
+    //         );
+    //     }
+    // }
     
     // private async Task UpdateContractPaymentsAsync(Contract contract, IList<ContractPaymentUpdateDto>? items)
     // {
@@ -435,21 +435,21 @@ public class UpdateContractCommandHandler : ICommandHandler<UpdateContractComman
                address.PostalCode != addressDto.PostalCode;
     }
     
-    private async Task SendContractInstallationsUpdatedIntegrationEvent(UpdateContractCommand request,
-                                                                        Contract contract)
-    {
-        await SetInstallationItemsNameAndUnit(request.Installations);
-        var installations = _mapper.Map<List<InstallationUpdatedEventDto>>(request.Installations);
-        MapContractLinesToInstallations(installations, contract.Items);
-        _eventBus.Publish(new ContractInstallationsUpdatedIntegrationEvent
-        {
-            ContractId = contract.Id,
-            ContractNo = contract.No,
-            CustomerId = contract.CustomerId,
-            CustomerName = (await _customerRepository.GetByIdAsync(contract.CustomerId))!.Name,
-            InstallationAddress = _mapper.Map<InstallationAddressEventDto>(request.InstallationAddress),
-            IsAddressChanged = IsAddressChanged(contract.InstallationAddress, request.InstallationAddress),
-            Installations = installations
-        });
-    }
+    // private async Task SendContractInstallationsUpdatedIntegrationEvent(UpdateContractCommand request,
+    //                                                                     Contract contract)
+    // {
+    //     await SetInstallationItemsNameAndUnit(request.Installations);
+    //     var installations = _mapper.Map<List<InstallationUpdatedEventDto>>(request.Installations);
+    //     MapContractLinesToInstallations(installations, contract.Items);
+    //     _eventBus.Publish(new ContractInstallationsUpdatedIntegrationEvent
+    //     {
+    //         ContractId = contract.Id,
+    //         ContractNo = contract.No,
+    //         CustomerId = contract.CustomerId,
+    //         CustomerName = (await _customerRepository.GetByIdAsync(contract.CustomerId))!.Name,
+    //         InstallationAddress = _mapper.Map<InstallationAddressEventDto>(request.InstallationAddress),
+    //         IsAddressChanged = IsAddressChanged(contract.InstallationAddress, request.InstallationAddress),
+    //         Installations = installations
+    //     });
+    // }
 }

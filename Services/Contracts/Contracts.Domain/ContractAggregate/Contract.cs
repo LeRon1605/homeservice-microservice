@@ -120,7 +120,7 @@ public class Contract : AuditableAggregateRoot
         CustomerServiceRepId = customerServiceRepId;
     }
     
-    public void AddContractLine(
+    public ContractLine AddContractLine(
         Guid productId, 
         string productName,
         Guid unitId,
@@ -153,6 +153,8 @@ public class Contract : AuditableAggregateRoot
             sellPrice);
         
         Items.Add(contractLine);
+
+        return contractLine;
     }
 
     public void RemoveItem(Guid id)
@@ -166,7 +168,7 @@ public class Contract : AuditableAggregateRoot
         Items.Remove(item);
     }
 
-    public void UpdateItem(
+    public ContractLine UpdateItem(
         Guid id,
         Guid productId, 
         string productName,
@@ -203,9 +205,11 @@ public class Contract : AuditableAggregateRoot
             quantity, 
             cost, 
             sellPrice);
+
+        return item;
     }
 
-    public void AddPayment(
+    public ContractPayment AddPayment(
         DateTime datePaid, 
         decimal paidAmount, 
         decimal? surcharge, 
@@ -225,9 +229,11 @@ public class Contract : AuditableAggregateRoot
             paymentMethodName);
         
         Payments.Add(contractPayment);
+
+        return contractPayment;
     }
 
-    public void UpdatePayment(
+    public ContractPayment UpdatePayment(
         Guid id, 
         DateTime datePaid, 
         decimal paidAmount, 
@@ -244,6 +250,7 @@ public class Contract : AuditableAggregateRoot
         }
         
         payment.Update(datePaid, paidAmount, surcharge, reference, comments, paymentMethodId, paymentMethodName);
+        return payment;
     }
 
     public void RemovePayment(Guid id)
@@ -257,13 +264,15 @@ public class Contract : AuditableAggregateRoot
         Payments.Remove(payment);
     }
     
-    public void AddAction(string name, DateTime date, string? comment, Guid actionByEmployeeId)
+    public ContractAction AddAction(string name, DateTime date, string? comment, Guid actionByEmployeeId)
     {
         var contractAction = new ContractAction(Id, name, date, actionByEmployeeId, comment);
         Actions.Add(contractAction);
+
+        return contractAction;
     }
 
-    public void UpdateAction(Guid id, string name, DateTime date, Guid actionByEmployeeId, string? comment)
+    public ContractAction UpdateAction(Guid id, string name, DateTime date, Guid actionByEmployeeId, string? comment)
     {
         var action = Actions.FirstOrDefault(x => x.Id == id);
         if (action == null)
@@ -272,6 +281,8 @@ public class Contract : AuditableAggregateRoot
         }
         
         action.Update(name, date, actionByEmployeeId, comment);
+
+        return action;
     }
 
     public void RemoveAction(Guid id)

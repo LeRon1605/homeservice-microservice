@@ -2,8 +2,6 @@
 
 public class ContractLineUpdateDto
 {
-    public Guid? Id { get; set; }
-    
     public Guid ProductId { get; set; }
     public Guid UnitId { get; set; }
     public Guid? TaxId { get; set; }

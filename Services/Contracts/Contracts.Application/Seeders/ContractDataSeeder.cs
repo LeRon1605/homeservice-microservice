@@ -295,27 +295,27 @@ public class ContractDataSeeder : IDataSeeder
                 PostalCode = faker.Address.ZipCode(),
                 State = faker.Address.State()
             },
-            Items = new List<ContractLineUpdateDto>(),
-            Payments = new List<ContractPaymentUpdateDto>(),
-            Actions = new List<ContractActionUpdateDto>(),
+            // Items = new List<ContractLineUpdateDto>(),
+            // Payments = new List<ContractPaymentUpdateDto>(),
+            // Actions = new List<ContractActionUpdateDto>(),
             Status = faker.PickRandom<ContractStatus>()
         };
 
-        for (var j = 0; j < 3; j++)
-        {
-            var product = products[faker.Random.Int(0, products.Count - 1)];
-            var productUnit = productUnits[faker.Random.Int(0, productUnits.Count - 1)];
-            
-            contractUpdateDto.Items.Add(new ContractLineUpdateDto()
-            {
-                ProductId = product.Id,
-                Quantity = faker.Random.Int(1, 10),
-                Cost = product.Price,
-                SellPrice = faker.Random.Decimal(100, 1000),
-                Color = product.Colors[0],
-                UnitId = productUnit.Id
-            });
-        }
+        // for (var j = 0; j < 3; j++)
+        // {
+        //     var product = products[faker.Random.Int(0, products.Count - 1)];
+        //     var productUnit = productUnits[faker.Random.Int(0, productUnits.Count - 1)];
+        //     
+        //     contractUpdateDto.Items.Add(new ContractLineUpdateDto()
+        //     {
+        //         ProductId = product.Id,
+        //         Quantity = faker.Random.Int(1, 10),
+        //         Cost = product.Price,
+        //         SellPrice = faker.Random.Decimal(100, 1000),
+        //         Color = product.Colors[0],
+        //         UnitId = productUnit.Id
+        //     });
+        // }
         
         // foreach (var payment in payments)
         // {

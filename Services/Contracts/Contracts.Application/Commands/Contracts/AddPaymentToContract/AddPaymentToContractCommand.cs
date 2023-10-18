@@ -1,9 +1,10 @@
 ﻿using BuildingBlocks.Application.CQRS;
+using Contracts.Application.Dtos.Contracts;
 using Contracts.Application.Dtos.Contracts.ContractCreate;
 
 namespace Contracts.Application.Commands.Contracts.AddPaymentToContract;
 
-public class AddPaymentToContractCommand : ContractPaymentCreateDto, ICommand
+public class AddPaymentToContractCommand : ContractPaymentCreateDto, ICommand<ContractPaymentDto>
 {
     public Guid ContractId { get; set; }
 
