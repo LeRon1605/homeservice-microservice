@@ -7,11 +7,9 @@ public record ContractCreatedIntegrationEvent : IntegrationEvent
 {
     public Guid ContractId {get; init; } 
     public int ContractNo { get; init; }
-    
     public Guid CustomerId { get; init; }
     public string CustomerName { get; init; } = null!;
     
     public InstallationAddressEventDto? InstallationAddress { get; init; }
-    
-    public List<InstallationEventDto> Installations { get; set; } = new(); 
+    public ICollection<ContractLineEventDto> ContractLines { get; init; } = null!;
 }

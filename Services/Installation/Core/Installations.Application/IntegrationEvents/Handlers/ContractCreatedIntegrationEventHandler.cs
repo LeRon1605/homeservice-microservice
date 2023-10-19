@@ -1,8 +1,8 @@
 using AutoMapper;
 using BuildingBlocks.Application.IntegrationEvent;
-using Installations.Application.Commands;
-using Installations.Application.Dtos;
+using BuildingBlocks.Domain.Data;
 using Installations.Application.IntegrationEvents.Events.Contracts;
+using Installations.Domain.ContractAggregate;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -10,51 +10,35 @@ namespace Installations.Application.IntegrationEvents.Handlers;
 
 public class ContractCreatedIntegrationEventHandler : IIntegrationEventHandler<ContractCreatedIntegrationEvent>
 {
-    private readonly IMediator _mediator;
+    private readonly IRepository<Contract> _contractRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ILogger<ContractCreatedIntegrationEventHandler> _logger;
 
-    public ContractCreatedIntegrationEventHandler(IMediator mediator,
+    public ContractCreatedIntegrationEventHandler(ILogger<ContractCreatedIntegrationEventHandler> logger,
+                                                  IUnitOfWork unitOfWork,
                                                   IMapper mapper,
-                                                  ILogger<ContractCreatedIntegrationEventHandler> logger)
+                                                  IRepository<Contract> contractRepository)
     {
-        _mediator = mediator;
-        _mapper = mapper;
         _logger = logger;
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
+        _contractRepository = contractRepository;
     }
 
     public async Task Handle(ContractCreatedIntegrationEvent @event)
     {
         _logger.LogInformation($"Handling integration event: {@event.Id} at {nameof(ContractCreatedIntegrationEventHandler)}");
-        foreach (var installation in @event.Installations)
+        
+        var installationAddress = _mapper.Map<InstallationAddress?>(@event.InstallationAddress);
+        var contract = new Contract(@event.ContractId, @event.ContractNo, @event.CustomerId, @event.CustomerName, installationAddress);
+        foreach (var contractLineEventDto in @event.ContractLines)
         {
-            await _mediator.Send(new AddInstallationCommand
-            {
-                ContractId = @event.ContractId,
-                ContractNo = @event.ContractNo,
-                ProductId = installation.ProductId,
-                ProductName = installation.ProductName,
-                ProductColor = installation.Color,
-                ContractLineId = installation.ContractLineId,
-                
-                CustomerId = @event.CustomerId,
-                CustomerName = @event.CustomerName, 
-                InstallerId = installation.InstallerId,
-                
-                InstallDate = installation.InstallDate,
-                EstimatedStartTime = installation.EstimatedStartTime,
-                EstimatedFinishTime = installation.EstimatedFinishTime,
-                ActualStartTime = installation.ActualStartTime,
-                ActualFinishTime = installation.ActualFinishTime,
-                
-                InstallationComment = installation.InstallationComment,
-                FloorType = installation.FloorType,
-                InstallationMetres = installation.InstallationMetres,
-                
-                InstallationItems = _mapper.Map<List<InstallationItemCreateDto>>(installation.Items),
-                InstallationAddress = _mapper.Map<InstallationAddressDto>(@event.InstallationAddress)
-            });
+            contract.AddContractLine(contractLineEventDto.Id, contractLineEventDto.ProductId, contractLineEventDto.ProductName, contractLineEventDto.Color); 
         }
+        
+        _contractRepository.Add(contract);
+        await _unitOfWork.SaveChangesAsync();
         
         _logger.LogInformation($"Handled integration event: {@event.Id} at {nameof(ContractCreatedIntegrationEventHandler)}");
     }

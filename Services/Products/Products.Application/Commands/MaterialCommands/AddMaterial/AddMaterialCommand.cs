@@ -10,7 +10,7 @@ public class AddMaterialCommand : MaterialCreateDto, ICommand<GetMaterialDto>
                               string name,
                               Guid typeId,
                               Guid? sellUnitId,
-                              decimal? sellPrice,
+                              decimal sellPrice,
                               decimal? cost,
                               bool isObsolete)
     {

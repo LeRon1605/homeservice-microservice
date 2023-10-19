@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Installations.Application.Dtos;
 using Installations.Application.IntegrationEvents.Events.Contracts.EventDtos;
+using Installations.Domain.ContractAggregate;
 using Installations.Domain.InstallationAggregate;
+using InstallationAddress = Installations.Domain.ContractAggregate.InstallationAddress;
 
 namespace Installations.Application.Mapper;
 
@@ -12,6 +14,7 @@ public class InstallationMapper : Profile
         CreateMap<InstallationItemEventDto, InstallationItemCreateDto>();
         CreateMap<InstallationItemEventDto, InstallationItemUpdateDto>();
         CreateMap<InstallationAddressEventDto, InstallationAddressDto>();
+        CreateMap<InstallationAddressEventDto, InstallationAddress>();
 
         CreateMap<Installation, InstallationDto>()
             .ForMember(dto => dto.Product, opt => opt.MapFrom(i => new ProductInInstallationDto { Id = i.ProductId, Name = i.ProductName }))

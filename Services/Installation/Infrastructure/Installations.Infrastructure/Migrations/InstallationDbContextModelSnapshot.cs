@@ -22,6 +22,53 @@ namespace Installations.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Installations.Domain.ContractAggregate.Contract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ContractNo")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Contract");
+                });
+
+            modelBuilder.Entity("Installations.Domain.ContractAggregate.ContractLine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Color")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ContractId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContractId");
+
+                    b.ToTable("ContractLine");
+                });
+
             modelBuilder.Entity("Installations.Domain.InstallationAggregate.Installation", b =>
                 {
                     b.Property<Guid>("Id")
@@ -123,7 +170,7 @@ namespace Installations.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("Cost")
+                    b.Property<decimal?>("Cost")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -160,11 +207,10 @@ namespace Installations.Infrastructure.Migrations
                     b.Property<decimal>("SellPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("UnitId")
+                    b.Property<Guid?>("UnitId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UnitName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -212,15 +258,57 @@ namespace Installations.Infrastructure.Migrations
                     b.Property<Guid>("ProductTypeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal?>("SellPrice")
+                    b.Property<decimal>("SellPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid?>("SellUnitId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("SellUnitName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Material");
+                });
+
+            modelBuilder.Entity("Installations.Domain.ContractAggregate.Contract", b =>
+                {
+                    b.OwnsOne("Installations.Domain.ContractAggregate.InstallationAddress", "InstallationAddress", b1 =>
+                        {
+                            b1.Property<Guid>("ContractId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("City")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("FullAddress")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("PostalCode")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("State")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("ContractId");
+
+                            b1.ToTable("Contract");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ContractId");
+                        });
+
+                    b.Navigation("InstallationAddress");
+                });
+
+            modelBuilder.Entity("Installations.Domain.ContractAggregate.ContractLine", b =>
+                {
+                    b.HasOne("Installations.Domain.ContractAggregate.Contract", null)
+                        .WithMany("ContractLines")
+                        .HasForeignKey("ContractId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Installations.Domain.InstallationAggregate.Installation", b =>
@@ -267,6 +355,11 @@ namespace Installations.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Installation");
+                });
+
+            modelBuilder.Entity("Installations.Domain.ContractAggregate.Contract", b =>
+                {
+                    b.Navigation("ContractLines");
                 });
 
             modelBuilder.Entity("Installations.Domain.InstallationAggregate.Installation", b =>

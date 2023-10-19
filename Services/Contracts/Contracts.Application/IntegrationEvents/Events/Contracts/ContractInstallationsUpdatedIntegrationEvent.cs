@@ -12,7 +12,5 @@ public record ContractInstallationsUpdatedIntegrationEvent : IntegrationEvent
     public Guid CustomerId { get; init; }
     public string CustomerName { get; init; } = null!;
     public InstallationAddressEventDto? InstallationAddress { get; init; }
-    public bool IsAddressChanged { get; init; }
-    
-    public List<InstallationUpdatedEventDto> Installations { get; set; } = new(); 
+    public ICollection<ContractLineEventDto> ContractLines { get; init; } = null!;
 }

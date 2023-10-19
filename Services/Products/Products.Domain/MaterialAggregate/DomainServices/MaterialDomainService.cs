@@ -29,7 +29,7 @@ public class MaterialDomainService : IMaterialDomainService
         string name, 
         Guid productTypeId, 
         Guid? sellUnitId, 
-        decimal? sellPrice,
+        decimal sellPrice,
         decimal? cost, 
         bool isObsolete)
     {
@@ -46,7 +46,7 @@ public class MaterialDomainService : IMaterialDomainService
         string name, 
         Guid productTypeId, 
         Guid? sellUnitId,
-        decimal? sellPrice, 
+        decimal sellPrice, 
         decimal? cost, 
         bool isObsolete)
     {

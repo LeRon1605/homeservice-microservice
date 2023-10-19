@@ -14,7 +14,7 @@ public class MaterialCreateDto
     
     public Guid? SellUnitId { get; set; }
     
-    public decimal? SellPrice { get; set; }
+    public decimal SellPrice { get; set; }
     
     public decimal? Cost { get; set; }
     

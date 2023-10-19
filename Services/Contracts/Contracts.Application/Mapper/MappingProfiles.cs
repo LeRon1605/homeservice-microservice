@@ -48,6 +48,8 @@ public class MappingProfiles : Profile
             .ForMember(dest => dest.QuotedAt, opt => opt.MapFrom(src => src.QuotedAt))
             .ForMember(dest => dest.SoldAt, opt => opt.MapFrom(src => src.SoldAt))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
+
+        CreateMap<ContractLine, ContractLineEventDto>();
         
         CreateMap<Tax, TaxDto>();
         CreateMap<ContractPayment, ContractPaymentDto>()

@@ -16,7 +16,7 @@ public class Material : AuditableAggregateRoot
     public Guid? SellUnitId { get; private set; }
     public ProductUnit SellUnit { get; private set; } = null!;
     
-    public decimal? SellPrice { get; private set; }
+    public decimal SellPrice { get; private set; }
     public decimal? Cost { get; private set; }
     
     public bool IsObsolete { get; private set; }
@@ -26,7 +26,7 @@ public class Material : AuditableAggregateRoot
         string name,
         Guid productTypeId,
         Guid? sellUnitId = null,
-        decimal? sellPrice = null,
+        decimal sellPrice = 0,
         decimal? cost = null,
         bool isObsolete = false)
     {
@@ -59,7 +59,7 @@ public class Material : AuditableAggregateRoot
         SellUnitId = sellUnitId;
     }
     
-    internal void SetSellPrice(decimal? sellPrice)
+    internal void SetSellPrice(decimal sellPrice)
     {
         SellPrice = sellPrice;
     }

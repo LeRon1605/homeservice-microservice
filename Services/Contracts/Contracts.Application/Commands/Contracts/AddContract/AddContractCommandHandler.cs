@@ -73,7 +73,6 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
     {
         // Todo: Validate employee exist (salesperson, supervisor, customer service rep and installer)
         await CheckCustomerExistAsync(request.CustomerId);
-        await SetInstallationItemsNameAndUnit(request.Installations);
 
         var contract = new Contract(
             request.CustomerId, request.CustomerNote, request.SalePersonId,
@@ -89,9 +88,7 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
         _contractRepository.Add(contract);
         await _unitOfWork.SaveChangesAsync();
         
-        var installations = _mapper.Map<List<InstallationEventDto>>(request.Installations);
-        // Each installation differs by its product and color, so I use them to find the corresponding contract line id
-        MapContractLinesToInstallations(installations, contract.Items);
+        _logger.LogInformation("Contract added {ContractId}", contract.Id);
         
         _eventBus.Publish(new ContractCreatedIntegrationEvent
         {
@@ -100,10 +97,8 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
             InstallationAddress = _mapper.Map<InstallationAddressEventDto>(request.InstallationAddress),
             CustomerId = contract.CustomerId,
             CustomerName = (await _customerRepository.GetByIdAsync(contract.CustomerId))!.Name,
-            Installations = installations
+            ContractLines = _mapper.Map<List<ContractLineEventDto>>(contract.Items),
         });
-        
-        _logger.LogInformation("Contract added {ContractId}", contract.Id);
 
         return _mapper.Map<ContractDetailDto>(contract);
     }
@@ -265,39 +260,5 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
         }
 
         return null;
-    }
-
-    private void MapContractLinesToInstallations(IList<InstallationEventDto> installations, IList<ContractLine> contractLines)
-    {
-        foreach (var installation in installations)
-        {
-            installation.ContractLineId = contractLines.First(x => x.ProductId == installation.ProductId && x.Color == installation.Color).Id;
-            installation.ProductName = contractLines.First(x => x.ProductId == installation.ProductId).ProductName;
-        }
-    }
-
-    // Set materials name and units name for each installation
-    private async Task SetInstallationItemsNameAndUnit(IList<InstallationCreateDto>? installations)
-    {
-        if (installations == null || !installations.Any())
-            return;
-        
-        foreach (var installation in installations)
-        {
-            // Set material name and unit name for each installation item
-            var materialIds = installation.Items.Select(x => x.MaterialId).ToList();
-            var materials = await _materialRepository.FindListAsync(new MaterialByIncludeIdsSpecification(materialIds)); 
-            var notFoundMaterialIds = materialIds.Except(materials.Select(x => x.Id)).ToList();
-            if (notFoundMaterialIds.Any())
-                throw new MaterialNotFoundException(notFoundMaterialIds.First());
-            installation.Items.ForEach(i => i.MaterialName = materials.First(x => x.Id == i.MaterialId).Name);
-            
-            var unitIds = installation.Items.Select(x => x.UnitId).ToList();
-            var units = await _productUnitRepository.FindListAsync(new ProductUnitByIncludedIdsSpecification(unitIds));
-            var notFoundUnitIds = unitIds.Except(units.Select(x => x.Id)).ToList();
-            if (notFoundUnitIds.Any())
-                throw new ProductUnitNotFoundException(notFoundUnitIds.First());
-            installation.Items.ForEach(i => i.UnitName = units.First(x => x.Id == i.UnitId).Name);
-        }
     }
 }

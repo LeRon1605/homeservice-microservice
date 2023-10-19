@@ -29,7 +29,7 @@ public class MaterialConfiguration : IEntityTypeConfiguration<Material>
 
         builder.Property(x => x.SellPrice)
                .HasPrecision(20, 2)
-               .IsRequired(false);
+               .IsRequired();
         
         builder.Property(x => x.Cost)
                 .HasPrecision(20, 2)

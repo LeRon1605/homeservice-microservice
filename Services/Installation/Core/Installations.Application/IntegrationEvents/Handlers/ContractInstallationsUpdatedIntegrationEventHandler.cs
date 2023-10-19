@@ -68,9 +68,6 @@ public class ContractInstallationsUpdatedIntegrationEventHandler : IIntegrationE
         {
             InstallationId = installation.Id!.Value,
             ContractLineId = installation.ContractLineId,
-            ProductId = installation.ProductId,
-            ProductName = installation.ProductName,
-            ProductColor = installation.Color,
             InstallerId = installation.InstallerId,
                         
             InstallDate = installation.InstallDate,
@@ -84,7 +81,6 @@ public class ContractInstallationsUpdatedIntegrationEventHandler : IIntegrationE
             InstallationMetres = installation.InstallationMetres,
                     
             InstallationItems = _mapper.Map<List<InstallationItemUpdateDto>>(installation.Items),
-            InstallationAddress = _mapper.Map<InstallationAddressDto>(@event.InstallationAddress),
         };
     }
 
@@ -94,14 +90,12 @@ public class ContractInstallationsUpdatedIntegrationEventHandler : IIntegrationE
         return new AddInstallationCommand
         {
             ContractId = @event.ContractId,
-            ContractNo = @event.ContractNo,
-            ProductId = installation.ProductId,
-            ProductName = installation.ProductName,
-            ProductColor = installation.Color,
+            // ContractNo = @event.ContractNo,
+            // ProductName = installation.ProductName,
             ContractLineId = installation.ContractLineId,
                     
-            CustomerId = @event.CustomerId,
-            CustomerName = @event.CustomerName, 
+            // CustomerId = @event.CustomerId,
+            // CustomerName = @event.CustomerName, 
             InstallerId = installation.InstallerId,
                     
             InstallDate = installation.InstallDate,
@@ -115,7 +109,7 @@ public class ContractInstallationsUpdatedIntegrationEventHandler : IIntegrationE
             InstallationMetres = installation.InstallationMetres,
                     
             InstallationItems = _mapper.Map<List<InstallationItemCreateDto>>(installation.Items),
-            InstallationAddress = _mapper.Map<InstallationAddressDto>(@event.InstallationAddress)
+            // InstallationAddress = _mapper.Map<InstallationAddressDto>(@event.InstallationAddress)
         };
     }
 }

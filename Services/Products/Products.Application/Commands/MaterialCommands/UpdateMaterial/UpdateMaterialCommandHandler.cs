@@ -9,6 +9,8 @@ using Products.Domain.MaterialAggregate;
 using Products.Domain.MaterialAggregate.DomainServices;
 using Products.Domain.MaterialAggregate.Exceptions;
 using Products.Domain.MaterialAggregate.Specifications;
+using Products.Domain.ProductUnitAggregate;
+using Products.Domain.ProductUnitAggregate.Exceptions;
 
 namespace Products.Application.Commands.MaterialCommands.UpdateMaterial;
 
@@ -16,6 +18,7 @@ public class UpdateMaterialCommandHandler : ICommandHandler<UpdateMaterialComman
 {
     private readonly IRepository<Material> _materialRepository;
     private readonly IMaterialDomainService _materialDomainService;
+    private readonly IReadOnlyRepository<ProductUnit> _productUnitRepository;
     
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<UpdateMaterialCommandHandler> _logger;
@@ -28,7 +31,8 @@ public class UpdateMaterialCommandHandler : ICommandHandler<UpdateMaterialComman
         IUnitOfWork unitOfWork,
         ILogger<UpdateMaterialCommandHandler> logger,
         IMapper mapper,
-        IEventBus eventBus)
+        IEventBus eventBus,
+        IReadOnlyRepository<ProductUnit> productUnitRepository)
     {
         _materialRepository = repository;
         _materialDomainService = materialDomainService;
@@ -36,14 +40,22 @@ public class UpdateMaterialCommandHandler : ICommandHandler<UpdateMaterialComman
         _logger = logger;
         _mapper = mapper;
         _eventBus = eventBus;
+        _productUnitRepository = productUnitRepository;
     }
     
     public async Task<GetMaterialDto> Handle(UpdateMaterialCommand request, CancellationToken cancellationToken)
     {
         var material = await _materialRepository.GetByIdAsync(request.Id);
         if (material == null)
-        {
             throw new MaterialNotFoundException(request.Id);
+
+        var unitName = string.Empty;
+        if (request.SellUnitId.HasValue)
+        {
+            var sellUnit = await _productUnitRepository.GetByIdAsync(request.SellUnitId.Value);
+            if (sellUnit == null)
+                throw new ProductUnitNotFoundException(request.SellUnitId.Value);
+            unitName = sellUnit.Name;
         }
         
         _logger.LogInformation("Updating material with id: {materialId}", request.Id);
@@ -60,7 +72,8 @@ public class UpdateMaterialCommandHandler : ICommandHandler<UpdateMaterialComman
         _materialRepository.Update(material);
         await _unitOfWork.SaveChangesAsync();
         
-        _eventBus.Publish(new MaterialUpdatedIntegrationEvent(material.Id, material.Name, material.IsObsolete));
+        _eventBus.Publish(new MaterialUpdatedIntegrationEvent(material.Id, material.Name, material.ProductTypeId, 
+            material.SellUnitId, unitName, material.SellPrice, material.Cost, material.IsObsolete));
         
         _logger.LogInformation("Updated material with id: {materialId}", request.Id);
 

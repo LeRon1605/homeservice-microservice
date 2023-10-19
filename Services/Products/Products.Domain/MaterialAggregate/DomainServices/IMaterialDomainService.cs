@@ -7,7 +7,7 @@ public interface IMaterialDomainService
         string name,
         Guid productTypeId,
         Guid? sellUnitId,
-        decimal? sellPrice,
+        decimal sellPrice,
         decimal? cost,
         bool isObsolete);
     
@@ -17,7 +17,7 @@ public interface IMaterialDomainService
         string name,
         Guid productTypeId,
         Guid? sellUnitId,
-        decimal? sellPrice,
+        decimal sellPrice,
         decimal? cost,
         bool isObsolete);
 }

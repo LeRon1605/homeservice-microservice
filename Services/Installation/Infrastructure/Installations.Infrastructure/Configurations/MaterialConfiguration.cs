@@ -20,7 +20,7 @@ public class MaterialConfiguration : IEntityTypeConfiguration<Material>
             .IsRequired(false);
 
         builder.Property(m => m.SellPrice)
-            .IsRequired(false);
+            .IsRequired();
 
         builder.Property(m => m.Cost)
             .IsRequired(false);

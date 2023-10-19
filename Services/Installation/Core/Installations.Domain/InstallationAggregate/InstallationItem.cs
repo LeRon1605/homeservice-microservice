@@ -11,10 +11,10 @@ public class InstallationItem : AuditableEntity
     
     public int Quantity { get; private set; }
     
-    public Guid UnitId { get; private set; }
-    public string UnitName { get; private set; } = null!;
+    public Guid? UnitId { get; private set; }
+    public string? UnitName { get; private set; }
     
-    public decimal Cost { get; private set; }
+    public decimal? Cost { get; private set; }
     public decimal SellPrice { get; private set; }
     
     public Installation Installation { get; private set; } = null!;
@@ -25,9 +25,9 @@ public class InstallationItem : AuditableEntity
                             Guid materialId, 
                             string materialName,
                             int quantity, 
-                            Guid unitId, 
-                            string unitName,
-                            decimal cost, 
+                            Guid? unitId, 
+                            string? unitName,
+                            decimal? cost, 
                             decimal sellPrice)
     {
         InstallationId = installationId;

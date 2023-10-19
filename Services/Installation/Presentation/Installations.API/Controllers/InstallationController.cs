@@ -1,4 +1,5 @@
 using BuildingBlocks.Application.Dtos;
+using Installations.Application.Commands;
 using Installations.Application.Dtos;
 using Installations.Application.Queries;
 using MediatR;
@@ -38,5 +39,27 @@ public class InstallationController : ControllerBase
     {
         var result = await _mediator.Send(new GetInstallationByIdQuery(installationId));
         return Ok(result);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> CreateInstallation(AddInstallationCommand command)
+    {
+        var result = await _mediator.Send(command);
+        return CreatedAtAction(nameof(GetInstallationById), new { installationId = result.Id }, result);
+    }
+    
+    [HttpPut("{installationId:guid}")]
+    public async Task<IActionResult> UpdateInstallation(Guid installationId, UpdateInstallationCommand command)
+    {
+        command.InstallationId = installationId;
+        var updatedInstallation = await _mediator.Send(command);
+        return Ok(updatedInstallation);
+    }
+    
+    [HttpDelete("{installationId:guid}")]
+    public async Task<IActionResult> DeleteInstallation(Guid installationId)
+    {
+        await _mediator.Send(new DeleteInstallationCommand { InstallationId = installationId });
+        return NoContent();
     }
 }

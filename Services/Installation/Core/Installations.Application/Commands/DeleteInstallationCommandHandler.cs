@@ -20,11 +20,11 @@ public class DeleteInstallationCommandHandler : ICommandHandler<DeleteInstallati
     public async Task Handle(DeleteInstallationCommand request, CancellationToken cancellationToken)
     {
         var installation = await _repository.GetByIdAsync(request.InstallationId);
-        if (installation is null)
-        {
-            throw new InstallationNotFoundException(request.InstallationId);
-        }
         
+        if (installation is null)
+            throw new InstallationNotFoundException(request.InstallationId);
+
+        installation.Delete();
         _repository.Delete(installation);
         await _unitOfWork.SaveChangesAsync();
     }

@@ -1,5 +1,6 @@
 using BuildingBlocks.Domain.Models;
 using Installations.Domain.InstallationAggregate.Enums;
+using Installations.Domain.InstallationAggregate.Exceptions;
 
 namespace Installations.Domain.InstallationAggregate;
 
@@ -92,7 +93,7 @@ public class Installation : AuditableAggregateRoot
         InstallationAddress = new InstallationAddress(fullAddress, city, state, postalCode);
     }
 
-    public void AddItem(Guid materialId, string materialName, int quantity, Guid unitId, string unitName, decimal cost, decimal sellPrice)
+    public void AddItem(Guid materialId, string materialName, int quantity, Guid? unitId, string? unitName, decimal? cost, decimal sellPrice)
     {
         var item = new InstallationItem(Id, materialId, materialName, quantity, unitId, unitName, cost, sellPrice);
         Items.Add(item);
@@ -162,5 +163,11 @@ public class Installation : AuditableAggregateRoot
                               string? postalCode = null)
     {
         InstallationAddress = new InstallationAddress(fullAddress, city, state, postalCode);
+    }
+    
+    public void Delete()
+    {
+        if (Status == InstallationStatus.Completed)
+            throw new InstallationAlreadyCompletedException(Id);
     }
 }

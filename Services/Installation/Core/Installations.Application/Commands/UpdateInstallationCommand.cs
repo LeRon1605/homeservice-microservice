@@ -1,16 +1,14 @@
 using BuildingBlocks.Application.CQRS;
 using Installations.Application.Dtos;
+using Newtonsoft.Json;
 
 namespace Installations.Application.Commands;
 
-public class UpdateInstallationCommand : ICommand
+public class UpdateInstallationCommand : ICommand<InstallationDto>
 {
-    public Guid InstallationId { get; init; }
+    [JsonIgnore]
+    public Guid InstallationId { get; set; }
     public Guid ContractLineId { get; init; }
-    
-    public Guid ProductId { get; init; }
-    public string ProductName { get; init; } = null!;
-    public string? ProductColor { get; init; }
     
     public Guid InstallerId { get; set; }
     
@@ -23,8 +21,6 @@ public class UpdateInstallationCommand : ICommand
     public string? InstallationComment { get; set; }
     public string? FloorType { get; set; }
     public double InstallationMetres { get; set; }
-    
-    public InstallationAddressDto? InstallationAddress { get; init; }
     
     public List<InstallationItemUpdateDto> InstallationItems { get; init; } = new();    
 }

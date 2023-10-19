@@ -66,7 +66,7 @@ namespace Products.Infrastructure.EfCore.Migrations
                     b.Property<Guid>("ProductTypeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal?>("SellPrice")
+                    b.Property<decimal>("SellPrice")
                         .HasPrecision(20, 2)
                         .HasColumnType("decimal(20,2)");
 
