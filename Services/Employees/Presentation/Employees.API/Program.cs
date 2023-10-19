@@ -10,6 +10,7 @@ using BuildingBlocks.Presentation.Swagger;
 using Employees.API.Extensions;
 using Employees.Application.Mapper;
 using Employees.Infrastructure;
+using Newtonsoft.Json.Converters;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,7 +32,9 @@ builder.Services.AddSwagger("EmployeeService")
     .AddGrpc();
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new StringEnumConverter()));
+builder.Services.AddSwaggerGenNewtonsoftSupport();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

@@ -47,6 +47,8 @@ public class IdentityDataSeeder : IDataSeeder
 
                 await SeedSalePersonRoleAsync();
                 
+                await SeedSupervisorRoleAsync();
+                
                 await SeedRoleClaimAsync();
             }
 

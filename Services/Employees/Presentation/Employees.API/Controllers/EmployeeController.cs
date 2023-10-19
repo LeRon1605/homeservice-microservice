@@ -1,6 +1,7 @@
 ﻿using Employees.Application.Command.Employees;
 using Employees.Application.Dtos;
 using Employees.Application.Queries;
+using Employees.Domain.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +21,27 @@ public class EmployeeController : ControllerBase
     {
         var employees = await _mediator.Send(new GetEmployeesWithPaginationQuery(employeeFilterAndPagingDto));
         return Ok(employees);
+    }
+    
+    [HttpGet("installers")]
+    public async Task<IActionResult> GetInstallers()
+    {
+        var installers = await _mediator.Send(new GetAllEmployeeByRoleQuery(AppRole.Installer));
+        return Ok(installers);
+    }
+    
+    [HttpGet("supervisors")]
+    public async Task<IActionResult> GetSupervisors()
+    {
+        var supervisors = await _mediator.Send(new GetAllEmployeeByRoleQuery(AppRole.Supervisor));
+        return Ok(supervisors);
+    }
+    
+    [HttpGet("salespersons")]
+    public async Task<IActionResult> GetSalesPersons()
+    {
+        var salesPersons = await _mediator.Send(new GetAllEmployeeByRoleQuery(AppRole.SalesPerson));
+        return Ok(salesPersons);
     }
     
     [HttpGet("{id:guid}")]

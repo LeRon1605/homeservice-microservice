@@ -11,7 +11,7 @@ public class EmployeeFilterAndPagingSpecification : Specification<Employee>
         int pageSize)
     {
         AddInclude(x => x.Role);
-        if (!string.IsNullOrEmpty(search))
+        if (!string.IsNullOrWhiteSpace(search))
         {
             //AddSearchTerm(search);
             AddFilter(x => x.EmployeeCode.ToString().Contains(search)
