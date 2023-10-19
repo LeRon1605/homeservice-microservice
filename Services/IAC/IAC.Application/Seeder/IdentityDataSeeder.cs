@@ -48,6 +48,8 @@ public class IdentityDataSeeder : IDataSeeder
                 await SeedSalePersonRoleAsync();
                 
                 await SeedSupervisorRoleAsync();
+
+                await SeedCustomerServiceRoleAsync();
                 
                 await SeedRoleClaimAsync();
             }
@@ -161,6 +163,18 @@ public class IdentityDataSeeder : IDataSeeder
         }
 
         _eventBus.Publish(new RoleCreatedIntegrationEvent(Guid.Parse(salePersonRole.Id), salePersonRole.Name));
+    }
+    
+    private async Task SeedCustomerServiceRoleAsync()
+    {
+        var customerServiceRole = new ApplicationRole(AppRole.CustomerService);
+        var result = await _roleManager.CreateAsync(customerServiceRole);
+        if (!result.Succeeded)
+        {
+            _logger.LogWarning("Seeding sale person role failed!");       
+        }
+
+        _eventBus.Publish(new RoleCreatedIntegrationEvent(Guid.Parse(customerServiceRole.Id), customerServiceRole.Name));
     }
     
     

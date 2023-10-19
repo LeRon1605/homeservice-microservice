@@ -50,18 +50,18 @@ public class EmployeeDataSeeder : IDataSeeder
         });
 
         var roles = await _roleRepository.GetAllAsync();
-        IList<Role> roleEmployees = roles.Where(roleEmployee => roleEmployee.Name != "Admin").ToList();
+        var roleEmployees = roles.Where(roleEmployee => roleEmployee.Name != "Admin").ToList();
 
         try
         {
-            var faker = new Faker();
-            for (int i = 0; i < 49; i++)
+            for (var i = 0; i < 49; i++)
             {
-                var role = roles[faker.Random.Int(0, roles.Count - 1)];
+                var faker = new Faker();
+                var role = faker.PickRandom(roleEmployees);
                 var employee = new Employee(
                     i+1000,
-                    faker.Name.Random.String2(10),
-                    faker.Company.Random.String2(10),
+                    faker.Person.FullName,
+                    faker.Commerce.Department(),
                     faker.Internet.Email(),
                     role.Id,
                     role.Name,

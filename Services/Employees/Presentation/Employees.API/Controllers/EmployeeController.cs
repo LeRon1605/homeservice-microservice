@@ -44,6 +44,13 @@ public class EmployeeController : ControllerBase
         return Ok(salesPersons);
     }
     
+    [HttpGet("customer-service")]
+    public async Task<IActionResult> GetCustomerServiceEmployees()
+    {
+        var salesPersons = await _mediator.Send(new GetAllEmployeeByRoleQuery(AppRole.CustomerService));
+        return Ok(salesPersons);
+    }
+    
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetEmployeeById(Guid id)
     {
