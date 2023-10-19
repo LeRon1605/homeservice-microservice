@@ -12,10 +12,16 @@ public record EmployeeAddedIntegrationEvent : IntegrationEvent
     public string RoleName { get; private set; }
     public string Password { get; private set; }
 
-    public EmployeeAddedIntegrationEvent(Guid id, string fullName, string email, string? phone, Guid roleId,
-        string roleName, string password)
+    public EmployeeAddedIntegrationEvent(
+        Guid employeeId, 
+        string fullName, 
+        string email, 
+        string? phone, 
+        Guid roleId,
+        string roleName, 
+        string password)
     {
-        EmployeeId = id;
+        EmployeeId = employeeId;
         FullName = fullName;
         Email = email;
         Phone = phone;

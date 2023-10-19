@@ -121,7 +121,7 @@ public class ContractDataSeeder : IDataSeeder
                 throw new Exception("Material data not seeded yet!");
             }
 
-            if (!_employeeRepository.AnyAsync().Result)
+            if (_employeeRepository.CountAsync().Result < 30)
             {
                 throw new Exception("Employee data not seeded yet!");
             }

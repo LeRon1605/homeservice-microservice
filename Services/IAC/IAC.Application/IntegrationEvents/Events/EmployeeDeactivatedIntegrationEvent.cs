@@ -8,9 +8,9 @@ public record EmployeeDeactivatedIntegrationEvent : IntegrationEvent
     public Guid EmployeeId { get;set; }
     public Status Status { get; set; }
 
-    public EmployeeDeactivatedIntegrationEvent(Guid id, Status status)
+    public EmployeeDeactivatedIntegrationEvent(Guid employeeId, Status status)
     {
-        EmployeeId = id;
+        EmployeeId = employeeId;
         Status = status;
     }
 }

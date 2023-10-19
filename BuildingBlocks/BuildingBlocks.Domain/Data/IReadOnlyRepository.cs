@@ -16,7 +16,10 @@ public interface IReadOnlyRepository<TEntity> where TEntity : Entity
     
     Task<int> CountAsync(ISpecification<TEntity> specification);
     
+    Task<int> CountAsync();
+    
     Task<int> SumAsync(ISpecification<TEntity> specification, Expression<Func<TEntity, int>> selector);
+    
     Task<decimal> SumAsync(ISpecification<TEntity> specification, Expression<Func<TEntity, decimal>> selector);
     
     Task<(IList<TEntity>, int)> FindWithTotalCountAsync(ISpecification<TEntity> specification);

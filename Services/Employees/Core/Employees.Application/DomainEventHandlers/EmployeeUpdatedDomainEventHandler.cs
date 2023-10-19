@@ -19,8 +19,7 @@ public class EmployeeUpdatedDomainEventHandler : IDomainEventHandler<EmployeeUpd
 
     public Task Handle(EmployeeUpdatedDomainEvent notification, CancellationToken cancellationToken)
     {
-        var employeeUpdatedIntegrationEvent =
-            new EmployeeUpdatedIntegrationEvent(notification.Employee.Id,
+        var employeeUpdatedIntegrationEvent = new EmployeeUpdatedIntegrationEvent(notification.Employee.Id,
                 notification.Employee.FullName,
                 notification.Employee.Email,
                 notification.Employee.Phone,

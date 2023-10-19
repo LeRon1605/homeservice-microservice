@@ -5,6 +5,7 @@ using BuildingBlocks.Domain.Models.Interfaces;
 using BuildingBlocks.Domain.Specification;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
+using Microsoft.EntityFrameworkCore.DynamicLinq;
 
 namespace BuildingBlocks.Infrastructure.EfCore.Repositories;
 
@@ -38,7 +39,12 @@ public class EfCoreReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity>
     {
         return await GetQuery<TEntity>.From(DbSet, specification).CountAsync();
     }
-    
+
+    public Task<int> CountAsync()
+    {
+        return DbSet.CountAsync();
+    }
+
     public async Task<int> SumAsync(ISpecification<TEntity> specification, Expression<Func<TEntity, int>> selector) {
         return await GetQuery<TEntity>.From(DbSet, specification).SumAsync(selector);
     }
