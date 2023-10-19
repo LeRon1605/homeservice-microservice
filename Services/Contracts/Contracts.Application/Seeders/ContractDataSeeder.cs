@@ -11,6 +11,7 @@ using Contracts.Application.Queries.Contracts.GetPaymentsOfContract;
 using Contracts.Domain.ContractAggregate;
 using Contracts.Domain.ContractAggregate.Specifications;
 using Contracts.Domain.CustomerAggregate;
+using Contracts.Domain.EmployeeAggregate;
 using Contracts.Domain.MaterialAggregate;
 using Contracts.Domain.PaymentMethodAggregate;
 using Contracts.Domain.ProductAggregate;
@@ -35,6 +36,7 @@ public class ContractDataSeeder : IDataSeeder
     private readonly ILogger<ContractDataSeeder> _logger;
     private readonly IReadOnlyRepository<ProductUnit> _productUnitRepository;
     private readonly IReadOnlyRepository<ContractPayment> _contractPaymentRepository;
+    private readonly IReadOnlyRepository<Employee> _employeeRepository;
     private readonly IUnitOfWork _unitOfWork;
     
     public ContractDataSeeder(
@@ -49,6 +51,7 @@ public class ContractDataSeeder : IDataSeeder
         IReadOnlyRepository<ProductUnit> productUnitRepository,
         IReadOnlyRepository<PaymentMethod> paymentMethodReadOnlyRepository,
         IReadOnlyRepository<ContractPayment> contractPaymentRepository,
+        IReadOnlyRepository<Employee> employeeRepository,
         IUnitOfWork unitOfWork)
     {
         _taxRepository = taxRepository;
@@ -60,6 +63,7 @@ public class ContractDataSeeder : IDataSeeder
         _customerRepository = customerRepository;
         _logger = logger;
         _productUnitRepository = productUnitRepository;
+        _employeeRepository = employeeRepository;
         _unitOfWork = unitOfWork;
         _paymentMethodReadOnlyRepository = paymentMethodReadOnlyRepository;
         _contractPaymentRepository = contractPaymentRepository;
@@ -115,6 +119,11 @@ public class ContractDataSeeder : IDataSeeder
             {
                 throw new Exception("Material data not seeded yet!");
             }
+
+            if (!_employeeRepository.AnyAsync().Result)
+            {
+                throw new Exception("Employee data not seeded yet!");
+            }
         });
         
         _logger.LogInformation("Begin seeding contracts data...");
@@ -124,12 +133,13 @@ public class ContractDataSeeder : IDataSeeder
         var materials = await _materialRepository.GetAllAsync();
         var customers = await _customerRepository.GetAllAsync();
         var paymentMethods = await _paymentMethodReadOnlyRepository.GetAllAsync();
+        var employees = await _employeeRepository.GetAllAsync();
         
         for (var i = 0; i < 50; i++)
         {
             try
             {
-                var command = new AddContractCommand(GetContractCreateDto(productUnits, products, materials, customers, paymentMethods));
+                var command = new AddContractCommand(GetContractCreateDto(productUnits, products, materials, customers, paymentMethods, employees));
                 await _mediator.Send(command);
             }
             catch(Exception e)
@@ -161,7 +171,8 @@ public class ContractDataSeeder : IDataSeeder
         IList<Product> products,
         IList<Material> materials,
         IList<Customer> customers,
-        IList<PaymentMethod> paymentMethods)
+        IList<PaymentMethod> paymentMethods,
+        IList<Employee> employees)
     {
         var faker = new Faker();
         var customer = customers[faker.Random.Int(0, (int)(customers.Count * 0.25))];
@@ -261,7 +272,7 @@ public class ContractDataSeeder : IDataSeeder
                 Name = faker.Commerce.ProductName(),
                 Comment = faker.Commerce.ProductDescription(),
                 Date = faker.Date.Past(),
-                ActionByEmployeeId = Guid.NewGuid()
+                ActionByEmployeeId = faker.PickRandom(employees).Id
             });
         }
 

@@ -1,4 +1,5 @@
 ﻿using Contracts.Domain.ContractAggregate;
+using Contracts.Domain.EmployeeAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -25,5 +26,9 @@ public class ContractActionConfiguration : IEntityTypeConfiguration<ContractActi
         builder.HasOne<Contract>()
             .WithMany(x => x.Actions)
             .HasForeignKey(x => x.ContractId);
+
+        builder.HasOne<Employee>(x => x.ActionByEmployee)
+            .WithMany()
+            .HasForeignKey(x => x.ActionByEmployeeId);
     }
 }

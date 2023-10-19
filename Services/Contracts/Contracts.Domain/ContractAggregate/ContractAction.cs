@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using BuildingBlocks.Domain.Models;
+using Contracts.Domain.EmployeeAggregate;
 
 namespace Contracts.Domain.ContractAggregate;
 
@@ -11,6 +12,7 @@ public class ContractAction : AuditableEntity
     
     public Guid ContractId { get; private set; }
     public Guid ActionByEmployeeId { get; private set; }
+    public Employee? ActionByEmployee { get; private set; }
     
     public ContractAction(
         Guid contractId,

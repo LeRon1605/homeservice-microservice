@@ -56,8 +56,14 @@ public class MappingProfiles : Profile
             .ForMember(dest => dest.PaymentMethod,
                 options => options.MapFrom(src => new PaymentMethodInContractPaymentDto()
                     { Id = src.PaymentMethodId, Name = src.PaymentMethodName }));
+
+        CreateMap<ContractAction, ContractActionDto>()
+            .ForMember(dest => dest.Employee, opt => opt.MapFrom(src => new EmployeeInContractActionDto()
+            {
+                Id = src.Id,
+                Name = src.ActionByEmployee.Name,
+            }));
         
-        CreateMap<ContractAction, ContractActionDto>();
         
         CreateMap<PaymentMethod, PaymentMethodDto>();
 

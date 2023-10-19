@@ -10,6 +10,9 @@ using Contracts.Domain.ContractAggregate;
 using Contracts.Domain.ContractAggregate.Exceptions;
 using Contracts.Domain.CustomerAggregate;
 using Contracts.Domain.CustomerAggregate.Exceptions;
+using Contracts.Domain.EmployeeAggregate;
+using Contracts.Domain.EmployeeAggregate.Exceptions;
+using Contracts.Domain.EmployeeAggregate.Specifications;
 using Contracts.Domain.MaterialAggregate;
 using Contracts.Domain.MaterialAggregate.Exceptions;
 using Contracts.Domain.MaterialAggregate.Specifications;
@@ -34,6 +37,7 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
     private readonly IRepository<Contract> _contractRepository;
     private readonly IReadOnlyRepository<Product> _productRepository;
     private readonly IReadOnlyRepository<Material> _materialRepository;
+    private readonly IReadOnlyRepository<Employee> _employeeRepository;
     private readonly IReadOnlyRepository<ProductUnit> _productUnitRepository;
     private readonly IReadOnlyRepository<PaymentMethod> _paymentMethodRepository;
     private readonly IReadOnlyRepository<Tax> _taxRepository;
@@ -47,6 +51,7 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
         IRepository<Contract> contractRepository,
         IReadOnlyRepository<Product> productRepository,
         IReadOnlyRepository<ProductUnit> productUnitRepository,
+        IReadOnlyRepository<Employee> employeeRepository,
         IReadOnlyRepository<PaymentMethod> paymentMethodRepository,
         IRepository<Customer> customerRepository,
         IReadOnlyRepository<Tax> taxRepository,
@@ -59,6 +64,7 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
         _contractRepository = contractRepository;
         _productRepository = productRepository;
         _productUnitRepository = productUnitRepository;
+        _employeeRepository = employeeRepository;
         _customerRepository = customerRepository;
         _paymentMethodRepository = paymentMethodRepository;
         _taxRepository = taxRepository;
@@ -170,11 +176,16 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
         {
             return;
         }
-        
-        // Todo: Validate employee
+
+        var employees = await _employeeRepository.FindListAsync(new EmployeeByIncludedIdsSpecification(request.Actions.Select(x => x.ActionByEmployeeId)));
         
         foreach (var action in request.Actions)
         {
+            if (employees.All(x => x.Id != action.ActionByEmployeeId))
+            {
+                throw new EmployeeNotFoundException(action.ActionByEmployeeId);
+            }
+            
             contract.AddAction(
                 action.Name,
                 action.Date,
