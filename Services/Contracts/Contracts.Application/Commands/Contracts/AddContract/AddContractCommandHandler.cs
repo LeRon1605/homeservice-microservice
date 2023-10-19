@@ -37,7 +37,7 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
     private readonly IRepository<Contract> _contractRepository;
     private readonly IReadOnlyRepository<Product> _productRepository;
     private readonly IReadOnlyRepository<Material> _materialRepository;
-    private readonly IReadOnlyRepository<Employee> _employeeRepository;
+    private readonly IRepository<Employee> _employeeRepository;
     private readonly IReadOnlyRepository<ProductUnit> _productUnitRepository;
     private readonly IReadOnlyRepository<PaymentMethod> _paymentMethodRepository;
     private readonly IReadOnlyRepository<Tax> _taxRepository;
@@ -51,7 +51,7 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
         IRepository<Contract> contractRepository,
         IReadOnlyRepository<Product> productRepository,
         IReadOnlyRepository<ProductUnit> productUnitRepository,
-        IReadOnlyRepository<Employee> employeeRepository,
+        IRepository<Employee> employeeRepository,
         IReadOnlyRepository<PaymentMethod> paymentMethodRepository,
         IRepository<Customer> customerRepository,
         IReadOnlyRepository<Tax> taxRepository,
@@ -77,7 +77,9 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
     
     public async Task<ContractDetailDto> Handle(AddContractCommand request, CancellationToken cancellationToken)
     {
-        // Todo: Validate employee exist (salesperson, supervisor, customer service rep and installer)
+        await CheckSalePersonAsync(request.SalePersonId);
+        await CheckSupervisorAsync(request.SupervisorId);
+        await CheckCustomerServiceRepAsync(request.CustomerServiceRepId);
         await CheckCustomerExistAsync(request.CustomerId);
 
         var contract = new Contract(
@@ -271,5 +273,29 @@ public class AddContractCommandHandler : ICommandHandler<AddContractCommand, Con
         }
 
         return null;
+    }
+
+    private async Task CheckSalePersonAsync(Guid salePersonId)
+    {
+        if (!await _employeeRepository.AnyAsync(new IsSalePersonEmployeeSpecification(salePersonId)))
+        {
+            throw new SalePersonNotFoundException(salePersonId);
+        }
+    }
+
+    private async Task CheckSupervisorAsync(Guid? supervisorId)
+    {
+        if (supervisorId.HasValue && !await _employeeRepository.AnyAsync(new IsSupervisorEmployeeSpecification(supervisorId.Value)))
+        {
+            throw new SupervisorNotFoundException(supervisorId.Value);
+        }
+    }
+
+    private async Task CheckCustomerServiceRepAsync(Guid? customerServiceRepId)
+    {
+        if (customerServiceRepId.HasValue && !await _employeeRepository.AnyAsync(new IsCustomerServiceEmployeeSpecification(customerServiceRepId.Value)))
+        {
+            throw new SupervisorNotFoundException(customerServiceRepId.Value);
+        }
     }
 }

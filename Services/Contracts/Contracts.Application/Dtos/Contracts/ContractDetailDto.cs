@@ -12,9 +12,9 @@ public class ContractDetailDto
     public decimal Balance { get; set; }
     public string? CustomerNote { get; set; }
     
-    public Guid SalePersonId { get; set; }
-    public Guid? SupervisorId { get; set; }
-    public Guid? CustomerServiceRepId { get; set; }
+    public EmployeeInContractDto SalePerson { get; set; } = null!;
+    public EmployeeInContractDto? Supervisor { get; set; }
+    public EmployeeInContractDto? CustomerServiceRep { get; set; }
     
     public int? PurchaseOrderNo { get; set; }
     
@@ -28,12 +28,14 @@ public class ContractDetailDto
     
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ContractStatus Status { get; set; }
-
-    // public IEnumerable<ContractLineDto> Items { get; set; } = null!;
-    // public IEnumerable<ContractPaymentDto> Payments { get; set; } = null!;
-    // public IEnumerable<ContractActionDto> Actions { get; set; } = null!;
     
     public InstallationAddressDto InstallationAddress { get; set; } = null!;
     public DateTime? EstimatedInstallationDate { get; set; }
     public DateTime? ActualInstallationDate { get; set; }
+}
+
+public class EmployeeInContractDto
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; } = null!;
 }

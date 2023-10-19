@@ -22,15 +22,6 @@ public class ContractConfiguration : IEntityTypeConfiguration<Contract>
         builder.Property(x => x.CustomerNote)
             .IsRequired(false);
 
-        builder.Property(x => x.SalePersonId)
-            .IsRequired();
-
-        builder.Property(x => x.SupervisorId)
-            .IsRequired(false);
-
-        builder.Property(x => x.CustomerServiceRepId)
-            .IsRequired(false);
-
         builder.Property(x => x.PurchaseOrderNo)
             .IsRequired(false);
 
@@ -71,5 +62,20 @@ public class ContractConfiguration : IEntityTypeConfiguration<Contract>
         builder.HasOne(x => x.Customer)
             .WithMany()
             .HasForeignKey(x => x.CustomerId);
+
+        builder.HasOne(x => x.SalePerson)
+            .WithMany()
+            .HasForeignKey(x => x.SalePersonId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.HasOne(x => x.Supervisor)
+            .WithMany()
+            .HasForeignKey(x => x.SupervisorId)
+            .IsRequired(false);
+
+        builder.HasOne(x => x.CustomerServiceRep)
+            .WithMany()
+            .HasForeignKey(x => x.CustomerServiceRepId)
+            .IsRequired(false);
     }
 }

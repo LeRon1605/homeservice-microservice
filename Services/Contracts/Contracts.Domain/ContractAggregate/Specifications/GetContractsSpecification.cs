@@ -18,6 +18,9 @@ public class GetContractsSpecification : Specification<Contract>
     {
         AddInclude(x => x.Customer);
         AddInclude(x => x.Items);
+        AddInclude(x => x.SalePerson);
+        AddInclude(x => x.Supervisor);
+        AddInclude(x => x.CustomerServiceRep);
 
         if (!string.IsNullOrWhiteSpace(search))
         {

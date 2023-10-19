@@ -10,5 +10,9 @@ public class ContractByIdSpecification : Specification<Contract>
         AddInclude(x => x.Items);
         AddInclude(x => x.Payments);
         AddInclude(x => x.Actions);
+        AddInclude(x => x.SalePerson);
+        AddInclude(x => x.Supervisor);
+        AddInclude(x => x.CustomerServiceRep);
+
     }
 }

@@ -53,7 +53,6 @@ public class EmailSender : IEmailSender
             catch
             {
                 _logger.LogError("Send mail error");
-                throw;
             }
             finally
             {

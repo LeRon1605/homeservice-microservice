@@ -27,9 +27,30 @@ public class MappingProfiles : Profile
 
         CreateMap<Contract, ContractDto>()
             .ForMember(dest => dest.CustomerName, options => options.MapFrom(src => src.Customer!.Name))
-            .ForMember(dest => dest.ContractValue, options => options.MapFrom(src => src.Items.Sum(x => x.Quantity * x.SellPrice)));
+            .ForMember(dest => dest.ContractValue, options => options.MapFrom(src => src.Items.Sum(x => x.Quantity * x.SellPrice)))
+            .ForMember(dest => dest.SalePersonName, options => options.MapFrom(src => src.SalePerson!.Name));
         CreateMap<Contract, ContractDetailDto>()
-            .ForMember(dest => dest.ContractValue, options => options.MapFrom(src => src.Items.Sum(x => x.Quantity * x.SellPrice)));
+            .ForMember(dest => dest.ContractValue, options => options.MapFrom(src => src.Items.Sum(x => x.Quantity * x.SellPrice)))
+            .ForMember(dest => dest.SalePerson, options => options.MapFrom(src => new EmployeeInContractDto()
+            {
+                Id = src.SalePersonId,
+                Name = src.SalePerson!.Name
+            }))
+            .ForMember(dest => dest.Supervisor, options => options.MapFrom(src => src.SupervisorId.HasValue
+                ? new EmployeeInContractDto()
+                {
+                    Id = src.SupervisorId.Value,
+                    Name = src.Supervisor!.Name
+                }
+                : null))
+            .ForMember(dest => dest.CustomerServiceRep, options => options.MapFrom(src => src.CustomerServiceRepId.HasValue
+                ? new EmployeeInContractDto()
+                {
+                    Id = src.CustomerServiceRepId.Value,
+                    Name = src.CustomerServiceRep!.Name
+                }
+                : null));
+        
         CreateMap<ContractLine, ContractLineDto>()
             .ForMember(dest => dest.Product,
                 options => options.MapFrom(src => new ProductInContractLineDto()
@@ -58,10 +79,11 @@ public class MappingProfiles : Profile
                     { Id = src.PaymentMethodId, Name = src.PaymentMethodName }));
 
         CreateMap<ContractAction, ContractActionDto>()
+            .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.CreatedBy) ? "System" : src.CreatedBy))
             .ForMember(dest => dest.Employee, opt => opt.MapFrom(src => new EmployeeInContractActionDto()
             {
                 Id = src.Id,
-                Name = src.ActionByEmployee.Name,
+                Name = src.ActionByEmployee!.Name,
             }));
         
         

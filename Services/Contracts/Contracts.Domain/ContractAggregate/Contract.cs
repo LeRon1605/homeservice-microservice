@@ -3,6 +3,7 @@ using BuildingBlocks.Domain.Models;
 using Contracts.Domain.ContractAggregate.Events;
 using Contracts.Domain.ContractAggregate.Exceptions;
 using Contracts.Domain.CustomerAggregate;
+using Contracts.Domain.EmployeeAggregate;
 
 namespace Contracts.Domain.ContractAggregate;
 
@@ -14,8 +15,13 @@ public class Contract : AuditableAggregateRoot
     public string? CustomerNote { get; private set; }
     
     public Guid SalePersonId { get; private set; }
+    public Employee? SalePerson { get; private set; }
+    
     public Guid? SupervisorId { get; private set; }
+    public Employee? Supervisor { get; private set; }
+    
     public Guid? CustomerServiceRepId { get; private set; }
+    public Employee? CustomerServiceRep { get; private set; }
     
     public int? PurchaseOrderNo { get; private set; }
     

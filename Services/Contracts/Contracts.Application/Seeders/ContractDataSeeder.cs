@@ -12,6 +12,7 @@ using Contracts.Domain.ContractAggregate;
 using Contracts.Domain.ContractAggregate.Specifications;
 using Contracts.Domain.CustomerAggregate;
 using Contracts.Domain.EmployeeAggregate;
+using Contracts.Domain.EmployeeAggregate.Specifications;
 using Contracts.Domain.MaterialAggregate;
 using Contracts.Domain.PaymentMethodAggregate;
 using Contracts.Domain.ProductAggregate;
@@ -133,33 +134,20 @@ public class ContractDataSeeder : IDataSeeder
         var materials = await _materialRepository.GetAllAsync();
         var customers = await _customerRepository.GetAllAsync();
         var paymentMethods = await _paymentMethodReadOnlyRepository.GetAllAsync();
-        var employees = await _employeeRepository.GetAllAsync();
+        var customerServiceEmployees = await _employeeRepository.FindListAsync(new CustomerServiceEmployeeSpecification());
+        var salePersonEmployees = await _employeeRepository.FindListAsync(new SalePersonEmployeeSpecification());
+        var supervisorEmployees = await _employeeRepository.FindListAsync(new SupervisorEmployeeSpecification());
         
         for (var i = 0; i < 50; i++)
         {
             try
             {
-                var command = new AddContractCommand(GetContractCreateDto(productUnits, products, materials, customers, paymentMethods, employees));
+                var command = new AddContractCommand(GetContractCreateDto(productUnits, products, materials, customers, paymentMethods, customerServiceEmployees, salePersonEmployees, supervisorEmployees));
                 await _mediator.Send(command);
             }
             catch(Exception e)
             {
                 _logger.LogError("Seeding a contract failed: {Message}", e.Message);
-            }
-        }
-
-        var contracts = await _contractRepository.GetAllAsync();
-        for (var i = 0; i < 10; i++)
-        {
-            try
-            {
-                var contractUpdateDto = await GetContractUpdateDto(productUnits, products, customers);
-                var command = new UpdateContractCommand(contracts[i].Id, contractUpdateDto);
-                await _mediator.Send(command);
-            }
-            catch(Exception e)
-            {
-                _logger.LogError("Seeding a deleted contract failed: {Message}", e.Message);
             }
         }
         
@@ -172,7 +160,9 @@ public class ContractDataSeeder : IDataSeeder
         IList<Material> materials,
         IList<Customer> customers,
         IList<PaymentMethod> paymentMethods,
-        IList<Employee> employees)
+        IList<Employee> customerServiceEmployees,
+        IList<Employee> salePersonEmployees,
+        IList<Employee> supervisorEmployees)
     {
         var faker = new Faker();
         var customer = customers[faker.Random.Int(0, (int)(customers.Count * 0.25))];
@@ -181,9 +171,9 @@ public class ContractDataSeeder : IDataSeeder
         {
             CustomerId = customer.Id,
             CustomerNote = faker.Lorem.Sentence(),
-            SalePersonId = faker.Random.Guid(),
-            SupervisorId = faker.Random.Guid(),
-            CustomerServiceRepId = faker.Random.Guid(),
+            SalePersonId = faker.PickRandom(salePersonEmployees).Id,
+            SupervisorId = faker.PickRandom(supervisorEmployees).Id,
+            CustomerServiceRepId = faker.PickRandom(customerServiceEmployees).Id,
             PurchaseOrderNo = faker.Random.Int(0, 100),
             InvoiceNo = faker.Random.Int(0, 100),
             InvoiceDate = faker.Date.Past(),
@@ -272,78 +262,11 @@ public class ContractDataSeeder : IDataSeeder
                 Name = faker.Commerce.ProductName(),
                 Comment = faker.Commerce.ProductDescription(),
                 Date = faker.Date.Past(),
-                ActionByEmployeeId = faker.PickRandom(employees).Id
+                ActionByEmployeeId = faker.PickRandom(customerServiceEmployees).Id
             });
         }
 
         return contractCreateDto;
-    }
-
-    private async Task<ContractUpdateDto> GetContractUpdateDto(
-        IList<ProductUnit> productUnits,
-        IList<Product> products,
-        IList<Customer> customers)
-    {
-        var faker = new Faker();
-        var customer = customers[faker.Random.Int(0, (int)(customers.Count * 0.25))];
-        
-        var contractUpdateDto = new ContractUpdateDto()
-        {
-            CustomerId = customer.Id,
-            CustomerNote = faker.Lorem.Sentence(),
-            SalePersonId = faker.Random.Guid(),
-            SupervisorId = faker.Random.Guid(),
-            CustomerServiceRepId = faker.Random.Guid(),
-            PurchaseOrderNo = faker.Random.Int(0, 100),
-            InvoiceNo = faker.Random.Int(0, 100),
-            InvoiceDate = faker.Date.Past(),
-            EstimatedInstallationDate = faker.Date.Future(),
-            ActualInstallationDate = faker.Date.Future(),
-            InstallationAddress = new InstallationAddressDto()
-            {
-                FullAddress = faker.Address.FullAddress(),
-                City = faker.Address.City(),
-                PostalCode = faker.Address.ZipCode(),
-                State = faker.Address.State()
-            },
-            // Items = new List<ContractLineUpdateDto>(),
-            // Payments = new List<ContractPaymentUpdateDto>(),
-            // Actions = new List<ContractActionUpdateDto>(),
-            Status = faker.PickRandom<ContractStatus>()
-        };
-
-        // for (var j = 0; j < 3; j++)
-        // {
-        //     var product = products[faker.Random.Int(0, products.Count - 1)];
-        //     var productUnit = productUnits[faker.Random.Int(0, productUnits.Count - 1)];
-        //     
-        //     contractUpdateDto.Items.Add(new ContractLineUpdateDto()
-        //     {
-        //         ProductId = product.Id,
-        //         Quantity = faker.Random.Int(1, 10),
-        //         Cost = product.Price,
-        //         SellPrice = faker.Random.Decimal(100, 1000),
-        //         Color = product.Colors[0],
-        //         UnitId = productUnit.Id
-        //     });
-        // }
-        
-        // foreach (var payment in payments)
-        // {
-        //     contractUpdateDto.Payments.Add(new ContractPaymentUpdateDto()
-        //     {
-        //         Id = payment.Id,
-        //         Comments = payment.Comments,
-        //         Reference = payment.Reference,
-        //         DatePaid = payment.DatePaid,
-        //         PaidAmount = payment.PaidAmount,
-        //         PaymentMethodId = payment.PaymentMethodId,
-        //         Surcharge = payment.Surcharge,
-        //         IsDelete = faker.Random.Bool()
-        //     });
-        // }
-
-        return contractUpdateDto;
     }
 
     private async Task SeedTaxesAsync()
