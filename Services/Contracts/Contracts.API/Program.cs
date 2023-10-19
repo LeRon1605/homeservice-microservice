@@ -1,5 +1,6 @@
 using BuildingBlocks.Infrastructure.Serilog;
 using BuildingBlocks.Presentation.Authentication;
+using BuildingBlocks.Presentation.Authorization;
 using BuildingBlocks.Presentation.DataSeeder;
 using BuildingBlocks.Presentation.EfCore;
 using BuildingBlocks.Presentation.EventBus;
@@ -14,7 +15,7 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Log.Logger = ApplicationLoggerFactory.CreateSerilogLogger(builder.Configuration, "ContractService");
+Log.Logger = ApplicationLoggerFactory.CreateSerilogLogger(builder.Configuration, "ContractService");
 
 builder.Services
     .AddSwagger("ContractService")
@@ -22,6 +23,7 @@ builder.Services
     .AddEfCoreDbContext<ContractDbContext>(builder.Configuration)
     .AddRepositories()
     .AddHomeServiceAuthentication(builder.Configuration)
+    .AddHomeServiceAuthorization()
     .AddApplicationExceptionHandler()
     .AddCurrentUser()
     .AddCqrs()
@@ -36,7 +38,7 @@ builder.Services.AddControllers()
 
 builder.Services.AddSwaggerGenNewtonsoftSupport();
 
-// builder.Host.UseSerilog();
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 
@@ -49,6 +51,7 @@ app.UseSwaggerUI();
 app.MapControllers();
 
 app.UseAuthentication();
+app.UseAuthorization();
 
 await app.ApplyMigrationAsync<ContractDbContext>(app.Logger);
 await app.SeedDataAsync();

@@ -1,10 +1,12 @@
 using BuildingBlocks.Application.IntegrationEvent;
 using Contracts.Application.IntegrationEvents.EventHandling;
+using Contracts.Application.IntegrationEvents.EventHandling.Employees;
 using Contracts.Application.IntegrationEvents.EventHandling.Materials;
 using Contracts.Application.IntegrationEvents.EventHandling.Orders;
 using Contracts.Application.IntegrationEvents.EventHandling.Products;
 using Contracts.Application.IntegrationEvents.EventHandling.ProductUnits;
 using Contracts.Application.IntegrationEvents.Events;
+using Contracts.Application.IntegrationEvents.Events.Employees;
 using Contracts.Application.IntegrationEvents.Events.Materials;
 using Contracts.Application.IntegrationEvents.Events.Orders;
 using Contracts.Application.IntegrationEvents.Events.Products;
@@ -31,6 +33,10 @@ public static class IntegrationEventHandlerExtension
         services.AddScoped<IIntegrationEventHandler<OrderAddedIntegrationEvent>, OrderAddedIntegrationEventHandler>();
 
         services.AddScoped<IIntegrationEventHandler<OrderRejectedIntegrationEvent>, OrderRejectedIntegrationEventHandler>();
+
+        services.AddScoped<IIntegrationEventHandler<EmployeeAddedIntegrationEvent>, EmployeeAddedIntegrationEventHandler>();
+        services.AddScoped<IIntegrationEventHandler<EmployeeUpdatedIntegrationEvent>, EmployeeUpdatedIntegrationEventHandler>();
+        
         return services;
     }
 }

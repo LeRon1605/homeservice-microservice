@@ -28,7 +28,7 @@ public class EmployeeAddedIntegrationEventHandler : IIntegrationEventHandler<Emp
 
         var user = new ApplicationUser
         {
-            Id = @event.Id.ToString(),
+            Id = @event.EmployeeId.ToString(),
             UserName = @event.Email,
             FullName = @event.FullName,
             Email = @event.Email,

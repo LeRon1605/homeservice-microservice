@@ -21,7 +21,9 @@ using Contracts.Application.Queries.Contracts.GetContractsOfCustomer;
 using Contracts.Application.Queries.Contracts.GetContractsQuery;
 using Contracts.Application.Queries.Contracts.GetItemsOfContract;
 using Contracts.Application.Queries.Contracts.GetPaymentsOfContract;
+using Contracts.Domain.Constants;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Contracts.API.Controllers;
@@ -38,6 +40,7 @@ public class ContractController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(ContractPermission.View)]
     [ProducesResponseType(typeof(PagedResult<ContractDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetContracts([FromQuery] GetContractsQuery query)
     {
@@ -46,6 +49,7 @@ public class ContractController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize(ContractPermission.View)]
     public async Task<IActionResult> GetContracts(Guid id)
     {
         var result = await _mediator.Send(new GetContractByIdQuery(id));
@@ -53,6 +57,7 @@ public class ContractController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(ContractPermission.Add)]
     [ProducesResponseType(typeof(ContractDetailDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> CreateContract(ContractCreateDto dto)
     {
@@ -61,6 +66,7 @@ public class ContractController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(ContractPermission.Edit)]
     [ProducesResponseType(typeof(ContractDetailDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateContract(Guid id, ContractUpdateDto dto)
     {
@@ -69,13 +75,15 @@ public class ContractController : ControllerBase
     }
 
     [HttpGet("customer/{customerId:guid}")]
-    public async Task<IActionResult> GetContracts(Guid customerId, [FromQuery] ContractOfCustomerFilterDto dto)
+    [Authorize(ContractPermission.View)]
+    public async Task<IActionResult> GetContractsOfCustomer(Guid customerId, [FromQuery] ContractOfCustomerFilterDto dto)
     {
         var contracts = await _mediator.Send(new ContractsOfCustomerQuery(customerId, dto));
         return Ok(contracts);
     }
     
     [HttpGet("{id:guid}/payments")]
+    [Authorize(ContractPermission.View)]
     [ProducesResponseType(typeof(PagedResult<PaymentMethodDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetPaymentsOfContract(Guid id, [FromQuery] PaymentsOfContractFilterDto dto)
     {
@@ -84,6 +92,7 @@ public class ContractController : ControllerBase
     }
     
     [HttpPost("{id:guid}/payments")]
+    [Authorize(ContractPermission.Edit)]
     [ProducesResponseType(typeof(ContractPaymentDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> AddPaymentOfContract(Guid id, ContractPaymentCreateDto dto)
     {
@@ -92,6 +101,7 @@ public class ContractController : ControllerBase
     }
     
     [HttpPut("{id:guid}/payments/{paymentId:guid}")]
+    [Authorize(ContractPermission.Edit)]
     [ProducesResponseType(typeof(ContractPaymentDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdatePaymentOfContract(Guid id, Guid paymentId, ContractPaymentUpdateDto dto)
     {
@@ -100,6 +110,7 @@ public class ContractController : ControllerBase
     }
     
     [HttpDelete("{id:guid}/payments/{paymentId:guid}")]
+    [Authorize(ContractPermission.Edit)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> DeletePaymentOfContract(Guid id, Guid paymentId)
     {
@@ -108,6 +119,7 @@ public class ContractController : ControllerBase
     }
     
     [HttpGet("{id:guid}/actions")]
+    [Authorize(ContractPermission.View)]
     [ProducesResponseType(typeof(PagedResult<ContractActionDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetActionsOfContract(Guid id, [FromQuery] ActionsOfContractFilterDto dto)
     {
@@ -116,6 +128,7 @@ public class ContractController : ControllerBase
     }
     
     [HttpPost("{id:guid}/actions")]
+    [Authorize(ContractPermission.Edit)]
     [ProducesResponseType(typeof(ContractActionDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> AddActionOfContract(Guid id, ContractActionCreateDto dto)
     {
@@ -124,6 +137,7 @@ public class ContractController : ControllerBase
     }
     
     [HttpPut("{id:guid}/actions/{actionId:guid}")]
+    [Authorize(ContractPermission.Edit)]
     [ProducesResponseType(typeof(ContractActionDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateActionOfContract(Guid id, Guid actionId, ContractActionUpdateDto dto)
     {
@@ -132,6 +146,7 @@ public class ContractController : ControllerBase
     }
     
     [HttpDelete("{id:guid}/actions/{actionId:guid}")]
+    [Authorize(ContractPermission.Edit)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> DeleteActionOfContract(Guid id, Guid actionId)
     {
@@ -140,6 +155,7 @@ public class ContractController : ControllerBase
     }
     
     [HttpGet("{id:guid}/items")]
+    [Authorize(ContractPermission.View)]
     [ProducesResponseType(typeof(IEnumerable<ContractLineDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetItemsOfContract(Guid id)
     {
@@ -148,6 +164,7 @@ public class ContractController : ControllerBase
     }
     
     [HttpPost("{id:guid}/items")]
+    [Authorize(ContractPermission.Edit)]
     [ProducesResponseType(typeof(ContractLineDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> AddItemToContract(Guid id, ContractLineCreateDto dto)
     {
@@ -156,6 +173,7 @@ public class ContractController : ControllerBase
     }
     
     [HttpPut("{id:guid}/items/{itemId:guid}")]
+    [Authorize(ContractPermission.Edit)]
     [ProducesResponseType(typeof(ContractLineDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateItemOfContract(Guid id, Guid itemId, ContractLineUpdateDto dto)
     {
@@ -164,6 +182,7 @@ public class ContractController : ControllerBase
     }
     
     [HttpDelete("{id:guid}/items/{itemId:guid}")]
+    [Authorize(ContractPermission.Edit)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> DeleteItemOfContract(Guid id, Guid itemId)
     {

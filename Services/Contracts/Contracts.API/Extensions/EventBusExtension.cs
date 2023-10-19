@@ -1,7 +1,9 @@
 using BuildingBlocks.Application.IntegrationEvent;
 using BuildingBlocks.EventBus.Interfaces;
+using Contracts.Application.IntegrationEvents.EventHandling.Employees;
 using Contracts.Application.IntegrationEvents.EventHandling.Materials;
 using Contracts.Application.IntegrationEvents.Events;
+using Contracts.Application.IntegrationEvents.Events.Employees;
 using Contracts.Application.IntegrationEvents.Events.Materials;
 using Contracts.Application.IntegrationEvents.Events.Orders;
 using Contracts.Application.IntegrationEvents.Events.Products;
@@ -31,5 +33,8 @@ public static class EventBusExtension
         eventBus.Subscribe<OrderAddedIntegrationEvent, IIntegrationEventHandler<OrderAddedIntegrationEvent>>();
         
         eventBus.Subscribe<OrderRejectedIntegrationEvent, IIntegrationEventHandler<OrderRejectedIntegrationEvent>>();
+        
+        eventBus.Subscribe<EmployeeAddedIntegrationEvent, IIntegrationEventHandler<EmployeeAddedIntegrationEvent>>();
+        eventBus.Subscribe<EmployeeUpdatedIntegrationEvent, IIntegrationEventHandler<EmployeeUpdatedIntegrationEvent>>();
     }
 }

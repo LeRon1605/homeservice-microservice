@@ -25,7 +25,7 @@ public class EmployeeUpdatedIntegrationEventHandler : IIntegrationEventHandler<E
         _logger.LogInformation("Received EmployeeUpdatedIntegrationEvent for employee with id: {employeeId}",
             @event.Id);
 
-        var user = await _userManager.FindByIdAsync(@event.Id.ToString());
+        var user = await _userManager.FindByIdAsync(@event.EmployeeId.ToString());
         if (user == null)
             throw new UserNotFoundException(nameof(ApplicationUser.Id), @event.Id.ToString());
         user.FullName = @event.FullName;

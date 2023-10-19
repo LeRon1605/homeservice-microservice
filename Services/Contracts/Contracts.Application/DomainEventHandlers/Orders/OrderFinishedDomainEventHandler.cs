@@ -6,7 +6,7 @@ using Contracts.Domain.CustomerAggregate;
 using Contracts.Domain.PendingOrdersAggregate.Events;
 using Microsoft.Extensions.Logging;
 
-namespace Contracts.Application.DomainEventHandlers;
+namespace Contracts.Application.DomainEventHandlers.Orders;
 
 public class OrderFinishedDomainEventHandler : IDomainEventHandler<OrderFinishedDomainEvent>
 {

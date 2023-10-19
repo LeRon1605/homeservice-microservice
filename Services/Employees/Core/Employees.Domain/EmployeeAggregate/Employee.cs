@@ -9,7 +9,7 @@ using Employees.Domain.RoleAggregate;
 
 namespace Employees.Domain.EmployeeAggregate;
 
-public class Employee : AggregateRoot
+public class Employee : AuditableAggregateRoot
 {
     public int EmployeeCode { get; private set; }
     public string FullName { get; private set; }

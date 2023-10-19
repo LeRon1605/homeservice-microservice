@@ -7,6 +7,8 @@ public class ContractPaymentDto
     public decimal PaidAmount { get; set; }
     public decimal Surcharge { get; set; }
     public decimal TotalPaid { get; set; }
+    public string? Reference { get; set; }
+    public string? Comments { get; set; }
     
     public Guid ContractId { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿using BuildingBlocks.Application.IntegrationEvent;
 
-namespace Employees.Application.IntegrationEvents.Events.Employees;
+namespace Contracts.Application.IntegrationEvents.Events.Employees;
 
 public record EmployeeAddedIntegrationEvent : IntegrationEvent
 {
@@ -12,8 +12,14 @@ public record EmployeeAddedIntegrationEvent : IntegrationEvent
     public string RoleName { get; private set; }
     public string Password { get; private set; }
 
-    public EmployeeAddedIntegrationEvent(Guid id, string fullName, string email, string? phone, Guid roleId,
-        string roleName, string password)
+    public EmployeeAddedIntegrationEvent(
+        Guid id, 
+        string fullName, 
+        string email, 
+        string? phone, 
+        Guid roleId,
+        string roleName, 
+        string password)
     {
         EmployeeId = id;
         FullName = fullName;

@@ -1,5 +1,6 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Domain.Models;
+using Contracts.Domain.ContractAggregate.Events;
 using Contracts.Domain.ContractAggregate.Exceptions;
 using Contracts.Domain.CustomerAggregate;
 
@@ -153,7 +154,8 @@ public class Contract : AuditableAggregateRoot
             sellPrice);
         
         Items.Add(contractLine);
-
+        AddDomainEvent(new NewContractItemAddedDomainEvent(this, contractLine));
+        
         return contractLine;
     }
 
@@ -166,6 +168,7 @@ public class Contract : AuditableAggregateRoot
         }
         
         Items.Remove(item);
+        AddDomainEvent(new NewContractItemAddedDomainEvent(this, item));
     }
 
     public ContractLine UpdateItem(
@@ -205,6 +208,8 @@ public class Contract : AuditableAggregateRoot
             quantity, 
             cost, 
             sellPrice);
+        
+        AddDomainEvent(new ContractItemUpdatedDomainEvent(this, item));
 
         return item;
     }
@@ -229,6 +234,7 @@ public class Contract : AuditableAggregateRoot
             paymentMethodName);
         
         Payments.Add(contractPayment);
+        AddDomainEvent(new NewContractPaymentAddedDomainEvent(this, contractPayment));
 
         return contractPayment;
     }
@@ -250,6 +256,8 @@ public class Contract : AuditableAggregateRoot
         }
         
         payment.Update(datePaid, paidAmount, surcharge, reference, comments, paymentMethodId, paymentMethodName);
+        AddDomainEvent(new ContractPaymentUpdatedDomainEvent(this, payment));
+        
         return payment;
     }
 
@@ -262,6 +270,7 @@ public class Contract : AuditableAggregateRoot
         }
         
         Payments.Remove(payment);
+        AddDomainEvent(new ContractPaymentDeletedDomainEvent(this, payment));
     }
     
     public ContractAction AddAction(string name, DateTime date, string? comment, Guid actionByEmployeeId)

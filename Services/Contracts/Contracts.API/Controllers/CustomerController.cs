@@ -58,6 +58,4 @@ public class CustomerController : ControllerBase
         await _mediator.Send(new DeleteCustomerCommand(id));
         return NoContent();
     }
-    
-    
 }

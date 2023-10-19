@@ -5,7 +5,7 @@ using Contracts.Domain.CustomerAggregate.Events;
 using Contracts.Domain.CustomerAggregate.Exceptions;
 using Contracts.Domain.CustomerAggregate.Specifications;
 
-namespace Contracts.Application.DomainEventHandlers;
+namespace Contracts.Application.DomainEventHandlers.Customers;
 
 public class CustomerDeletedDomainEventHandler : IDomainEventHandler<CustomerDeletedDomainEvent>
 {

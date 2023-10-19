@@ -45,9 +45,9 @@ public abstract class AppDbContextBase : DbContext
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
-        ProcessAuditEntityState();
-        
         await DispatchDomainEventsAsync();
+        
+        ProcessAuditEntityState();
         
         return await base.SaveChangesAsync(cancellationToken);
     }
