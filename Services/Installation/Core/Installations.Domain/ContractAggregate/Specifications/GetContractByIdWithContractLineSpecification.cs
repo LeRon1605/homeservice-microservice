@@ -2,9 +2,9 @@ using BuildingBlocks.Domain.Specification;
 
 namespace Installations.Domain.ContractAggregate.Specifications;
 
-public class GetContractWithContractLineSpecification : Specification<Contract>
+public class GetContractByIdWithContractLineSpecification : Specification<Contract>
 {
-    public GetContractWithContractLineSpecification(Guid contractId)
+    public GetContractByIdWithContractLineSpecification(Guid contractId)
     {
         AddInclude(x => x.ContractLines);
         AddFilter(x => x.Id == contractId);

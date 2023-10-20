@@ -7,16 +7,20 @@ using Installations.Domain.ContractAggregate.Exceptions;
 using Installations.Domain.ContractAggregate.Specifications;
 using Installations.Domain.InstallationAggregate;
 using Installations.Domain.InstallationAggregate.Exceptions;
+using Installations.Domain.InstallerAggregate;
+using Installations.Domain.InstallerAggregate.Exceptions;
+using Installations.Domain.InstallerAggregate.Specifications;
 using Installations.Domain.MaterialAggregate;
 using Installations.Domain.MaterialAggregate.Specifications;
 
 namespace Installations.Application.Commands;
 
-public class AddInstallationCommandHandler : ICommandHandler<AddInstallationCommand, InstallationDto>
+public class AddInstallationCommandHandler : ICommandHandler<AddInstallationCommand, InstallationDetailDto>
 {
     private readonly IRepository<Installation> _installationRepository;
     private readonly IReadOnlyRepository<Contract> _contractRepository;
     private readonly IReadOnlyRepository<Material> _materialRepository;
+    private readonly IReadOnlyRepository<Installer> _installerRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
@@ -24,18 +28,20 @@ public class AddInstallationCommandHandler : ICommandHandler<AddInstallationComm
                                          IUnitOfWork unitOfWork,
                                          IReadOnlyRepository<Contract> contractRepository,
                                          IMapper mapper,
-                                         IReadOnlyRepository<Material> materialRepository)
+                                         IReadOnlyRepository<Material> materialRepository,
+                                         IReadOnlyRepository<Installer> installerRepository)
     {
         _installationRepository = installationRepository;
         _unitOfWork = unitOfWork;
         _contractRepository = contractRepository;
         _mapper = mapper;
         _materialRepository = materialRepository;
+        _installerRepository = installerRepository;
     }
 
-    public async Task<InstallationDto> Handle(AddInstallationCommand request, CancellationToken cancellationToken)
+    public async Task<InstallationDetailDto> Handle(AddInstallationCommand request, CancellationToken cancellationToken)
     {
-        var contract = await _contractRepository.FindAsync(new GetContractWithContractLineSpecification(request.ContractId))
+        var contract = await _contractRepository.FindAsync(new GetContractByIdWithContractLineSpecification(request.ContractId))
                        ?? throw new ContractNotFoundException(request.ContractId);
         
         var contractLine = contract.ContractLines.FirstOrDefault(x => x.Id == request.ContractLineId)
@@ -44,10 +50,15 @@ public class AddInstallationCommandHandler : ICommandHandler<AddInstallationComm
         var materials = await _materialRepository.FindListAsync(new GetMaterialsByIdsSpecification(request.InstallationItems.Select(x => x.MaterialId)));
         if (materials.Count != request.InstallationItems.Count)
         {
-            throw new InstallationItemNotFoundException(materials.Select(x => x.Id)
-                                                                 .Except(request.InstallationItems
-                                                                    .Select(x => x.MaterialId)).First());
+            throw new InstallationItemNotFoundException(request.InstallationItems.Select(x => x.MaterialId)
+                                                                 .Except(materials.Select(x => x.Id)).First());
         } 
+        
+        // Validate installer
+        var installer = await _installerRepository.FindAsync(new InstallerByIdSpecification(request.InstallerId))
+            ?? throw new InstallerNotFoundException(request.InstallerId);
+        if (installer.IsDeactivated) 
+            throw new InstallerIsDeactivatedException(installer.Id);
         
         var installation = new Installation(contractId: request.ContractId,
                 contractNo: contract.ContractNo,
@@ -81,6 +92,6 @@ public class AddInstallationCommandHandler : ICommandHandler<AddInstallationComm
         _installationRepository.Add(installation);
         await _unitOfWork.SaveChangesAsync();
 
-        return _mapper.Map<InstallationDto>(installation);
+        return _mapper.Map<InstallationDetailDto>(installation);
     }
 }

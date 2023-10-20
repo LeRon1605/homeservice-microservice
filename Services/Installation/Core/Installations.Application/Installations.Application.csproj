@@ -9,10 +9,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\..\BuildingBlocks\BuildingBlocks.Application\BuildingBlocks.Application.csproj" />
+      <ProjectReference Include="..\..\..\..\BuildingBlocks\BuildingBlocks.EventBus\BuildingBlocks.EventBus.csproj" />
       <ProjectReference Include="..\Installations.Domain\Installations.Domain.csproj" />
-
     </ItemGroup>
-
+    <ItemGroup>
+        <PackageReference Include="Bogus" Version="34.0.2" />
+    </ItemGroup>
 
 
 

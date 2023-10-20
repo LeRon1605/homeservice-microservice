@@ -3,7 +3,7 @@ using Installations.Application.Dtos;
 
 namespace Installations.Application.Commands;
 
-public class AddInstallationCommand : ICommand<InstallationDto>
+public class AddInstallationCommand : ICommand<InstallationDetailDto>
 {
     public Guid ContractId { get; init; }
     public Guid ContractLineId { get; init; }

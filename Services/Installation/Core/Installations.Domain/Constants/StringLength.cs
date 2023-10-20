@@ -6,4 +6,6 @@ public static class StringLength
     public const int Comment = 2048;
     public const int Unit = 64;
     public const int Name = 256;
+    public const int Email = 256;
+    public const int Phone = 32;
 }

@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Installations.Application.Commands;
 
-public class UpdateInstallationCommand : ICommand<InstallationDto>
+public class UpdateInstallationCommand : ICommand<InstallationDetailDto>
 {
     [JsonIgnore]
     public Guid InstallationId { get; set; }

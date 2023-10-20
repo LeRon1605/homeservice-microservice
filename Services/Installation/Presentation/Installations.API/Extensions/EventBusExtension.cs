@@ -1,6 +1,7 @@
 using BuildingBlocks.Application.IntegrationEvent;
 using BuildingBlocks.EventBus.Interfaces;
 using Installations.Application.IntegrationEvents.Events.Contracts;
+using Installations.Application.IntegrationEvents.Events.Employees;
 using Installations.Application.IntegrationEvents.Events.Materials;
 using Installations.Domain.MaterialAggregate;
 
@@ -18,5 +19,9 @@ public static class EventBusExtension
         eventBus.Subscribe<MaterialAddedIntegrationEvent, IIntegrationEventHandler<MaterialAddedIntegrationEvent>>();
         eventBus.Subscribe<MaterialDeletedIntegrationEvent, IIntegrationEventHandler<MaterialDeletedIntegrationEvent>>();
         eventBus.Subscribe<MaterialUpdatedIntegrationEvent, IIntegrationEventHandler<MaterialUpdatedIntegrationEvent>>();
+        
+        eventBus.Subscribe<EmployeeAddedIntegrationEvent, IIntegrationEventHandler<EmployeeAddedIntegrationEvent>>();
+        eventBus.Subscribe<EmployeeDeactivatedIntegrationEvent, IIntegrationEventHandler<EmployeeDeactivatedIntegrationEvent>>();
+        eventBus.Subscribe<EmployeeUpdatedIntegrationEvent, IIntegrationEventHandler<EmployeeUpdatedIntegrationEvent>>();
     }
 }
