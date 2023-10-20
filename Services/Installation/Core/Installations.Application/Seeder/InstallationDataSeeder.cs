@@ -56,6 +56,11 @@ public class InstallationDataSeeder : IDataSeeder
             {
                 throw new Exception("Contract data not seeded yet!");
             }
+
+            if (!_materialRepository.AnyAsync().Result)
+            {
+                throw new Exception("Material data not seeded yet!");
+            }
         });
 
         var contracts = await _contractRepository.FindListAsync(new GetContractsWithContractLineSpecification());
