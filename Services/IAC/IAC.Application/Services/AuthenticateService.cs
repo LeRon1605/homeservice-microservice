@@ -183,7 +183,7 @@ public class AuthenticateService : IAuthenticateService
     {
         var roleNames = loginPortal switch
         {
-            LoginPortal.BackOffice => new string[] { AppRole.Admin, AppRole.SalePerson},
+            LoginPortal.BackOffice => new string[] { AppRole.Admin, AppRole.SalePerson, AppRole.Installer, AppRole.CustomerService, AppRole.Supervisor },
             LoginPortal.Installation => new string[] { AppRole.Installer },
             LoginPortal.Customer => new string[] { AppRole.Customer }
         };
