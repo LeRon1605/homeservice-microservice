@@ -34,20 +34,17 @@ public class MappingProfiles : Profile
             .ForMember(dest => dest.SalePerson, options => options.MapFrom(src => new EmployeeInContractDto()
             {
                 Id = src.SalePersonId,
-                Name = src.SalePerson!.Name
             }))
             .ForMember(dest => dest.Supervisor, options => options.MapFrom(src => src.SupervisorId.HasValue
                 ? new EmployeeInContractDto()
                 {
                     Id = src.SupervisorId.Value,
-                    Name = src.Supervisor!.Name
                 }
                 : null))
             .ForMember(dest => dest.CustomerServiceRep, options => options.MapFrom(src => src.CustomerServiceRepId.HasValue
                 ? new EmployeeInContractDto()
                 {
                     Id = src.CustomerServiceRepId.Value,
-                    Name = src.CustomerServiceRep!.Name
                 }
                 : null));
         

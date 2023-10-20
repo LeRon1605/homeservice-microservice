@@ -37,5 +37,4 @@ public class ContractDetailDto
 public class EmployeeInContractDto
 {
     public Guid Id { get; set; }
-    public string Name { get; set; } = null!;
 }

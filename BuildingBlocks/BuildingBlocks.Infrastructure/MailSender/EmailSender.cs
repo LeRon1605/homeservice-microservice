@@ -15,14 +15,14 @@ public class EmailSender : IEmailSender
         _emailConfig = emailConfig;
         _logger = logger;
     }
-    
+
     public void SendEmail(Message message)
     {
         var emailMessage = CreateEmailMessage(message);
 
         Send(emailMessage);
     }
-    
+
     private MimeMessage CreateEmailMessage(Message message)
     {
         var emailMessage = new MimeMessage();
@@ -32,9 +32,9 @@ public class EmailSender : IEmailSender
         //emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Text) { Text = message.Content };
         var builder = new BodyBuilder();
         builder.HtmlBody = message.Content;
-        emailMessage.Body = builder.ToMessageBody ();
-        
-        
+        emailMessage.Body = builder.ToMessageBody();
+
+
         return emailMessage;
     }
 
@@ -50,9 +50,9 @@ public class EmailSender : IEmailSender
 
                 client.Send(mailMessage);
             }
-            catch
+            catch (Exception e)
             {
-                _logger.LogError("Send mail error");
+                _logger.LogError($"Send email Error, {e.Message}");
             }
             finally
             {

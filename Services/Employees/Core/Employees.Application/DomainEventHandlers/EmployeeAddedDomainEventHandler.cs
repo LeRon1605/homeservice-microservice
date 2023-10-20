@@ -34,17 +34,18 @@ public class EmployeeAddedDomainEventHandler : IDomainEventHandler<EmployeeAdded
         var role = await _roleRepository.FindAsync(new RoleByIdSpecification(notification.Employee.RoleId));
         if (role == null)
             throw new RoleNotFoundException(notification.Employee.RoleId);
-        
-        var password = GetRandomPassword();
+
+        var password = "Employee@123";
         var content = $"<p>Dear {notification.Employee.FullName},</p>\n " +
-                         $"<p>We are thrilled to inform you that your new account with HomeServiceApp has been successfully created. " +
-                         $"Here are your account details: </p>\n " +
-                         $"<span> - Username:  {notification.Employee.Email}</span>\n " +
-                         $"<span>\n - Password:  {password}</span>\n " +
-                         $"<p>Please remember to keep your login credentials secure. If you ever forget your password, you can use our \"Forgot Password\" feature on our website to reset it.</p>\n " +
-                         "<p>If you have any questions or concerns, please do not hesitate to contact us at <strong>homeserviceapp@gmail.com</strong>.</p>\n " +
-                         "<p>Thank you .</p>\n <p>Sincerely,</p>\n <p><strong>Home Service Company</strong></p>";
-        var message = new Message(new string[] { notification.Employee.Email }, "Create Account for HomeService", content);
+                      $"<p>We are thrilled to inform you that your new account with HomeServiceApp has been successfully created. " +
+                      $"Here are your account details: </p>\n " +
+                      $"<span> - Username:  {notification.Employee.Email}</span>\n " +
+                      $"<span>\n - Password:  {password}</span>\n " +
+                      $"<p>Please remember to keep your login credentials secure. If you ever forget your password, you can use our \"Forgot Password\" feature on our website to reset it.</p>\n " +
+                      "<p>If you have any questions or concerns, please do not hesitate to contact us at <strong>homeserviceapp@gmail.com</strong>.</p>\n " +
+                      "<p>Thank you .</p>\n <p>Sincerely,</p>\n <p><strong>Home Service Company</strong></p>";
+        var message = new Message(new string[] { notification.Employee.Email }, "Create Account for HomeService",
+            content);
         //var message = new Message(new string[] { "maivietquynh0605@gmail.com" }, "Create Account for HomeService",content);
         _emailSender.SendEmail(message);
 
@@ -58,7 +59,8 @@ public class EmployeeAddedDomainEventHandler : IDomainEventHandler<EmployeeAdded
             password);
 
         _eventBus.Publish(employeeAddedIntegrationEvent);
-        _logger.LogInformation("Published integration event: {EventName}", employeeAddedIntegrationEvent.GetType().Name);
+        _logger.LogInformation("Published integration event: {EventName}",
+            employeeAddedIntegrationEvent.GetType().Name);
     }
 
     private string GetRandomPassword()
