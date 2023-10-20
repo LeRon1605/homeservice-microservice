@@ -82,7 +82,7 @@ public class MappingProfiles : Profile
             .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.CreatedBy) ? "System" : src.CreatedBy))
             .ForMember(dest => dest.Employee, opt => opt.MapFrom(src => new EmployeeInContractActionDto()
             {
-                Id = src.Id,
+                Id = src.ActionByEmployeeId,
                 Name = src.ActionByEmployee!.Name,
             }));
         

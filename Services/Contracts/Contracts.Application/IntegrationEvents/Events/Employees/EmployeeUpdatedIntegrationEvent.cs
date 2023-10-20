@@ -12,14 +12,14 @@ public record EmployeeUpdatedIntegrationEvent : IntegrationEvent
     public string RoleName { get; private set; }
 
     public EmployeeUpdatedIntegrationEvent(
-        Guid id, 
+        Guid employeeId, 
         string fullName, 
         string email, 
         string phone, 
         Guid roleId,
         string roleName)
     {
-        EmployeeId = id;
+        EmployeeId = employeeId;
         FullName = fullName;
         Email = email;
         Phone = phone;
