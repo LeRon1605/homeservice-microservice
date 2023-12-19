@@ -4,7 +4,9 @@ using Contracts.Application.Commands.Customers.DeleteCustomer;
 using Contracts.Application.Commands.Customers.EditCustomer;
 using Contracts.Application.Dtos.Customers;
 using Contracts.Application.Queries.Customers;
+using Contracts.Domain.Constants;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Contracts.API.Controllers;
@@ -21,6 +23,7 @@ public class CustomerController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(CustomerPermission.View)]
     [ProducesResponseType(typeof(PagedResult<CustomerDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCustomers([FromQuery] CustomerFilterAndPagingQuery query)
     {
@@ -29,6 +32,7 @@ public class CustomerController : ControllerBase
     }
     
     [HttpGet("{id:guid}")]
+    [Authorize(CustomerPermission.View)]
     [ProducesResponseType(typeof(CustomerDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCustomerById([FromRoute] Guid id)
     {
@@ -37,6 +41,8 @@ public class CustomerController : ControllerBase
     }
     
     [HttpPost]
+    [Authorize(CustomerPermission.Add)]
+    [ProducesResponseType(typeof(CustomerDto), StatusCodes.Status201Created)]
     public async Task<IActionResult> CreateCustomer([FromBody] AddCustomerCommand command)
     {
         var customer = await _mediator.Send(command);
@@ -44,6 +50,8 @@ public class CustomerController : ControllerBase
     }
     
     [HttpPut("{id:guid}")]
+    [Authorize(CustomerPermission.Edit)]
+    [ProducesResponseType(typeof(CustomerDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateCustomer([FromRoute] Guid id, [FromBody] EditCustomerCommand command)
     {
         command.Id = id;
@@ -52,6 +60,7 @@ public class CustomerController : ControllerBase
     }
     
     [HttpDelete("{id:guid}")]
+    [Authorize(CustomerPermission.Delete)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> DeleteCustomer([FromRoute] Guid id)
     {

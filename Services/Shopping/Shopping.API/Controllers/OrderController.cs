@@ -22,6 +22,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin, Sales person, Customer service, Installer, Supervisor, Customer")]
     [ProducesResponseType(typeof(PagedResult<OrderDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetOrdersAsync([FromQuery] OrderFilterAndPagingDto orderFilterAndPagingDto)
     {
@@ -38,6 +39,8 @@ public class OrderController : ControllerBase
     }
 
    [HttpPost("{id:guid}/reject-order")]
+   [Authorize(Roles = "Admin, Sales person, Customer service, Installer, Supervisor")]
+   [ProducesResponseType(typeof(OrderDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> RejectOrder(Guid id, [FromBody]OrderRejectDto orderRejectDto)
     {
         var order = await _mediator.Send(new OrderRejectCommand(id, orderRejectDto));
@@ -45,6 +48,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize(Roles = "Admin, Sales person, Customer service, Installer, Supervisor, Customer")]
     [ProducesResponseType(typeof(PagedResult<OrderDetailsDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetOrderDetails(Guid id)
     {
@@ -53,6 +57,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet("export")]
+    [Authorize(Roles = "Admin, Sales person, Customer service, Installer, Supervisor")]
     public async Task<IActionResult> ExportOrdersAsync()
     {
         var byteArray = await _mediator.Send(new ExportOrdersCommand());

@@ -1,8 +1,10 @@
-﻿using Employees.Application.Command.Employees;
+﻿using BuildingBlocks.Application.Dtos;
+using Employees.Application.Command.Employees;
 using Employees.Application.Dtos;
 using Employees.Application.Queries;
 using Employees.Domain.Constants;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Employees.API.Controllers;
@@ -16,7 +18,10 @@ public class EmployeeController : ControllerBase
     {
         _mediator = mediator;
     }
+    
     [HttpGet]
+    [Authorize(Roles = "Admin, Sales person, Customer service, Installer, Supervisor")]
+    [ProducesResponseType(typeof(PagedResult<GetEmployeesDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetEmployees([FromQuery] EmployeeFilterAndPagingDto employeeFilterAndPagingDto)
     {
         var employees = await _mediator.Send(new GetEmployeesWithPaginationQuery(employeeFilterAndPagingDto));
@@ -24,6 +29,8 @@ public class EmployeeController : ControllerBase
     }
     
     [HttpGet("installers")]
+    [Authorize(Roles = "Admin, Sales person, Customer service, Installer, Supervisor")]
+    [ProducesResponseType(typeof(IEnumerable<GetEmployeesDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetInstallers()
     {
         var installers = await _mediator.Send(new GetAllEmployeeByRoleQuery(AppRole.Installer));
@@ -31,6 +38,8 @@ public class EmployeeController : ControllerBase
     }
     
     [HttpGet("supervisors")]
+    [Authorize(Roles = "Admin, Sales person, Customer service, Installer, Supervisor")]
+    [ProducesResponseType(typeof(IEnumerable<GetEmployeesDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetSupervisors()
     {
         var supervisors = await _mediator.Send(new GetAllEmployeeByRoleQuery(AppRole.Supervisor));
@@ -38,6 +47,8 @@ public class EmployeeController : ControllerBase
     }
     
     [HttpGet("salespersons")]
+    [Authorize(Roles = "Admin, Sales person, Customer service, Installer, Supervisor")]
+    [ProducesResponseType(typeof(IEnumerable<GetEmployeesDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetSalesPersons()
     {
         var salesPersons = await _mediator.Send(new GetAllEmployeeByRoleQuery(AppRole.SalesPerson));
@@ -45,6 +56,8 @@ public class EmployeeController : ControllerBase
     }
     
     [HttpGet("customer-service")]
+    [Authorize(Roles = "Admin, Sales person, Customer service, Installer, Supervisor")]
+    [ProducesResponseType(typeof(IEnumerable<GetEmployeesDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCustomerServiceEmployees()
     {
         var salesPersons = await _mediator.Send(new GetAllEmployeeByRoleQuery(AppRole.CustomerService));
@@ -52,6 +65,8 @@ public class EmployeeController : ControllerBase
     }
     
     [HttpGet("{id:guid}")]
+    [Authorize(Roles = "Admin, Sales person, Customer service, Installer, Supervisor")]
+    [ProducesResponseType(typeof(GetEmployeesDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetEmployeeById(Guid id)
     {
         var employee = await _mediator.Send(new GetEmployeeByIdQuery(id));
@@ -59,6 +74,8 @@ public class EmployeeController : ControllerBase
     }
     
     [HttpPost]
+    [Authorize(Roles = "Admin, Sales person, Customer service, Installer, Supervisor")]
+    [ProducesResponseType(typeof(GetEmployeesDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> CreateEmployee([FromBody]CreateEmployeeDto createEmployeeDto)
     {
         var employee = await _mediator.Send(new CreateEmployeeCommand(createEmployeeDto));
@@ -66,6 +83,8 @@ public class EmployeeController : ControllerBase
     }
     
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = "Admin, Sales person, Customer service, Installer, Supervisor")]
+    [ProducesResponseType(typeof(GetEmployeesDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateEmployee(Guid id, [FromBody]UpdateEmployeeDto updateEmployeeDto)
     {
         var employee = await _mediator.Send(new UpdateEmployeeCommand(id, updateEmployeeDto));
@@ -73,6 +92,8 @@ public class EmployeeController : ControllerBase
     }
     
     [HttpPost("{id:guid}/deactivate")]
+    [Authorize(Roles = "Admin, Sales person, Customer service, Installer, Supervisor")]
+    [ProducesResponseType(typeof(GetEmployeesDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> DeactivateEmployee(Guid id)
     {
         var employee = await _mediator.Send(new DeactivateEmployeeCommand(id));

@@ -1,6 +1,7 @@
 ﻿using Contracts.Application.Commands.Contracts.ConvertContractFromOrder;
 using Contracts.Application.Dtos.Contracts;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Contracts.API.Controllers;
@@ -17,6 +18,7 @@ public class OrderController : ControllerBase
     }
     
     [HttpPost("{id:guid}/contract")]
+    [Authorize(Roles = "Admin, Sales person")]
     [ProducesResponseType(typeof(ContractDetailDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> ConvertOrderToContract(Guid id, ContractConvertedFromOrderDto dto)
     {

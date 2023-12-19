@@ -1,5 +1,6 @@
 using BuildingBlocks.Application.Dtos;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Products.Application.Commands.ProductCommands.AddProduct;
 using Products.Application.Commands.ProductCommands.DeleteProduct;
@@ -11,6 +12,7 @@ using Products.Application.Dtos.Products;
 using Products.Application.Queries.MaterialQuery.GetMaterialByProduct;
 using Products.Application.Queries.ProductQuery.GetProductById;
 using Products.Application.Queries.ProductQuery.GetProductsWithPagination;
+using Products.Domain.Constant;
 
 namespace Products.API.Controllers;
 
@@ -26,6 +28,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
+    // [Authorize(ProductPermission.View)]
     [ProducesResponseType(typeof(PagedResult<GetProductDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProductsAsync([FromQuery] GetProductsWithPaginationQuery query)
     {
@@ -34,6 +37,8 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    // [Authorize(ProductPermission.View)]
+    [ProducesResponseType(typeof(GetProductDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProductById(Guid id)
     {
         var product = await _mediator.Send(new GetProductByIdQuery(id));
@@ -41,6 +46,8 @@ public class ProductController : ControllerBase
     }
     
     [HttpPost]
+    [Authorize(ProductPermission.Add)]
+    [ProducesResponseType(typeof(GetProductDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> CreateProductAsync([FromBody] ProductCreateDto productCreateDto)
     {
         var product = await _mediator.Send(new AddProductCommand(productCreateDto));
@@ -48,6 +55,7 @@ public class ProductController : ControllerBase
     } 
     
     [HttpPut("{id:guid}")]
+    [Authorize(ProductPermission.Edit)]
     [ProducesResponseType(typeof(GetProductDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateProductAsync(Guid id, ProductUpdateDto productUpdateDto)
     {
@@ -56,6 +64,7 @@ public class ProductController : ControllerBase
     } 
     
     [HttpDelete("{id:guid}")]
+    [Authorize(ProductPermission.Delete)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> DeleteProductAsync(Guid id)
     {
